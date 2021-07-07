@@ -1,0 +1,13 @@
+body,
+html,
+#root {
+  height: 100%;
+  margin: 0;
+  background-color: #393e46;
+  color: white;
+}
+
+.navbar {
+  background-color: #222831;
+  color: white;
+}
