@@ -1,10 +1,12 @@
-import React from 'react';
 import { useWeb3React } from '@web3-react/core';
+import Web3ReactManager from '../Web3/Web3ReactManager';
 
 const Header = () => {
-  const { account, chainId } = useWeb3React();
+  const { account, chainId, active, error } = useWeb3React();
 
-  // const chains = { 1: 'Etherum', 1337: 'Ganache' };
+  const connectClickHandler = () => {
+    return <Web3ReactManager />;
+  };
 
   const truncateWalletAddress = (
     address: string,
@@ -32,26 +34,36 @@ const Header = () => {
           <span className='navbar-toggler-icon'></span>
         </button>
         <div className='collapse navbar-collapse' id='navbarSupportedContent'>
-          <ul className='navbar-nav ms-auto mb-2 mb-lg-0 gap-3'>
-            {/* <li className='nav-item'>
-              <button type='button' className='btn btn-secondary'>
-                {chainId && chains.chainId}
-              </button>
-            </li> */}
-            <li className='nav-item'>
-              <button type='button' className='btn btn-secondary'>
-                {chainId === 1 && 'Ethereum'}
-                {chainId === 1337 && 'Ganache'}
-              </button>
-            </li>
-            <li className='nav-item'>
-              <button type='button' className='btn btn-secondary'>
-                {account !== null &&
-                  account !== undefined &&
-                  truncateWalletAddress(account)}
-              </button>
-            </li>
-          </ul>
+          {active && !error && (
+            <ul className='navbar-nav ms-auto mb-2 mb-lg-0 gap-3'>
+              <li className='nav-item'>
+                <button type='button' className='btn btn-secondary'>
+                  {chainId === 1 && 'Ethereum'}
+                  {(chainId === 1337 || chainId === 5777) && 'Ganache'}
+                </button>
+              </li>
+              <li className='nav-item'>
+                <button type='button' className='btn btn-secondary'>
+                  {account !== null &&
+                    account !== undefined &&
+                    truncateWalletAddress(account)}
+                </button>
+              </li>
+            </ul>
+          )}
+          {!active && (
+            <ul className='navbar-nav ms-auto mb-2 mb-lg-0 gap-3'>
+              <li className='nav-item'>
+                <button
+                  type='button'
+                  className='btn btn-secondary'
+                  onClick={connectClickHandler}
+                >
+                  Connect
+                </button>
+              </li>
+            </ul>
+          )}
         </div>
       </div>
     </nav>

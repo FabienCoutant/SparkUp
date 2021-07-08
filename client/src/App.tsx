@@ -1,7 +1,8 @@
-import React from 'react';
-import { useEagerConnect, useInactiveListener } from './hooks/web3';
+import useEagerConnect from './hooks/useEagerConnect';
+import useInactiveListener from './hooks/useInactiveListener';
 import Header from './components/UI/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Web3ReactManager from './components/Web3/Web3ReactManager';
 
 function App() {
   const triedEager = useEagerConnect();
@@ -10,6 +11,7 @@ function App() {
   return (
     <div>
       <Header />
+      <Web3ReactManager />
     </div>
   );
 }
