@@ -1,12 +1,10 @@
-import { useWeb3React } from '@web3-react/core';
 import Web3ReactManager from '../Web3/Web3ReactManager';
-
+import { AbstractConnector } from '@web3-react/abstract-connector';
+import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
+import { SUPPORTED_WALLETS } from '../../constants';
+import { injected } from '../../utils/web3React';
 const Header = () => {
-  const { account, chainId, active, error } = useWeb3React();
-
-  const connectClickHandler = () => {
-    return <Web3ReactManager />;
-  };
+  const { account, chainId, active, error, activate } = useWeb3React();
 
   const truncateWalletAddress = (
     address: string,
@@ -16,6 +14,10 @@ const Header = () => {
     return `${address.substring(0, startLength)}...${address.substring(
       address.length - endLength
     )}`;
+  };
+
+  const tryActivation = async () => {
+    activate(injected, undefined, true);
   };
 
   return (
@@ -57,7 +59,7 @@ const Header = () => {
                 <button
                   type='button'
                   className='btn btn-secondary'
-                  onClick={connectClickHandler}
+                  onClick={() => tryActivation()}
                 >
                   Connect
                 </button>

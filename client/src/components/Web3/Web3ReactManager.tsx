@@ -1,17 +1,17 @@
-import useEagerConnect from '../../hooks/useEagerConnect';
-import useInactiveListener from '../../hooks/useInactiveListener';
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from '@web3-react/injected-connector';
+import useEagerConnect from '../../hooks/useEagerConnect';
+import useInactiveListener from '../../hooks/useInactiveListener';
 import Notification from '../UI/Notification';
 
 const Web3ReactManager = () => {
   const triedEager = useEagerConnect();
   useInactiveListener(!triedEager);
   const { error } = useWeb3React();
-  console.log(useWeb3React());
+
   function getErrorMessage(error: Error) {
     if (error instanceof NoEthereumProviderError) {
       return (
