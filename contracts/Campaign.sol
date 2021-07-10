@@ -15,6 +15,7 @@ contract Campaign {
     Info private CampaignInfo;
 
     //Events
+    event CampaignInfoUpdated(Info CampaignInfo);
 
     constructor(Info memory newCampaignData){
         require(bytes(newCampaignData.title).length>0,"!Err: Title empty");
@@ -27,6 +28,20 @@ contract Campaign {
         c.description = newCampaignData.description;
         c.fundingGoal = newCampaignData.fundingGoal;
         c.deadLine = newCampaignData.deadLine;
+    }
+
+    function updateInfo(Info calldata updatedCampaignInfo) external {
+        require(msg.sender == manager, "!Not Authorized");
+        require(bytes(updatedCampaignInfo.title).length>0,"!Err: Title empty");
+        require(bytes(updatedCampaignInfo.description).length>0,"!Err: Description empty");
+        require(updatedCampaignInfo.fundingGoal>=100,"!Err: Funding Goal not enough");
+        require(updatedCampaignInfo.deadLine>=(block.timestamp + 7 days),"!Err: DeadLine to short");
+        Info storage c = CampaignInfo;
+        c.title = updatedCampaignInfo.title;
+        c.description = updatedCampaignInfo.description;
+        c.fundingGoal = updatedCampaignInfo.fundingGoal;
+        c.deadLine = updatedCampaignInfo.deadLine;
+        emit CampaignInfoUpdated(CampaignInfo);
     }
 
     function getCampaignInfo() external view returns (Info memory){

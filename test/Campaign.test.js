@@ -12,7 +12,7 @@ contract("Campaign", (accounts) => {
 		deadLine: 0
 	};
 	let CampaignContractInstance;
-	beforeEach(async ()=>{
+	beforeEach(async () => {
 		const currentTime = await time.latest();
 		initialCampaignInfo.deadLine = parseInt(currentTime.add(time.duration.days(30))); // add 30*24*60*60 = 2592000 seconds
 		CampaignContractInstance = await CampaignContract.new(
@@ -59,7 +59,82 @@ contract("Campaign", (accounts) => {
 				{from: manager}
 			), "!Err: DeadLine to short");
 		});
+	});
+	describe("--- Update ---", async () => {
+		it("should revert if not manager update the campaign", async () => {
+			const updatedData = {
+				...initialCampaignInfo, title: "Updated"
+			}
+			await expectRevert(CampaignContractInstance.updateInfo(updatedData, {from: alice}), "!Not Authorized");
+		});
+		it("should update the title", async () => {
+			const updatedData = {
+				...initialCampaignInfo, title: "Updated"
+			}
+			await CampaignContractInstance.updateInfo(updatedData, {from: manager});
+			const CampaignInfo = await CampaignContractInstance.getCampaignInfo();
+			expect(CampaignInfo.title).to.be.equal(updatedData.title);
+		});
+		it("should revert the update it the title is empty", async () => {
+			const badUpdatedData = {
+				...initialCampaignInfo, title: ""
+			}
+			await expectRevert(CampaignContractInstance.updateInfo(badUpdatedData, {from: manager}), "!Err: Title empty");
+		});
+		it("should update the description", async () => {
+			const updatedData = {
+				...initialCampaignInfo, description: "Updated"
+			}
+			await CampaignContractInstance.updateInfo(updatedData, {from: manager});
+			const CampaignInfo = await CampaignContractInstance.getCampaignInfo();
+			expect(CampaignInfo.description).to.be.equal(updatedData.description);
+		});
+		it("should revert if description is empty", async () => {
+			const badUpdatedData = {...initialCampaignInfo, description: ""};
+			await expectRevert(CampaignContractInstance.updateInfo(badUpdatedData, {from: manager}), "!Err: Description empty");
+		});
+		it("should update the fundingGoal", async () => {
+			const updatedData = {
+				...initialCampaignInfo, fundingGoal: 10000
+			}
+			await CampaignContractInstance.updateInfo(updatedData, {from: manager});
+			const CampaignInfo = await CampaignContractInstance.getCampaignInfo();
+			expect(CampaignInfo.fundingGoal).to.be.equal(updatedData.fundingGoal.toString());
+		});
+		it("should revert if fundingGoal is not greater than 100", async () => {
+			const badUpdatedData = {...initialCampaignInfo, fundingGoal: 99};
+			await expectRevert(CampaignContractInstance.updateInfo(badUpdatedData, {from: manager}
+			), "!Err: Funding Goal not enough");
+		});
+		it("should update the deadLine", async () => {
+			const currentTime = await time.latest();
+			const newDeadLine = parseInt(currentTime.add(time.duration.days(50)));
+			const updatedData = {
+				...initialCampaignInfo, deadLine: newDeadLine
+			}
+			await CampaignContractInstance.updateInfo(updatedData, {from: manager});
+			const CampaignInfo = await CampaignContractInstance.getCampaignInfo();
+			expect(CampaignInfo.deadLine).to.be.equal(updatedData.deadLine.toString());
+		});
+		it("should revert if deadLine is not greater than now plus 7 days", async () => {
+			const currentTime = await time.latest();
+			const badDeadLine = parseInt(currentTime.add(time.duration.days(6)));
+			const badUpdatedData = {...initialCampaignInfo, deadLine: badDeadLine};
+			await expectRevert(CampaignContractInstance.updateInfo(
+				badUpdatedData,
+				{from: manager}
+			), "!Err: DeadLine to short");
+		});
+		it("should emit event after update",async () =>{
+			const updatedData = {
+				...initialCampaignInfo, description: "Updated"
+			}
+			const receipt = await CampaignContractInstance.updateInfo(updatedData, {from: manager});
 
+			expectEvent(receipt,"CampaignInfoUpdated", [[
+				updatedData.title,updatedData.description,updatedData.fundingGoal.toString(),updatedData.deadLine.toString()
+			]]);
+		});
 
 	});
 });
