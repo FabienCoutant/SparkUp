@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'SuperFats';
+  src: url('../src/assets/fonts/Superfats-6PRM.ttf');
+}
+
 body,
 html,
 #root {
@@ -18,4 +23,8 @@ html,
 
 .card-body {
   background-color: #222831;
+}
+
+.brand {
+  font-family: 'SuperFats';
 }

@@ -51,7 +51,7 @@ const Header = () => {
   return (
     <nav className='navbar navbar-expand-lg navbar-light'>
       <div className='container-fluid'>
-        <h2>SparkUp</h2>
+        <h2 className='brand mb-0'>SparkUp</h2>
         <button
           className='navbar-toggler'
           type='button'
