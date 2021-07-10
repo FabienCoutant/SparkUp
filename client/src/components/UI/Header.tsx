@@ -1,10 +1,27 @@
-import Web3ReactManager from '../Web3/Web3ReactManager';
-import { AbstractConnector } from '@web3-react/abstract-connector';
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
-import { SUPPORTED_WALLETS } from '../../constants';
+import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../utils/web3React';
+import { useAppDispatch } from '../../store/hooks';
+import { uiActions } from '../../store/ui-slice';
+import { getContract } from '../../utils/web3React';
+import USDC from '../../contracts/USDC.json';
+import { useEffect, useState } from 'react';
+
 const Header = () => {
-  const { account, chainId, active, error, activate } = useWeb3React();
+  const dispatch = useAppDispatch();
+  const { account, chainId, active, error, activate, library } = useWeb3React();
+  const [balanceUSDC, setBalanceUSDC] = useState('');
+
+  useEffect(() => {
+    const getBalance = async () => {
+      const contractUSDC = getContract(USDC, library, chainId!);
+      const balance = await contractUSDC!.methods.balanceOf(account).call();
+      const truncatedBalance = (parseInt(balance) / 1e6).toFixed(2);
+      setBalanceUSDC(truncatedBalance);
+    };
+    if (library && chainId) {
+      getBalance();
+    }
+  }, [library, account, chainId]);
 
   const truncateWalletAddress = (
     address: string,
@@ -17,7 +34,18 @@ const Header = () => {
   };
 
   const tryActivation = async () => {
-    activate(injected, undefined, true);
+    activate(
+      injected,
+      (error) =>
+        dispatch(
+          uiActions.setNotification({
+            display: true,
+            message: error.message,
+            type: 'error',
+          })
+        ),
+      false
+    );
   };
 
   return (
@@ -41,7 +69,13 @@ const Header = () => {
               <li className='nav-item'>
                 <button type='button' className='btn btn-secondary'>
                   {chainId === 1 && 'Ethereum'}
+                  {chainId === 3 && 'Ropsten'}
                   {(chainId === 1337 || chainId === 5777) && 'Ganache'}
+                </button>
+              </li>
+              <li className='nav-item'>
+                <button type='button' className='btn btn-secondary'>
+                  {balanceUSDC} USDC
                 </button>
               </li>
               <li className='nav-item'>

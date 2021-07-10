@@ -1,17 +1,17 @@
-import useEagerConnect from './hooks/useEagerConnect';
-import useInactiveListener from './hooks/useInactiveListener';
 import Header from './components/UI/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Web3ReactManager from './components/Web3/Web3ReactManager';
+import Notification from './components/UI/Notification';
+import useInitWeb3 from './hooks/useInitWeb3';
+import { useAppSelector } from './store/hooks';
 
 function App() {
-  const triedEager = useEagerConnect();
-  useInactiveListener(!triedEager);
+  useInitWeb3();
+  const display = useAppSelector((state) => state.ui.display);
 
   return (
     <div>
       <Header />
-      <Web3ReactManager />
+      {display && <Notification />}
     </div>
   );
 }

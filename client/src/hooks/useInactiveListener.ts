@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
+import { useAppDispatch } from '../store/hooks';
+import { uiActions } from '../store/ui-slice';
 
 import { injected } from '../utils/web3React';
 
 const useInactiveListener = (suppress: boolean = false) => {
   const { active, error, activate } = useWeb3React();
+  const dispatch = useAppDispatch();
 
   useEffect((): any => {
     const { ethereum } = window as any;
@@ -42,7 +45,16 @@ const useInactiveListener = (suppress: boolean = false) => {
         }
       };
     }
-  }, [active, error, suppress, activate]);
+    if (!error) {
+      dispatch(
+        uiActions.setNotification({
+          display: false,
+          message: null,
+          type: null,
+        })
+      );
+    }
+  }, [active, error, suppress, activate, dispatch]);
 };
 
 export default useInactiveListener;
