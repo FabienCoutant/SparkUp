@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.6;
-pragma experimental ABIEncoderV2;
+pragma abicoder v2;
 
 contract Campaign {
 
@@ -12,10 +12,12 @@ contract Campaign {
     }
 
     address private manager;
+    bool private isDelete;
     Info private CampaignInfo;
 
     //Events
     event CampaignInfoUpdated(Info CampaignInfo);
+    event CampaignDisabled();
 
     //Modifiers
     modifier dataValidation(Info memory data){
@@ -26,21 +28,28 @@ contract Campaign {
         _;
     }
 
+    modifier isNotDelete(){
+        require(!isDelete,"!Err: Deleted");
+        _;
+    }
+
     modifier onlyManager(){
         require(msg.sender==manager,"!Not Authorized");
         _;
     }
+
+
     constructor(Info memory newCampaignData) dataValidation(newCampaignData){
         manager = msg.sender;
         _setCampaignInfo(newCampaignData);
     }
 
-    function updateInfo(Info memory updatedCampaignData) external onlyManager() dataValidation(updatedCampaignData){
+    function updateInfo(Info memory updatedCampaignData) external isNotDelete() onlyManager() dataValidation(updatedCampaignData){
         _setCampaignInfo(updatedCampaignData);
         emit CampaignInfoUpdated(CampaignInfo);
     }
 
-    function _setCampaignInfo(Info memory newCampaignData)private{
+    function _setCampaignInfo(Info memory newCampaignData) private{
         Info storage c = CampaignInfo;
         c.title = newCampaignData.title;
         c.description = newCampaignData.description;
@@ -50,5 +59,11 @@ contract Campaign {
     function getCampaignInfo() external view returns (Info memory){
         return CampaignInfo;
     }
-
+    function getIsDelete() external view returns(bool){
+        return isDelete;
+    }
+    function deleteCampaign() external isNotDelete() onlyManager(){
+        isDelete=true;
+        emit CampaignDisabled();
+    }
 }
