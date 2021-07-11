@@ -12,6 +12,7 @@ contract("Campaign", (accounts) => {
 		deadLine: 0
 	};
 	let CampaignContractInstance;
+
 	beforeEach(async () => {
 		const currentTime = await time.latest();
 		initialCampaignInfo.deadLine = parseInt(currentTime.add(time.duration.days(30))); // add 30*24*60*60 = 2592000 seconds
@@ -60,7 +61,7 @@ contract("Campaign", (accounts) => {
 			), "!Err: DeadLine to short");
 		});
 	});
-	describe("--- Update ---", async () => {
+	xdescribe("--- Update ---", async () => {
 		it("should revert if not manager update the campaign", async () => {
 			const updatedData = {
 				...initialCampaignInfo, title: "Updated"
