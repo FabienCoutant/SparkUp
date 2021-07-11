@@ -1,0 +1,30 @@
+@font-face {
+  font-family: 'SuperFats';
+  src: url('../src/assets/fonts/Superfats-6PRM.ttf');
+}
+
+body,
+html,
+#root {
+  height: 100%;
+  margin: 0;
+  background-color: #393e46;
+  color: white;
+}
+
+.navbar {
+  background-color: #222831;
+  color: white;
+}
+
+.card-header {
+  background-color: #222831;
+}
+
+.card-body {
+  background-color: #222831;
+}
+
+.navbar-brand {
+  font-family: 'SuperFats';
+}
