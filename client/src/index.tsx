@@ -6,11 +6,14 @@ import { Web3ReactProvider } from '@web3-react/core';
 import { getLibrary } from './utils/web3React';
 import { Provider } from 'react-redux';
 import store from './store/index';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getLibrary}>
     <Provider store={store}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   </Web3ReactProvider>,
   document.getElementById('root')

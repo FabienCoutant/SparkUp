@@ -5,6 +5,9 @@ import { uiActions } from '../../store/ui-slice';
 import { getContract } from '../../utils/web3React';
 import USDC from '../../contracts/USDC.json';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -51,7 +54,12 @@ const Header = () => {
   return (
     <nav className='navbar navbar-expand-lg navbar-light'>
       <div className='container-fluid'>
-        <h2 className='brand mb-0'>SparkUp</h2>
+        <div
+          className='navbar-brand mb-0'
+          style={{ color: 'white', fontSize: '30px' }}
+        >
+          SparkUp
+        </div>
         <button
           className='navbar-toggler'
           type='button'
@@ -64,31 +72,44 @@ const Header = () => {
           <span className='navbar-toggler-icon'></span>
         </button>
         <div className='collapse navbar-collapse' id='navbarSupportedContent'>
-          {active && !error && (
-            <ul className='navbar-nav ms-auto mb-2 mb-lg-0 gap-3'>
-              <li className='nav-item'>
-                <button type='button' className='btn btn-secondary'>
-                  {chainId === 1 && 'Ethereum'}
-                  {chainId === 3 && 'Ropsten'}
-                  {(chainId === 1337 || chainId === 5777) && 'Ganache'}
+          <ul className='navbar-nav ms-auto mb-2 mb-lg-0'>
+            <li className='nav-item'>
+              <Link
+                to='/createcampaign'
+                style={{ textDecoration: 'none', color: 'white' }}
+              >
+                <button type='button' className='btn btn-secondary gap-2'>
+                  <FontAwesomeIcon icon={faPlus} size='xs' />
+                  <span> </span>Create Campaign
                 </button>
-              </li>
-              <li className='nav-item'>
-                <button type='button' className='btn btn-secondary'>
-                  {balanceUSDC} USDC
-                </button>
-              </li>
-              <li className='nav-item'>
-                <button type='button' className='btn btn-secondary'>
-                  {account !== null &&
-                    account !== undefined &&
-                    truncateWalletAddress(account)}
-                </button>
-              </li>
-            </ul>
-          )}
-          {!active && (
-            <ul className='navbar-nav ms-auto mb-2 mb-lg-0 gap-3'>
+              </Link>
+            </li>
+          </ul>
+          <ul className='navbar-nav ms-auto mb-2 mb-lg-0 gap-3'>
+            {active && !error && (
+              <>
+                <li className='nav-item'>
+                  <button type='button' className='btn btn-secondary'>
+                    {chainId === 1 && 'Ethereum'}
+                    {chainId === 3 && 'Ropsten'}
+                    {(chainId === 1337 || chainId === 5777) && 'Ganache'}
+                  </button>
+                </li>
+                <li className='nav-item'>
+                  <button type='button' className='btn btn-secondary'>
+                    {balanceUSDC} USDC
+                  </button>
+                </li>
+                <li className='nav-item'>
+                  <button type='button' className='btn btn-secondary'>
+                    {account !== null &&
+                      account !== undefined &&
+                      truncateWalletAddress(account)}
+                  </button>
+                </li>
+              </>
+            )}
+            {!active && (
               <li className='nav-item'>
                 <button
                   type='button'
@@ -98,8 +119,8 @@ const Header = () => {
                   Connect
                 </button>
               </li>
-            </ul>
-          )}
+            )}
+          </ul>
         </div>
       </div>
     </nav>
