@@ -2,68 +2,103 @@
 pragma solidity 0.8.6;
 pragma abicoder v2;
 
-contract Campaign {
+import "./interfaces/ICampaign.sol";
 
-    struct Info {
-        string title;
-        string description;
-        uint256 fundingGoal;
-        uint256 deadLine;
-    }
+contract Campaign is ICampaign {
+//    struct Rewards {
+//        string title;
+//        string description;
+//        bool isStockLimited;
+//        uint256 stockLimit;
+//        uint256 nbContributors;
 
-    address private manager;
-    bool private isDelete;
-    Info private CampaignInfo;
+//        mapping(address => uint) contributorsList;
+//    }
+//
+//    struct  Info  {
+//        string title;
+//        string description;
+//        uint256 fundingGoal;
+//        uint256 durationDays;
+//    }
 
-    //Events
-    event CampaignInfoUpdated(Info CampaignInfo);
+    uint256 public createAt;
+    uint256 public lastUpdatedAt;
+    address public manager;
+    bool public isDisabled;
+    Info public campaignInfo;
+    Rewards[] public rewardsList;
+
+    //    Events
+    event CampaignInfoUpdated();
+    event newCampaign();
     event CampaignDisabled();
 
     //Modifiers
-    modifier dataValidation(Info memory data){
-        require(bytes(data.title).length>0,"!Err: Title empty");
-        require(bytes(data.description).length>0,"!Err: Description empty");
-        require(data.fundingGoal>=100,"!Err: Funding Goal not enough");
-        require(data.deadLine>=(block.timestamp + 7 days),"!Err: DeadLine to short");
-        _;
-    }
-
-    modifier isNotDelete(){
-        require(!isDelete,"!Err: Deleted");
+    modifier isNotDisabled(){
+        require(!isDisabled, "!Err: Disabled");
         _;
     }
 
     modifier onlyManager(){
-        require(msg.sender==manager,"!Not Authorized");
+        require(msg.sender == manager, "!Not Authorized");
         _;
     }
 
-
-    constructor(Info memory newCampaignData) dataValidation(newCampaignData){
+    constructor(Info memory infoData, Rewards[] memory rewardsData)
+    {
+        require(rewardsData.length>0,"!Err: Rewards empty");
         manager = msg.sender;
-        _setCampaignInfo(newCampaignData);
+        createAt = block.timestamp;
+        _setCampaignInfo(infoData);
+//        _setCampaignReward(rewardsData[0]);
+        for(uint8 i=0;i<rewardsData.length;i++){
+            _setCampaignReward(rewardsData[i]);
+        }
+        emit newCampaign();
     }
 
-    function updateInfo(Info memory updatedCampaignData) external isNotDelete() onlyManager() dataValidation(updatedCampaignData){
-        _setCampaignInfo(updatedCampaignData);
-        emit CampaignInfoUpdated(CampaignInfo);
+    function updateAllInfoData(Info memory updatedInfoData) external override isNotDisabled() onlyManager() {
+        _setCampaignInfo(updatedInfoData);
+        emit CampaignInfoUpdated();
     }
 
-    function _setCampaignInfo(Info memory newCampaignData) private{
-        Info storage c = CampaignInfo;
-        c.title = newCampaignData.title;
-        c.description = newCampaignData.description;
-        c.fundingGoal = newCampaignData.fundingGoal;
-        c.deadLine = newCampaignData.deadLine;
+    function _setCampaignInfo(Info memory data) private {
+        require(bytes(data.title).length > 0, "!Err: Title empty");
+        require(bytes(data.description).length > 0, "!Err: Description empty");
+        require(data.fundingGoal >= 100, "!Err: Funding Goal not enough");
+        require(createAt + data.durationDays * 1 days >= block.timestamp + 7 days, "!Err: durationDays to short");
+        campaignInfo.title = data.title;
+        campaignInfo.description = data.description;
+        campaignInfo.fundingGoal = data.fundingGoal;
+        campaignInfo.durationDays = data.durationDays;
     }
-    function getCampaignInfo() external view returns (Info memory){
-        return CampaignInfo;
+
+    function _setCampaignReward(Rewards memory data) private{
+        require(bytes(data.title).length > 0, "!Err: Title empty");
+        require(bytes(data.description).length > 0, "!Err: Description empty");
+        Rewards memory r;
+        r.title=data.title;
+        r.description=data.description;
+        r.minimumContribution=data.minimumContribution;
+        r.stockLimit=data.stockLimit;
+        r.nbContributors=data.nbContributors;
+        r.isStockLimited=data.isStockLimited;
+        rewardsList.push(r);
+//        rewardsList.push(Rewards(data.title,data.description,data.minimumContribution,data.stockLimit,data.nbContributors,data.isStockLimited));
     }
-    function getIsDelete() external view returns(bool){
-        return isDelete;
-    }
-    function deleteCampaign() external isNotDelete() onlyManager(){
-        isDelete=true;
+
+    function deleteCampaign() external override isNotDisabled() onlyManager() {
+        isDisabled = true;
         emit CampaignDisabled();
     }
+
+    function updateManager(address newManager) external override onlyManager() {
+        manager = newManager;
+    }
+
+    function getRewardsList() external view returns(Rewards[] memory){
+        return rewardsList;
+    }
+
 }
