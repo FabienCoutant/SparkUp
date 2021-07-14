@@ -11,29 +11,38 @@ contract("Campaign", (accounts) => {
 		fundingGoal: 1000,
 		durationDays: 30
 	};
-	const initialRewards=[
+	const initialRewards = [
 		{
-			title:"First rewards",
-			description:"level1",
-			minimumContribution:100,
-			stockLimit:0,
-			nbContributors:0,
-			amount:0,
-			isStockLimited:false
+			title: "First rewards",
+			description: "level1",
+			minimumContribution: 100,
+			stockLimit: 0,
+			nbContributors: 0,
+			amount: 0,
+			isStockLimited: false
 		},
 		{
-			title:"Second rewards",
-			description:"level2",
-			minimumContribution:5,
-			stockLimit:10,
-			nbContributors:0,
-			amount:0,
-			isStockLimited:true
+			title: "Second rewards",
+			description: "level2",
+			minimumContribution: 5,
+			stockLimit: 1000,
+			nbContributors: 0,
+			amount: 0,
+			isStockLimited: true
 		}
 	];
+	const newReward = {
+		title: "Third rewards",
+		description: "level3",
+		minimumContribution: 150,
+		stockLimit: 100,
+		nbContributors: 0,
+		amount: 0,
+		isStockLimited: true
+	}
 	let CampaignContractInstance;
 
-	xdescribe("--- Info Creation ---", async () => {
+	describe("--- Info Creation ---", async () => {
 		it("should allow manager to create a campaign with title, description, amount to raise and durationDays", async () => {
 			CampaignContractInstance = await CampaignContract.new(
 				initialCampaignInfo,
@@ -81,18 +90,16 @@ contract("Campaign", (accounts) => {
 			), "!Err: durationDays to short");
 		});
 	});
-	describe("--- Rewards creation ---",async ()=>{
-		it("should allow manager to create a campaign with rewards",async ()=>{
-			// console.log("initialRewards",initialRewards)
+	describe("--- Rewards creation ---", async () => {
+		it("should allow manager to create a campaign with rewards", async () => {
 			CampaignContractInstance = await CampaignContract.new(
 				initialCampaignInfo,
 				initialRewards,
 				{from: manager}
 			);
-			const RewardsInfo = await CampaignContractInstance.getRewardsList();
-			console.log(RewardsInfo);
-			expect(RewardsInfo[0].title).to.be.equal(initialRewards[0].title);
-			expect(RewardsInfo[0].description).to.be.equal(initialRewards[0].description);
+			const RewardsInfo = await CampaignContractInstance.rewardsList(0);
+			expect(RewardsInfo.title).to.be.equal(initialRewards[0].title);
+			expect(RewardsInfo.description).to.be.equal(initialRewards[0].description);
 		});
 		it("should revert if no rewards is defined", async () => {
 			await expectRevert(CampaignContract.new(
@@ -102,8 +109,8 @@ contract("Campaign", (accounts) => {
 			), "!Err: Rewards empty");
 		});
 		it("should revert if title is empty", async () => {
-			const badRewardsInfo = initialRewards.map(reward=>{
-				return {...reward, title:""};
+			const badRewardsInfo = initialRewards.map(reward => {
+				return {...reward, title: ""};
 			});
 			await expectRevert(CampaignContract.new(
 				initialCampaignInfo,
@@ -112,8 +119,8 @@ contract("Campaign", (accounts) => {
 			), "!Err: Title empty");
 		});
 		it("should revert if description is empty", async () => {
-			const badRewardsInfo = initialRewards.map(reward=>{
-				return {...reward, description:""};
+			const badRewardsInfo = initialRewards.map(reward => {
+				return {...reward, description: ""};
 			});
 			await expectRevert(CampaignContract.new(
 				initialCampaignInfo,
@@ -121,8 +128,22 @@ contract("Campaign", (accounts) => {
 				{from: manager}
 			), "!Err: Description empty");
 		});
+		it("should revert if not manager try to add a reward",async ()=>{
+			await expectRevert(CampaignContractInstance.addReward(newReward,{from:alice}),"!Not Authorized");
+		});
+		it("should add a new reward and emit event",async ()=>{
+			const initialRewardNb = await CampaignContractInstance.rewardsCounter();
+			const receipt= await CampaignContractInstance.addReward(newReward,{from:manager});
+			expectEvent(receipt,"CampaignNewRewardsAdded",{
+				rewardsCounter:initialRewardNb.add(new BN(1))
+			});
+			const afterRewardNb = await CampaignContractInstance.rewardsCounter();
+			expect(afterRewardNb).to.be.bignumber.equal(initialRewardNb.add(new BN(1)));
+			const RewardsInfo = await CampaignContractInstance.rewardsList(afterRewardNb);
+			expect(RewardsInfo.title).to.be.equal(newReward.title);
+		});
 	});
-	xdescribe("--- Update Info ---", async () => {
+	describe("--- Update Info ---", async () => {
 		beforeEach(async () => {
 			CampaignContractInstance = await CampaignContract.new(
 				initialCampaignInfo,
@@ -199,7 +220,54 @@ contract("Campaign", (accounts) => {
 			expectEvent(receipt, "CampaignInfoUpdated");
 		});
 	});
-	xdescribe("--- Disabled ---", async () => {
+	describe("--- Update Rewards ---", async () => {
+		beforeEach(async () => {
+			// console.log(initialRewards);
+			CampaignContractInstance = await CampaignContract.new(
+				initialCampaignInfo,
+				initialRewards,
+				{from: manager}
+			);
+
+		});
+		it("should revert if not manager try to update All rewards", async () => {
+			const newRewardsInfo = initialRewards.map(a => ({...a}));
+			newRewardsInfo[0].title = "Updated";
+			await expectRevert(CampaignContractInstance.updateAllRewardsData(newRewardsInfo, {from: alice}), "!Not Authorized");
+		});
+		it("should update rewards list for manager", async () => {
+			const newRewardsInfo = initialRewards.map(a => ({...a}));
+			newRewardsInfo[0].title = "Updated";
+			const receipt = await CampaignContractInstance.updateAllRewardsData(newRewardsInfo, {from: manager});
+			expectEvent(receipt, "CampaignRewardsUpdated");
+			const RewardsInfo = await CampaignContractInstance.rewardsList(0);
+			expect(RewardsInfo.title).to.be.equal(newRewardsInfo[0].title);
+		});
+		it("should revert if reward has empty title", async () => {
+			const badRewardsInfo = initialRewards.map(a => ({...a}));
+			badRewardsInfo[1].title = "";
+			await expectRevert(CampaignContractInstance.updateAllRewardsData(badRewardsInfo, {from: manager}), "!Err: Title empty");
+		});
+		it("should revert if reward has empty description", async () => {
+			const badRewardsInfo = initialRewards.map(a => ({...a}));
+			badRewardsInfo[1].description = "";
+			await expectRevert(CampaignContractInstance.updateAllRewardsData(badRewardsInfo, {from: manager}), "!Err: Description empty");
+		});
+		it("should revert if update the rewards at index that not exist", async () => {
+			const newRewardsInfo = initialRewards.map(a => ({...a}));
+			newRewardsInfo[0].title = "Updated";
+			await expectRevert(CampaignContractInstance.updateRewardData(newRewardsInfo[0],10, {from: manager}), "!Err: Index not exist");
+		});
+		it("should update the reward at index 1 and emit event", async () => {
+			const newRewardsInfo = initialRewards.map(a => ({...a}));
+			newRewardsInfo[0].title = "Updated";
+			const receipt =await CampaignContractInstance.updateRewardData(newRewardsInfo[0],1, {from: manager});
+			expectEvent(receipt,"CampaignRewardsUpdated");
+			const RewardsInfo = await CampaignContractInstance.rewardsList(1);
+			expect(RewardsInfo.title).to.be.equal(newRewardsInfo[0].title);
+		});
+	});
+	describe("--- Disabled ---", async () => {
 		beforeEach(async () => {
 			CampaignContractInstance = await CampaignContract.new(
 				initialCampaignInfo,

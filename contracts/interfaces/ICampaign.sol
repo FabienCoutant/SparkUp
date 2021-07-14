@@ -2,6 +2,7 @@
 pragma solidity 0.8.6;
 
 interface ICampaign {
+
     struct Rewards {
         string title;
         string description;
@@ -10,7 +11,6 @@ interface ICampaign {
         uint256 stockLimit;
         uint256 nbContributors;
         bool isStockLimited;
-//        mapping(address => uint) contributorsList;
     }
 
     struct Info {
@@ -22,9 +22,13 @@ interface ICampaign {
 
     function updateAllInfoData(Info memory updatedInfoData) external;
 
-//    function setReward(uint256 rewardIndex, Rewards memory newRewardData) public;
-//
-//    function updateAllRewardsData(uint256 rewardIndex, Rewards[] memory newRewardsData) external;
+    function addReward(Rewards memory newRewardData) external;
+
+    function updateAllRewardsData(Rewards[] memory newRewardsData) external;
+
+    function updateRewardData( Rewards memory newRewardData,uint256 rewardIndex) external;
+
+    function deleteReward(uint256 rewardIndex) external;
 
     function deleteCampaign() external;
 
