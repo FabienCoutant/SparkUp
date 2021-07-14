@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core';
-import { injected } from '../../utils/web3React';
+import { injected } from '../../connectors';
 import { useAppDispatch } from '../../store/hooks';
 import { uiActions } from '../../store/ui-slice';
 import { getContract } from '../../utils/web3React';

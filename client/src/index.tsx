@@ -2,20 +2,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Web3ReactProvider } from '@web3-react/core';
+import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core';
 import { getLibrary } from './utils/web3React';
 import { Provider } from 'react-redux';
 import store from './store/index';
 import { BrowserRouter } from 'react-router-dom';
 
+const Web3ProviderNetwork = createWeb3ReactRoot('NETWORK');
+
 ReactDOM.render(
-  <Web3ReactProvider getLibrary={getLibrary}>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </Web3ReactProvider>,
+  <Provider store={store}>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <Web3ProviderNetwork getLibrary={getLibrary}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Web3ProviderNetwork>
+    </Web3ReactProvider>
+  </Provider>,
   document.getElementById('root')
 );
 

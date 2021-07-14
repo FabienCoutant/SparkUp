@@ -4,8 +4,10 @@ import Notification from './components/UI/Notification';
 import useInitWeb3 from './hooks/useInitWeb3';
 import { useAppSelector } from './store/hooks';
 import CreateCampaign from './components/Campaigns/CreateCampaign';
-import { Route } from 'react-router-dom';
-
+import { Route, Switch } from 'react-router-dom';
+import Web3ReactManager from './components/Web3ReactManager/Web3ReactManager';
+import CreateRewards from './components/Campaigns/CreateRewards';
+import ConfirmCampaign from './components/Campaigns/ConfirmCampaign';
 function App() {
   useInitWeb3();
   const display = useAppSelector((state) => state.ui.display);
@@ -14,10 +16,22 @@ function App() {
     <>
       <Header />
       <div className='container'>
-        {display && <Notification />}
-        <Route path='/createcampaign'>
-          <CreateCampaign />
-        </Route>
+        <Web3ReactManager>
+          <>
+            {display && <Notification />}
+            <Switch>
+              <Route path='/createcampaign' exact>
+                <CreateCampaign />
+              </Route>
+              <Route path='/createcampaign/rewards' exact>
+                <CreateRewards />
+              </Route>
+              <Route path='/createcampaign/confirm' exact>
+                <ConfirmCampaign />
+              </Route>
+            </Switch>
+          </>
+        </Web3ReactManager>
       </div>
     </>
   );
