@@ -1,7 +1,9 @@
 # dependencies
 .idea
+*.DS_Store
 /node_modules
 .env
 
-.travis
-
+#Code coverage
+/coverage
+coverage.json
