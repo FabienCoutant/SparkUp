@@ -1,7 +1,8 @@
-SparkUp
-==============
-____
+#SparkUp
+
 Alyra's 2021 Final Project.
+
+---
 
 ## Contents
 * [Technical Specifications](#Technical-Specifications)
@@ -52,7 +53,6 @@ This part list the development languages and libraries used during the project
 * Ethereum Mainnet
 
 
----
 
 ## Concept
 
@@ -70,7 +70,6 @@ In case of a **unsuccessful fundraising** :
 
 * each backer is authorized to withdraw their contribution
 
----
 
 ## Installation
 
@@ -83,7 +82,6 @@ In case of a **unsuccessful fundraising** :
 
 Then move to the configuration part.
 
----
 ## Configuration
 
 ### Environment Parameters
@@ -130,18 +128,15 @@ You will first need to deploy the back-end (solidity files) and then the front.
 * Local Deployment : move into the client folder and run `npm run start` and then open your browser at the following url : https://localhost:3000/ 
 * Ropsten : to interact with our DApp and smart-contract use the following url : 
 
----
+
 ## Tests
 
 TODO
 
----
 ## Events
 
 TODO
 
-
----
 
 ## Contributors
 
