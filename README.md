@@ -4,7 +4,7 @@ ____
 Alyra's 2021 Final Project.
 
 ## Contents
-* [Technical Specifications](#Technical Specifications)
+* [Technical Specifications](#Technical-Specifications)
   * [Back-end](#Back-end)
   * [Front-end](#Front-end)
   * [Framework](#Framework)
@@ -13,18 +13,18 @@ Alyra's 2021 Final Project.
 * [Concept](#concept)
 * [Installation](#Installation)
 * [Configuration](#Configuration)
-  * [Environment Parameters](#Environment Parameters)
+  * [Environment Parameters](#Environment-Parameters)
     * [Back-end](#Back-end) 
     * [Front-end](#Front-end) 
   * [Deployment](#Deployment)
     * [Back-end](#Back-end)
     * [Front-end](#Front-end)
-* [Run Front-end](#Run Front-end)
+* [Run Front-end](#Run-Front-end)
 * [Tests](#Tests)
 * [Events](#Events)
 * [Contributors](#Contributors)
 
-##Technical Specifications
+## Technical Specifications
 ___
 
 This part list the development languages and libraries used during the project
