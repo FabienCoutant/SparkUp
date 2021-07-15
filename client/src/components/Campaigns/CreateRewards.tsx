@@ -1,9 +1,8 @@
-import { useState } from 'react';
 import Reward from './Reward';
-import { Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { reward } from '../../store/reward-slice';
 import { rewardActions } from '../../store/reward-slice';
+import NextButton from '../UI/NextButton';
 const CreateRewards = () => {
   const dispatch = useAppDispatch();
   const rewards = useAppSelector((state) => state.reward.rewards);
@@ -30,14 +29,7 @@ const CreateRewards = () => {
           Add Reward
         </button>
       </div>
-      <Link
-        to='/createcampaign/confirm'
-        style={{ textDecoration: 'none', color: 'white' }}
-      >
-        <button type='submit' className='btn btn-primary'>
-          Next
-        </button>
-      </Link>
+      <NextButton route='/createcampaign/confirm' disabled={false} />
     </div>
   );
 };

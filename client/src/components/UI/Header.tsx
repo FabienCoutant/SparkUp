@@ -6,8 +6,6 @@ import { getContract } from '../../utils/web3React';
 import USDC from '../../contracts/USDC.json';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -54,12 +52,14 @@ const Header = () => {
   return (
     <nav className='navbar navbar-expand-lg navbar-light'>
       <div className='container-fluid'>
-        <div
-          className='navbar-brand mb-0'
-          style={{ color: 'white', fontSize: '30px' }}
-        >
-          SparkUp
-        </div>
+        <Link to='/' style={{ textDecoration: 'none', color: 'white' }}>
+          <div
+            className='navbar-brand mb-0'
+            style={{ color: 'white', fontSize: '30px' }}
+          >
+            SparkUp
+          </div>
+        </Link>
         <button
           className='navbar-toggler'
           type='button'
@@ -72,19 +72,6 @@ const Header = () => {
           <span className='navbar-toggler-icon'></span>
         </button>
         <div className='collapse navbar-collapse' id='navbarSupportedContent'>
-          <ul className='navbar-nav ms-auto mb-2 mb-lg-0'>
-            <li className='nav-item'>
-              <Link
-                to='/createcampaign'
-                style={{ textDecoration: 'none', color: 'white' }}
-              >
-                <button type='button' className='btn btn-secondary gap-2'>
-                  <FontAwesomeIcon icon={faPlus} size='xs' />
-                  <span> </span>Create Campaign
-                </button>
-              </Link>
-            </li>
-          </ul>
           <ul className='navbar-nav ms-auto mb-2 mb-lg-0 gap-3'>
             {active && !error && (
               <>

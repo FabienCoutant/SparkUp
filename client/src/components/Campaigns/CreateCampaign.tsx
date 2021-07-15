@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { campaignActions } from '../../store/campaign-slice';
-import { Link } from 'react-router-dom';
 import Campaign from './Campaign';
-const CreateCampaign = () => {
+import NextButton from '../UI/NextButton';
+const CreateCampaign = (props?: { showNextButton: boolean }) => {
   const campaignTitleRef = useRef<HTMLInputElement>(null);
   const campaignDescriptionRef = useRef<HTMLTextAreaElement>(null);
   const campaignFundingGoalRef = useRef<HTMLInputElement>(null);
@@ -117,26 +117,14 @@ const CreateCampaign = () => {
       {confirmed && (
         <div className='mt-3'>
           <Campaign />
-          <button
-            className='btn btn-primary mt-3'
-            onClick={modifyCampaignHandler}
-          >
+          <button className='btn btn-primary' onClick={modifyCampaignHandler}>
             Modify Campaign
           </button>
         </div>
       )}
-      <Link
-        to='/createcampaign/rewards'
-        style={{ textDecoration: 'none', color: 'white' }}
-      >
-        <button
-          type='submit'
-          className='btn btn-primary mt-3'
-          disabled={!confirmed}
-        >
-          Next
-        </button>
-      </Link>
+      {props?.showNextButton && (
+        <NextButton route='/createcampaign/rewards' disabled={!confirmed} />
+      )}
     </>
   );
 };
