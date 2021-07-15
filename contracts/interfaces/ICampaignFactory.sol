@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.6;
 
-import "../Campaign.sol";
+import "../interfaces/ICampaign.sol";
+
 interface ICampaignFactory {
 
-    function createCampaign(Campaign.Info memory campaignData) external;
+    function createCampaign(ICampaign.Info memory infoData,ICampaign.Rewards[] memory rewardsData) external;
 
-    function deleteCampaign() external;
+    function deleteCampaign() external returns(bool);
 
-    function updateManager(address _newManager) external;
-
+    function updateOwner() external;
 
 }
