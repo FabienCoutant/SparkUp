@@ -2,7 +2,6 @@
 
 Alyra's 2021 Final Project.
 
----
 
 ## Contents
 * [Technical Specifications](#Technical-Specifications)
