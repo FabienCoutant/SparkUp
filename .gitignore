@@ -1,6 +1,7 @@
 # dependencies
 .idea
-
 /node_modules
 .env
+
+.travis
 

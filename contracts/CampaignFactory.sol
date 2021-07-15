@@ -33,7 +33,6 @@ contract CampaignFactory is ICampaignFactory {
 
     function deleteCampaign() public override returns(bool){
         require(contractExist[msg.sender], "!Err: Not exist");
-        //ne pas swap sur last elem
         uint _indexToSwap = contractIndex[msg.sender];
         if(_indexToSwap != getLastDeployedCampaignsIndex()){
             deployedCampaigns[_indexToSwap] = deployedCampaigns[getLastDeployedCampaignsIndex()];

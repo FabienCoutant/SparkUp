@@ -7,7 +7,12 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "coverage": "npx truffle run coverage ; (cat coverage/lcov.info | npx coveralls)"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FabienCoutant/SparkUp.git"
   },
   "keywords": [],
   "author": "",
