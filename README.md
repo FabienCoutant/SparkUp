@@ -25,7 +25,6 @@ Alyra's 2021 Final Project.
 * [Contributors](#Contributors)
 
 ## Technical Specifications
-___
 
 This part list the development languages and libraries used during the project
 
@@ -53,8 +52,9 @@ This part list the development languages and libraries used during the project
 * Ethereum Mainnet
 
 
+---
+
 ## Concept
-___
 
 **SparkUp** is a DApp with the goal of decentralizing the way of crowdfunding work and also to improve the funding
 process. We believe that backers and creators must keep a link between them after fundraising. To do so, we developed a
@@ -70,8 +70,10 @@ In case of a **unsuccessful fundraising** :
 
 * each backer is authorized to withdraw their contribution
 
+---
+
 ## Installation
-___
+
 
 * Install npm
 * Clone this repository where you want : `git clone https://github.com/FabienCoutant/SparkUp.git`
@@ -81,9 +83,8 @@ ___
 
 Then move to the configuration part.
 
-## Configuration
-
 ---
+## Configuration
 
 ### Environment Parameters
 
@@ -129,21 +130,21 @@ You will first need to deploy the back-end (solidity files) and then the front.
 * Local Deployment : move into the client folder and run `npm run start` and then open your browser at the following url : https://localhost:3000/ 
 * Ropsten : to interact with our DApp and smart-contract use the following url : 
 
+---
 ## Tests
 
----
 TODO
 
+---
 ## Events
 
----
 TODO
 
 
+---
 
 ## Contributors
 
----
 
 - [Rayane Loutfi](https://github.com/RayXpub)
 - [Fabien Coutant](https://github.com/FabienCoutant)
