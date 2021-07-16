@@ -12,7 +12,12 @@ html,
   margin: 0;
   background-color: #393e46;
   color: white;
-  display: block;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 #root {
@@ -42,8 +47,7 @@ html,
   background-color: #222831;
   color: white;
   position: absolute;
-  bottom: 0;
-  display: block;
+  margin-top: auto;
   width: 100%;
 }
 

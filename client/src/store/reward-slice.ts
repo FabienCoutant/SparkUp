@@ -35,6 +35,14 @@ const rewardSlice = createSlice({
         state.rewards.push(action.payload);
       }
     },
+    removeReward(state, action: PayloadAction<{ id: number }>) {
+      const tempRewards = state.rewards.slice(action.payload.id + 1);
+      tempRewards.forEach((reward) => {
+        reward.id--;
+      });
+      const newReward = [...state.rewards, ...tempRewards];
+      state.rewards = newReward;
+    },
   },
 });
 

@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { campaignActions } from '../../store/campaign-slice';
+import { uiActions } from '../../store/ui-slice';
 import Campaign from './Campaign';
 import NextButton from '../UI/NextButton';
 const CreateCampaign = (props?: { showNextButton: boolean }) => {
@@ -11,11 +12,19 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
 
   const dispatch = useAppDispatch();
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [fundingGoal, setFundingGoal] = useState(0);
-  const [deadline, setDeadline] = useState<Date | null>(null);
+  // const [title, setTitle] = useState('');
+  // const [description, setDescription] = useState('');
+  // const [fundingGoal, setFundingGoal] = useState(0);
+  // const [deadline, setDeadline] = useState<Date | null>(null);
   const confirmed = useAppSelector((state) => state.campaign.confirmed);
+
+  const isValidDate = (date: string) => {
+    var myDateStr = new Date(date);
+    if (!isNaN(myDateStr.getMonth())) {
+      return true;
+    }
+    return false;
+  };
   const campaignSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (
@@ -24,16 +33,58 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
       null !== campaignFundingGoalRef.current &&
       null !== campaignDeadlineRef.current
     ) {
-      setTitle(campaignTitleRef.current.value);
-      setDescription(campaignDescriptionRef.current.value);
-      setFundingGoal(parseInt(campaignFundingGoalRef.current.value));
-      setDeadline(new Date(campaignDeadlineRef.current.value));
-      dispatch(campaignActions.setConfirmed({ confirmed: true }));
+      const title = campaignTitleRef.current.value;
+      const description = campaignDescriptionRef.current.value;
+      const fundingGoal = parseInt(campaignFundingGoalRef.current.value);
+      const deadline = campaignDeadlineRef.current.value;
 
-      campaignTitleRef.current.value = '';
-      campaignDescriptionRef.current.value = '';
-      campaignFundingGoalRef.current.value = '';
-      campaignDeadlineRef.current.value = 'jj/mm/aaa';
+      if (title === '') {
+        dispatch(
+          uiActions.setNotification({
+            display: true,
+            message: 'Please enter a title for your campaign!',
+            type: 'alert',
+          })
+        );
+      } else if (description === '') {
+        dispatch(
+          uiActions.setNotification({
+            display: true,
+            message: 'Please enter a description for your campaign!',
+            type: 'alert',
+          })
+        );
+      } else if (fundingGoal < 10000 || isNaN(fundingGoal)) {
+        dispatch(
+          uiActions.setNotification({
+            display: true,
+            message: 'Your funding goal must be at least 10 000 USDC!',
+            type: 'alert',
+          })
+        );
+      } else if (new Date(deadline) === null) {
+        dispatch(
+          uiActions.setNotification({
+            display: true,
+            message: 'Please enter a deadline for your campaign!',
+            type: 'alert',
+          })
+        );
+      } else {
+        dispatch(
+          campaignActions.setCampaign({
+            title,
+            description,
+            fundingGoal,
+            deadline: new Date(deadline),
+            confirmed: true,
+          })
+        );
+        campaignTitleRef.current.value = '';
+        campaignDescriptionRef.current.value = '';
+        campaignFundingGoalRef.current.value = '';
+        campaignDeadlineRef.current.value = 'jj/mm/aaaa';
+      }
     }
   };
 
@@ -41,24 +92,24 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
     dispatch(campaignActions.setConfirmed({ confirmed: false }));
   };
 
-  useEffect(() => {
-    if (
-      title !== '' &&
-      description !== '' &&
-      fundingGoal !== 0 &&
-      deadline !== null
-    ) {
-      dispatch(
-        campaignActions.setCampaign({
-          title,
-          description,
-          fundingGoal,
-          deadline,
-          confirmed,
-        })
-      );
-    }
-  }, [dispatch, title, description, fundingGoal, deadline, confirmed]);
+  // useEffect(() => {
+  //   if (
+  //     title !== '' &&
+  //     description !== '' &&
+  //     fundingGoal !== 0 &&
+  //     deadline !== null
+  //   ) {
+  //     dispatch(
+  //       campaignActions.setCampaign({
+  //         title,
+  //         description,
+  //         fundingGoal,
+  //         deadline,
+  //         confirmed,
+  //       })
+  //     );
+  //   }
+  // }, [dispatch, title, description, fundingGoal, deadline, confirmed]);
 
   return (
     <>
