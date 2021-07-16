@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "coverage": "npx truffle run coverage ; (cat coverage/lcov.info | npx coveralls)"
+    "coverage": "npx truffle run coverage",
+    "build-doc": "npx solidity-docgen --solc-module solc-0.8 -i ./contracts -o ./docs"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "coveralls": "^3.1.1",
     "dotenv": "^10.0.0",
     "prettier": "^2.3.2",
-    "solidity-coverage": "^0.7.16"
+    "solidity-coverage": "^0.7.16",
+    "solidity-docgen": "^0.5.13"
   }
 }
