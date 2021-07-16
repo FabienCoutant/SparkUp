@@ -27,6 +27,7 @@
     "prettier": "^2.3.2",
     "solc-0.8": "npm:solc@^0.8.6",
     "solidity-coverage": "^0.7.16",
-    "solidity-docgen": "^0.5.13"
+    "solidity-docgen": "^0.5.13",
+    "webpack": "4.44.2"
   }
 }
