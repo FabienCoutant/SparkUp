@@ -80,7 +80,53 @@
 35
 36
 37
-38</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -117,9 +163,60 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: GPL-3.0
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// SPDX-License-Identifier: MIT
 pragma solidity 0.8.6;
 &nbsp;
+/**
+* @title ICampaign
+* @notice The Campaign contract handle the all life of one Campaign. It's generate by the CampaignFactory.
+* @dev Interface for the Campaign contract
+*/
 interface ICampaign {
 &nbsp;
     struct Rewards {
@@ -139,20 +236,61 @@ interface ICampaign {
         uint256 durationDays;
     }
 &nbsp;
+    /**
+     * @notice Update all the information in the struct Info for the campaign.
+     * @dev Only the manager must be able to call it.
+     * @param updatedInfoData Info Object that contains all the new information following the Info struct for the campaign
+     */
     function updateAllInfoData(Info memory updatedInfoData) external;
 &nbsp;
+    /**
+     * @notice Add a new reward level to the campaign.
+     * @dev Only the manager must be able to call it.
+     * @param newRewardData Rewards Object that contains all the needed information following the Rewards struct for the campaign
+     */
     function addReward(Rewards memory newRewardData) external;
 &nbsp;
-    function updateAllRewardsData(Rewards[] memory newRewardsData) external;
+    /**
+     * @notice Update all Rewards by removing each current reward and then adding the new levels.
+     * @dev Only the manager must be able to call it.
+     * @param updatedRewardsData Rewards[] Array of Object that contains all the needed information following the Rewards struct for the campaign
+     */
+    function updateAllRewardsData(Rewards[] memory updatedRewardsData) external;
 &nbsp;
+    /**
+     * @notice Update the data of a specific reward regarding its id.
+     * @dev Only the manager must be able to call it.
+     * @param newRewardData Rewards Object that contains the new data to set following the Rewards struct for the campaign
+     * @param rewardIndex uint256 Index of the reward to update
+     */
     function updateRewardData( Rewards memory newRewardData,uint256 rewardIndex) external;
 &nbsp;
+    /**
+     * @notice Delete a reward by its Id.
+     * @dev Only the manager must be able to call it.
+     * @param rewardIndex uint256 Index of the reward to delete
+     */
     function deleteReward(uint256 rewardIndex) external;
 &nbsp;
+    /**
+     * @notice Delete the campaign.
+     * @dev It's the entry point for deleting a campaign. Only the manager must be able to call it
+     */
     function deleteCampaign() external;
 &nbsp;
+    /**
+     * @notice Allow the manager to setup a new one.
+     * @dev Only the manager must be able to call it.
+     * @param newManager address Address of the new manager
+     */
     function updateManager(address newManager) external;
 &nbsp;
+    /**
+     * @notice Allow the factory to setup a new one in case of migration.
+     * @dev Used for mainly for pointing the right factory during the deletion
+     * @param newFactory address Address of the new factory
+     */
+    function updateFactory(address newFactory) external;
 }
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -160,7 +298,7 @@ interface ICampaign {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jul 16 2021 09:46:15 GMT+0300 (Eastern European Summer Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jul 16 2021 16:23:05 GMT+0300 (Eastern European Summer Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

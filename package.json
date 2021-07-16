@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "coverage": "npx truffle run coverage",
+    "coverage": "npx truffle run coverage ; (cat coverage/lcov.info | npx coveralls)",
     "build-doc": "npx solidity-docgen --solc-module solc-0.8 -i ./contracts -o ./docs -t docs/templates && doctoc ./docs/ --maxlevel 3"
   },
   "repository": {
@@ -28,6 +28,7 @@
     "solc-0.8": "npm:solc@^0.8.6",
     "solidity-coverage": "^0.7.16",
     "solidity-docgen": "^0.5.13",
+    "truffle": "^5.4.1",
     "webpack": "4.44.2"
   }
 }

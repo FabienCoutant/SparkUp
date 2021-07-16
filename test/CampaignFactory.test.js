@@ -1,4 +1,4 @@
-const {expectRevert, expectEvent, ether, time, BN} = require("@openzeppelin/test-helpers");
+const {expectRevert, expectEvent} = require("@openzeppelin/test-helpers");
 const {expect} = require("chai");
 const CampaignFactoryContract = artifacts.require("CampaignFactory");
 const CampaignContract = artifacts.require("Campaign");
@@ -78,7 +78,7 @@ contract("CampaignFactory", (accounts) => {
 		it("should return an array with all campaign address", async () => {
 			await CampaignFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {from: alice});
 			await CampaignFactoryContractInstance.createCampaign(secondInitialCampaignInfo, initialRewards, {from: alice});
-			const deployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaigns();
+			const deployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaignsList();
 			expect(deployedCampaignsList).to.have.lengthOf(2);
 		});
 	});
