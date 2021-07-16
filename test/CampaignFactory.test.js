@@ -50,7 +50,7 @@ contract("CampaignFactory", (accounts) => {
 
 	describe("--- Creation ---", async () => {
 		it("should allow people to create new campaign", async () => {
-			const receipt= await CampaignFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {from: alice});
+			const receipt = await CampaignFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {from: alice});
 			firstCampaignAddress = receipt.logs[0].args.campaignAddress; // get the Campaign created address
 			const contractExist = await CampaignFactoryContractInstance.contractExist(firstCampaignAddress);
 			expect(contractExist).to.be.true;
@@ -74,6 +74,22 @@ contract("CampaignFactory", (accounts) => {
 			expect(campaignInfo.title).to.be.equal(initialCampaignInfo.title);
 			const campaignReward = await firstCampaignContractInstance.rewardsList(0);
 			expect(campaignReward.title).to.be.equal(initialRewards[0].title);
+		});
+		it("should return an array with all campaign address", async () => {
+			await CampaignFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {from: alice});
+			await CampaignFactoryContractInstance.createCampaign(secondInitialCampaignInfo, initialRewards, {from: alice});
+			const deployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaigns();
+			expect(deployedCampaignsList).to.have.lengthOf(2);
+		});
+	});
+	describe("--- Update ---", async () => {
+		it("should allow the owner to set a new owner", async () => {
+			await CampaignFactoryContractInstance.updateOwner(alice, {from: owner});
+			const newOwner = await CampaignFactoryContractInstance.owner();
+			expect(newOwner).to.be.equal(alice);
+		})
+		it("should revert if not owner try to set a new owner",async ()=>{
+			await expectRevert(CampaignFactoryContractInstance.updateOwner(bob,{from:alice}),"!Not Authorized");
 		});
 	});
 	describe("--- Deletion ---", async () => {
@@ -134,6 +150,9 @@ contract("CampaignFactory", (accounts) => {
 		it("should revert if not the manager try to delete it", async () => {
 			await expectRevert(secondCampaignContractInstance.deleteCampaign({from: bob}), "!Not Authorized");
 		});
+		it("should revert if not the contract try to call the delete in the factory", async () => {
+			await expectRevert(CampaignFactoryContractInstance.deleteCampaign({from: bob}), "!Err: Not exist");
+		});
 
 		it("should revert when the manager call a function of a deleted contract", async () => {
 			const receipt = await secondCampaignContractInstance.deleteCampaign({from: alice});
@@ -151,7 +170,7 @@ contract("CampaignFactory", (accounts) => {
 				amount: 0,
 				isStockLimited: true
 			}
-			await expectRevert(secondCampaignContractInstance.addReward(newReward,{from: alice}), "!Err: Disabled");
+			await expectRevert(secondCampaignContractInstance.addReward(newReward, {from: alice}), "!Err: Disabled");
 		});
 	});
 });

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "coverage": "npx truffle run coverage",
-    "build-doc": "npx solidity-docgen --solc-module solc-0.8"
+    "build-doc": "npx solidity-docgen --solc-module solc-0.8 -i ./contracts -o ./docs -t docs/templates && doctoc ./docs/ --maxlevel 3"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
     "@openzeppelin/test-helpers": "^0.5.12",
     "@truffle/hdwallet-provider": "^1.4.1",
     "coveralls": "^3.1.1",
+    "doctoc": "^2.0.1",
     "dotenv": "^10.0.0",
     "prettier": "^2.3.2",
     "solc-0.8": "npm:solc@^0.8.6",

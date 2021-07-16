@@ -268,6 +268,9 @@ contract("Campaign", (accounts) => {
 
 				await expectRevert(CampaignContractInstance.updateAllRewardsData(badRewardsInfo, {from: alice}), "!Err: Title empty");
 			});
+			it("should revert if rewards array is empty title", async () => {
+				await expectRevert(CampaignContractInstance.updateAllRewardsData([], {from: alice}), "!Err: Rewards empty");
+			});
 			it("should revert if reward has empty description", async () => {
 				const badRewardsInfo = initialRewards.map(a => ({...a}));
 				badRewardsInfo[1].description = "";

@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.6;
-pragma abicoder v2;
 
 import "./interfaces/ICampaign.sol";
 import "./interfaces/ICampaignFactory.sol";
@@ -49,17 +48,26 @@ contract Campaign is ICampaign {
         }
     }
 
+    /**
+     * @inheritdoc ICampaign
+     */
     function updateAllInfoData(Info memory updatedInfoData) external override isNotDisabled() onlyManager() {
         _setCampaignInfo(updatedInfoData);
         emit CampaignInfoUpdated();
     }
 
+    /**
+     * @inheritdoc ICampaign
+     */
     function addReward(Rewards memory newRewardData) external override isNotDisabled() onlyManager() {
         rewardsCounter++;
         _setCampaignReward(rewardsCounter, newRewardData);
         emit CampaignNewRewardsAdded(rewardsCounter);
     }
 
+    /**
+     * @inheritdoc ICampaign
+     */
     function updateAllRewardsData(Rewards[] memory updatedRewardsData) external override isNotDisabled() onlyManager {
         require(updatedRewardsData.length > 0, "!Err: Rewards empty");
         for (uint i = 0; i < rewardsCounter; i++) {
@@ -72,12 +80,19 @@ contract Campaign is ICampaign {
         emit CampaignRewardsUpdated();
     }
 
+    /**
+     * @inheritdoc ICampaign
+     */
     function updateRewardData(Rewards memory newRewardData, uint rewardIndex) external override isNotDisabled() onlyManager() {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         _setCampaignReward(rewardIndex, newRewardData);
         emit CampaignRewardsUpdated();
     }
 
+    /**
+    * @notice Internal function that set a new campaign's info and making data validation first.
+    * @param data Info Object that contains the Info data following the Info struct
+    */
     function _setCampaignInfo(Info memory data) private {
         require(bytes(data.title).length > 0, "!Err: Title empty");
         require(bytes(data.description).length > 0, "!Err: Description empty");
@@ -89,6 +104,11 @@ contract Campaign is ICampaign {
         campaignInfo.durationDays = data.durationDays;
     }
 
+    /**
+     * @notice Internal function that set a new campaign's reward level and making data validation first.
+     * @param index uint Index of the reward to add
+     * @param data Rewards Object that contains the Reward data following the Rewards struct
+     */
     function _setCampaignReward(uint index, Rewards memory data) private {
         require(bytes(data.title).length > 0, "!Err: Title empty");
         require(bytes(data.description).length > 0, "!Err: Description empty");
@@ -102,12 +122,18 @@ contract Campaign is ICampaign {
         rewardsList[index] = r;
     }
 
+    /**
+     * @inheritdoc ICampaign
+     */
     function deleteCampaign() external override isNotDisabled() onlyManager() {
         isDisabled = true;
         ICampaignFactory(factory).deleteCampaign();
         emit CampaignDisabled();
     }
 
+    /**
+     * @inheritdoc ICampaign
+     */
     function deleteReward(uint256 rewardIndex) external override isNotDisabled() onlyManager() {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         if(rewardsCounter!=rewardIndex){
@@ -118,11 +144,17 @@ contract Campaign is ICampaign {
         emit CampaignRewardDeleted();
     }
 
+    /**
+     * @inheritdoc ICampaign
+     */
     function updateManager(address newManager) external override onlyManager() {
         manager = newManager;
     }
 
-    function updateFactory(address newFactory) external {
+    /**
+     * @inheritdoc ICampaign
+     */
+    function updateFactory(address newFactory) external override {
         require(factory == msg.sender, "!Err: Not Factory Contract");
         factory = newFactory;
     }
