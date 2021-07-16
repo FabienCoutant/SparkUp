@@ -25,6 +25,7 @@ const campaignSlice = createSlice({
       state.description = action.payload.description;
       state.fundingGoal = action.payload.fundingGoal;
       state.deadline = action.payload.deadline;
+      state.confirmed = action.payload.confirmed;
     },
     setConfirmed(state, action: PayloadAction<{ confirmed: boolean }>) {
       state.confirmed = action.payload.confirmed;

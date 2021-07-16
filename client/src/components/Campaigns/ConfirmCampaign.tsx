@@ -12,14 +12,20 @@ const ConfirmCampaing = () => {
 
   return (
     <>
-      <h1 className='mt-2 mb-5 text-center'>Campaign Summuary</h1>
+      <h1 className='mt-5 mb-5 text-center'>Campaign Summuary</h1>
       <CreateCampaign showNextButton={false} />
       {rewards.map((reward: reward) => {
         return <Reward id={reward.id} key={reward.id} />;
       })}
-      <button className='btn btn-primary mb-3' onClick={submitCampaignHandler}>
-        Submit Campaign
-      </button>
+      <div className='text-center'>
+        <button
+          className='btn btn-primary mb-3'
+          onClick={submitCampaignHandler}
+          style={{ width: '25%' }}
+        >
+          Submit Campaign
+        </button>
+      </div>
     </>
   );
 };

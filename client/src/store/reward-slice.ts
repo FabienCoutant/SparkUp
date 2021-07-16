@@ -35,13 +35,17 @@ const rewardSlice = createSlice({
         state.rewards.push(action.payload);
       }
     },
+    setConfirmed(
+      state,
+      action: PayloadAction<{ id: number; confirmed: boolean }>
+    ) {
+      state.rewards[action.payload.id].confirmed = action.payload.confirmed;
+    },
     removeReward(state, action: PayloadAction<{ id: number }>) {
-      const tempRewards = state.rewards.slice(action.payload.id + 1);
-      tempRewards.forEach((reward) => {
-        reward.id--;
-      });
-      const newReward = [...state.rewards, ...tempRewards];
-      state.rewards = newReward;
+      state.rewards.splice(action.payload.id, 1);
+      for (let i = action.payload.id; i < state.rewards.length; i++) {
+        state.rewards[i].id--;
+      }
     },
   },
 });

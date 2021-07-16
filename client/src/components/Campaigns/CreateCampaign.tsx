@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { campaignActions } from '../../store/campaign-slice';
 import { uiActions } from '../../store/ui-slice';
@@ -18,12 +18,12 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
   // const [deadline, setDeadline] = useState<Date | null>(null);
   const confirmed = useAppSelector((state) => state.campaign.confirmed);
 
-  const isValidDate = (date: string) => {
-    var myDateStr = new Date(date);
-    if (!isNaN(myDateStr.getMonth())) {
-      return true;
+  const isValidDate = (date: Date) => {
+    if (Object.prototype.toString.call(date) === 'Invalid Date') {
+      // it is a date
+      return false;
     }
-    return false;
+    return true;
   };
   const campaignSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,7 +36,7 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
       const title = campaignTitleRef.current.value;
       const description = campaignDescriptionRef.current.value;
       const fundingGoal = parseInt(campaignFundingGoalRef.current.value);
-      const deadline = campaignDeadlineRef.current.value;
+      const deadline = new Date(campaignDeadlineRef.current.value);
 
       if (title === '') {
         dispatch(
@@ -62,7 +62,9 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
             type: 'alert',
           })
         );
-      } else if (new Date(deadline) === null) {
+      } else if (!isValidDate(deadline)) {
+        console.log(deadline);
+        console.log(isValidDate(deadline));
         dispatch(
           uiActions.setNotification({
             display: true,
@@ -91,25 +93,6 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
   const modifyCampaignHandler = () => {
     dispatch(campaignActions.setConfirmed({ confirmed: false }));
   };
-
-  // useEffect(() => {
-  //   if (
-  //     title !== '' &&
-  //     description !== '' &&
-  //     fundingGoal !== 0 &&
-  //     deadline !== null
-  //   ) {
-  //     dispatch(
-  //       campaignActions.setCampaign({
-  //         title,
-  //         description,
-  //         fundingGoal,
-  //         deadline,
-  //         confirmed,
-  //       })
-  //     );
-  //   }
-  // }, [dispatch, title, description, fundingGoal, deadline, confirmed]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { rewardActions } from '../../store/reward-slice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { uiActions } from '../../store/ui-slice';
@@ -7,11 +7,6 @@ const Rewards = (props: { id: number }) => {
   const dispatch = useAppDispatch();
 
   const rewards = useAppSelector((state) => state.reward.rewards);
-
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [value, setValue] = useState(0);
-  const [confirmed, setConfirmed] = useState(false);
 
   const rewardTitleRef = useRef<HTMLInputElement>(null);
   const rewardDescriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -23,57 +18,59 @@ const Rewards = (props: { id: number }) => {
       null !== rewardDescriptionRef.current &&
       null !== rewardValueRef.current
     ) {
-      setTitle(rewardTitleRef.current.value);
-      setDescription(rewardDescriptionRef.current.value);
-      setValue(parseInt(rewardValueRef.current.value));
-      setConfirmed(true);
+      const title = rewardTitleRef.current.value;
+      const description = rewardDescriptionRef.current.value;
+      const value = parseInt(rewardValueRef.current.value);
+
+      if (title === '') {
+        dispatch(
+          uiActions.setNotification({
+            display: true,
+            message: 'Please enter a title for your reward!',
+            type: 'alert',
+          })
+        );
+      } else if (description === '') {
+        dispatch(
+          uiActions.setNotification({
+            display: true,
+            message: 'Please enter a description for your reward!',
+            type: 'alert',
+          })
+        );
+      } else if (value === 0 || isNaN(value)) {
+        dispatch(
+          uiActions.setNotification({
+            display: true,
+            message: 'Your reward value must be greater than 0!',
+            type: 'alert',
+          })
+        );
+      } else {
+        dispatch(
+          rewardActions.addReward({
+            id: props.id,
+            title,
+            description,
+            value,
+            confirmed: true,
+          })
+        );
+      }
     }
   };
 
-  useEffect(() => {
-    if (props.id > 0 && props.id < rewards.length - 1) {
-      if (value <= rewards[props.id - 1].value!) {
-        dispatch(
-          uiActions.setNotification({
-            display: true,
-            message: 'The reward value must be more than the previous one!',
-            type: 'alert',
-          })
-        );
-      }
-      if (value >= rewards[props.id + 1].value!) {
-        dispatch(
-          uiActions.setNotification({
-            display: true,
-            message: 'The reward value must be less than the next one!',
-            type: 'alert',
-          })
-        );
-      }
-    }
-    if (title !== '' && description !== '' && value !== 0 && confirmed) {
-      dispatch(
-        rewardActions.addReward({
-          id: props.id,
-          title,
-          description,
-          value,
-          confirmed,
-        })
-      );
-    }
-  }, [dispatch, props.id, title, description, value, confirmed, rewards]);
-
   const changeRewardHandler = () => {
     dispatch(
-      rewardActions.addReward({
+      rewardActions.setConfirmed({
         id: props.id,
-        title,
-        description,
-        value,
         confirmed: false,
       })
     );
+  };
+
+  const removeRewardHandler = () => {
+    dispatch(rewardActions.removeReward({ id: props.id }));
   };
 
   return (
@@ -139,7 +136,7 @@ const Rewards = (props: { id: number }) => {
               </button>
               <button
                 className='btn btn-primary ms-3'
-                onClick={changeRewardHandler}
+                onClick={removeRewardHandler}
                 disabled={rewards.length < 2}
               >
                 Remove Reward
