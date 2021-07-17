@@ -22,7 +22,7 @@ export const getContract = (
     );
   }
   if (type === 'LOCAL') {
-    const deployedNetwork = contractJSON.networks[chainId.toString()];
+    const deployedNetwork = contractJSON.networks[chainId];
     contract = new library.eth.Contract(
       contractJSON.abi,
       deployedNetwork && deployedNetwork.address
