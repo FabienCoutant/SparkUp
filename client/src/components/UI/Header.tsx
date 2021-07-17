@@ -2,27 +2,26 @@ import { useWeb3React } from '@web3-react/core';
 import { injected } from '../../connectors';
 import { useAppDispatch } from '../../store/hooks';
 import { uiActions } from '../../store/ui-slice';
-import { getContract } from '../../utils/web3React';
-import USDC from '../../contracts/USDC.json';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useContractUSDC } from '../../hooks/useContract';
 
 const Header = () => {
   const dispatch = useAppDispatch();
-  const { account, chainId, active, error, activate, library } = useWeb3React();
+  const { account, chainId, active, error, activate } = useWeb3React();
   const [balanceUSDC, setBalanceUSDC] = useState('');
+  const contractUSDC = useContractUSDC();
 
   useEffect(() => {
     const getBalance = async () => {
-      const contractUSDC = getContract(USDC, library, chainId!);
       const balance = await contractUSDC!.methods.balanceOf(account).call();
       const truncatedBalance = (parseInt(balance) / 1e6).toFixed(2);
       setBalanceUSDC(truncatedBalance);
     };
-    if (library && chainId) {
+    if (chainId && chainId !== 1337) {
       getBalance();
     }
-  }, [library, account, chainId]);
+  }, [account, chainId, contractUSDC]);
 
   const truncateWalletAddress = (
     address: string,

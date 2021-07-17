@@ -39,3 +39,20 @@ export const USDC_CONTRACTS: { [key: string]: string } = {
   '1': '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   '3': '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
 };
+
+export interface Info {
+  title: string;
+  description: string;
+  fundingGoal: number;
+  durationDays: number;
+}
+
+export interface Rewards {
+  title: string;
+  description: string;
+  minimumContribution: number;
+  amount: number;
+  stockLimit: number;
+  nbContributors: number;
+  isStockLimited: boolean;
+}

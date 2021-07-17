@@ -6,7 +6,11 @@ const Footer = () => {
     <div className='footer-basic'>
       <footer>
         <div className='social'>
-          <a href='#'>
+          <a
+            href='https://github.com/FabienCoutant/SparkUp'
+            target='_blank'
+            rel='noreferrer'
+          >
             <Github />
           </a>
           <a href='#'>
@@ -14,21 +18,11 @@ const Footer = () => {
           </a>
         </div>
         <ul className='list-inline'>
-          <li className='list-inline-item'>
-            <a href='#'>Home</a>
-          </li>
-          <li className='list-inline-item'>
-            <a href='#'>Services</a>
-          </li>
-          <li className='list-inline-item'>
-            <a href='#'>About</a>
-          </li>
-          <li className='list-inline-item'>
-            <a href='#'>Terms</a>
-          </li>
-          <li className='list-inline-item'>
-            <a href='#'>Privacy Policy</a>
-          </li>
+          <li className='list-inline-item'>Home</li>
+          <li className='list-inline-item'>Services</li>
+          <li className='list-inline-item'>About</li>
+          <li className='list-inline-item'>Terms</li>
+          <li className='list-inline-item'>Privacy Policy</li>
         </ul>
         <p className='copyright'>Company Name © 2021</p>
       </footer>

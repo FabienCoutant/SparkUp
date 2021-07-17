@@ -4,7 +4,10 @@ export interface reward {
   id: number;
   title: string | null;
   description: string | null;
-  value: number | null;
+  minimumContribution: number | null;
+  amount: number | null;
+  stockLimit: number | null;
+  isStockLimited: boolean | null;
   confirmed: boolean | null;
 }
 
@@ -18,7 +21,10 @@ const initialState: rewardState = {
       id: 0,
       title: null,
       description: null,
-      value: null,
+      minimumContribution: null,
+      amount: null,
+      stockLimit: null,
+      isStockLimited: null,
       confirmed: false,
     },
   ],

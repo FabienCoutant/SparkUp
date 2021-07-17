@@ -6,17 +6,28 @@ export const getLibrary = (provider: any) => {
 };
 
 export const getContract = (
-  contractABI: any,
+  contractJSON: any,
   library: Web3,
-  chainId: number
+  chainId: number,
+  type: string
 ) => {
-  if (!contractABI) {
+  if (!contractJSON) {
     return;
   }
-  const contract = new library.eth.Contract(
-    contractABI,
-    USDC_CONTRACTS[chainId.toString()]
-  );
+  let contract;
+  if (type === 'USDC') {
+    contract = new library.eth.Contract(
+      contractJSON,
+      USDC_CONTRACTS[chainId.toString()]
+    );
+  }
+  if (type === 'LOCAL') {
+    const deployedNetwork = contractJSON.networks[chainId.toString()];
+    contract = new library.eth.Contract(
+      contractJSON.abi,
+      deployedNetwork && deployedNetwork.address
+    );
+  }
 
   return contract;
 };
