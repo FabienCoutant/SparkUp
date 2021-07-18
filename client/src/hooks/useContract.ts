@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
-import { getContract } from '../utils/web3React';
+import { getContract, getTestContract } from '../utils/web3React';
 import { useWeb3React } from '@web3-react/core';
 import USDC from '../contracts/USDC.json';
 import CampaignFactory from '../contracts/CampaignFactory.json';
+import Campaign from '../contracts/Campaign.json';
 
 export const useContractUSDC = () => {
   const { library, chainId } = useWeb3React();
@@ -17,7 +18,7 @@ export const useContractUSDC = () => {
   }, [chainId, library]);
 };
 
-export function useContractCampaignFactory() {
+export const useContractCampaignFactory = () => {
   const { library, chainId } = useWeb3React();
   return useMemo(() => {
     if (!library || !chainId) return null;
@@ -28,4 +29,17 @@ export function useContractCampaignFactory() {
       return null;
     }
   }, [chainId, library]);
-}
+};
+
+// export const useContractCampaign = (address: string) => {
+//   const { library, chainId } = useWeb3React();
+//   return useMemo(() => {
+//     if (!library || !chainId) return null;
+//     try {
+//       return getTestContract(Campaign, library, address);
+//     } catch (error) {
+//       console.error('Failed to get contract', error);
+//       return null;
+//     }
+//   }, [chainId, library, address]);
+// };

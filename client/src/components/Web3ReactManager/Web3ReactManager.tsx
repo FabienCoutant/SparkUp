@@ -54,7 +54,6 @@ export default function Web3ReactManager({
   if (!active && networkError) {
     dispatch(
       uiActions.setNotification({
-        display: true,
         message: networkError.message,
         type: 'error',
       })

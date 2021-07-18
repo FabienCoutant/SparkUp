@@ -14,7 +14,6 @@ const useInitWeb3 = () => {
   if (error) {
     dispatch(
       uiActions.setNotification({
-        display: true,
         message: error.message,
         type: 'error',
       })

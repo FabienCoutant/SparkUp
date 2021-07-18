@@ -17,7 +17,6 @@ const Rewards = (props: { id: number }) => {
     if (isStockLimited === null) {
       dispatch(
         uiActions.setNotification({
-          display: true,
           message:
             'Please indicate if there is an inventory limit for this reward!',
           type: 'alert',
@@ -43,7 +42,6 @@ const Rewards = (props: { id: number }) => {
       if (title === '') {
         dispatch(
           uiActions.setNotification({
-            display: true,
             message: 'Please enter a title for your reward!',
             type: 'alert',
           })
@@ -51,7 +49,6 @@ const Rewards = (props: { id: number }) => {
       } else if (description === '') {
         dispatch(
           uiActions.setNotification({
-            display: true,
             message: 'Please enter a description for your reward!',
             type: 'alert',
           })
@@ -59,7 +56,6 @@ const Rewards = (props: { id: number }) => {
       } else if (minimumContribution === 0 || isNaN(minimumContribution)) {
         dispatch(
           uiActions.setNotification({
-            display: true,
             message: 'Your reward value must be greater than 0!',
             type: 'alert',
           })
@@ -67,7 +63,6 @@ const Rewards = (props: { id: number }) => {
       } else if (isStockLimited && (stockLimit === 0 || isNaN(stockLimit))) {
         dispatch(
           uiActions.setNotification({
-            display: true,
             message: 'Please enter an inventory reward greater than 0!',
             type: 'alert',
           })
