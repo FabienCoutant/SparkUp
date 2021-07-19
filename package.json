@@ -7,9 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npx truffle test",
+    "test": "bash ./scripts/run_tests.sh",
     "coverage": "npx truffle run coverage",
-    "gas": "REPORT_GAS=true CI=true npm run test",
+    "gas": "CI=true npm run test",
     "build-doc": "npx solidity-docgen --solc-module solc-0.8 -i ./contracts -o ./docs -t docs/templates && doctoc ./docs/ --maxlevel 3"
   },
   "homepage": "https://github.com/FabienCoutant/SparkUp#readme",
@@ -32,10 +32,12 @@
     "doctoc": "^2.0.1",
     "dotenv": "^10.0.0",
     "eth-gas-reporter": "^0.2.22",
+    "ganache-cli": "^6.12.2",
     "prettier": "^2.3.2",
     "solc-0.8": "npm:solc@^0.8.6",
     "solidity-coverage": "^0.7.16",
     "solidity-docgen": "^0.5.13",
+    "truffle": "^5.4.1",
     "webpack": "4.44.2"
   }
 }
