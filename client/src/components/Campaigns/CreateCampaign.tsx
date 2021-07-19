@@ -41,7 +41,6 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
       if (title === '') {
         dispatch(
           uiActions.setNotification({
-            display: true,
             message: 'Please enter a title for your campaign!',
             type: 'alert',
           })
@@ -49,7 +48,6 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
       } else if (description === '') {
         dispatch(
           uiActions.setNotification({
-            display: true,
             message: 'Please enter a description for your campaign!',
             type: 'alert',
           })
@@ -57,7 +55,6 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
       } else if (fundingGoal < 10000 || isNaN(fundingGoal)) {
         dispatch(
           uiActions.setNotification({
-            display: true,
             message: 'Your funding goal must be at least 10 000 USDC!',
             type: 'alert',
           })
@@ -67,7 +64,6 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
         console.log(isValidDate(deadline));
         dispatch(
           uiActions.setNotification({
-            display: true,
             message: 'Please enter a deadline for your campaign!',
             type: 'alert',
           })
@@ -150,7 +146,7 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
       )}
       {confirmed && (
         <div className='mt-3'>
-          <Campaign />
+          <Campaign campaign={null} />
           <button className='btn btn-primary' onClick={modifyCampaignHandler}>
             Modify Campaign
           </button>

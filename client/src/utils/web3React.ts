@@ -16,10 +16,7 @@ export const getContract = (
   }
   let contract;
   if (type === 'USDC') {
-    contract = new library.eth.Contract(
-      contractJSON,
-      USDC_CONTRACTS[chainId.toString()]
-    );
+    contract = new library.eth.Contract(contractJSON, USDC_CONTRACTS[chainId]);
   }
   if (type === 'LOCAL') {
     const deployedNetwork = contractJSON.networks[chainId];
@@ -28,6 +25,20 @@ export const getContract = (
       deployedNetwork && deployedNetwork.address
     );
   }
+
+  return contract;
+};
+
+export const getTestContract = (
+  contractJSON: any,
+  library: Web3,
+  address: string
+) => {
+  if (!contractJSON) {
+    return;
+  }
+  let contract;
+  contract = new library.eth.Contract(contractJSON.abi, address);
 
   return contract;
 };

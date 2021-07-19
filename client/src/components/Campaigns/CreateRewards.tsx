@@ -14,7 +14,6 @@ const CreateRewards = () => {
     if (!campaign.confirmed) {
       dispatch(
         uiActions.setNotification({
-          display: true,
           message: 'You must confirm a campaign to access this page!',
           type: 'error',
         })

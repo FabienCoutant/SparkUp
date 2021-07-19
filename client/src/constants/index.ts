@@ -44,7 +44,7 @@ export interface Info {
   title: string;
   description: string;
   fundingGoal: number;
-  durationDays: number;
+  durationDays: number | Date;
 }
 
 export interface Rewards {

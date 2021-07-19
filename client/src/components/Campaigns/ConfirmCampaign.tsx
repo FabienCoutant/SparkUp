@@ -20,7 +20,6 @@ const ConfirmCampaing = () => {
     if (!campaign.confirmed || !rewards[0].confirmed) {
       dispatch(
         uiActions.setNotification({
-          display: true,
           message:
             'You must confirm a campaign and its rewards to access this page!',
           type: 'error',
