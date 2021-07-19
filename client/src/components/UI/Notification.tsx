@@ -7,9 +7,7 @@ const Notification = () => {
   const message = useAppSelector((state) => state.ui.message);
   const type = useAppSelector((state) => state.ui.type);
   const dismissAlert = () => {
-    dispatch(
-      uiActions.setNotification({ display: false, message: null, type: null })
-    );
+    dispatch(uiActions.hideNotification());
   };
 
   return (

@@ -16,10 +16,16 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    setNotification(state, action: PayloadAction<uiState>) {
-      state.display = action.payload.display;
+    setNotification(
+      state,
+      action: PayloadAction<{ message: string; type: string }>
+    ) {
+      state.display = true;
       state.message = action.payload.message;
       state.type = action.payload.type;
+    },
+    hideNotification(state) {
+      state.display = false;
     },
   },
 });

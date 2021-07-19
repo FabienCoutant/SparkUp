@@ -1,6 +1,7 @@
 import { useAppSelector } from '../../store/hooks';
+import { Info } from '../../constants/index';
 
-const Campaign = () => {
+const Campaign = (props: { campaign: Info | null }) => {
   const campaign = useAppSelector((state) => state.campaign);
 
   return (
@@ -14,14 +15,14 @@ const Campaign = () => {
             Campaign Title :
           </label>
           <h5 className='card-title list-inline-item' id='campaignTitle'>
-            {campaign.title}
+            {props.campaign ? props?.campaign.title : campaign.title}
           </h5>
         </div>
         <label htmlFor='campaignDescription' className='form-label'>
           Campaign Description :
         </label>
         <p className='card-text' id='campaingDescription'>
-          {campaign.description}
+          {props.campaign ? props?.campaign.description : campaign.description}
         </p>
         <div className='list-inline'>
           <label
@@ -34,7 +35,9 @@ const Campaign = () => {
             className='card-subtitle mb-2 list-inline-item'
             id='campaignFundingGoal'
           >
-            {campaign.fundingGoal}
+            {props.campaign
+              ? props?.campaign.fundingGoal
+              : campaign.fundingGoal}
           </h6>
         </div>
         <div className='list-inline'>
@@ -48,7 +51,9 @@ const Campaign = () => {
             className='card-subtitle mb-2 list-inline-item'
             id='campaignDeadline'
           >
-            {campaign.deadline?.toDateString()}
+            {props.campaign
+              ? props?.campaign.durationDays
+              : campaign.deadline?.toDateString()}
           </h6>
         </div>
       </div>

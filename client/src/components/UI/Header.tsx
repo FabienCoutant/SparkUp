@@ -39,7 +39,6 @@ const Header = () => {
       (error) =>
         dispatch(
           uiActions.setNotification({
-            display: true,
             message: error.message,
             type: 'error',
           })
