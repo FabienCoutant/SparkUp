@@ -32,7 +32,6 @@ export const getContract = (
 export const getTestContract = (
   contractJSON: any,
   library: Web3,
-  chainId: number,
   address: string
 ) => {
   if (!contractJSON) {
