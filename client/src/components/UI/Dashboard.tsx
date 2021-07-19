@@ -4,14 +4,14 @@ import { useContractCampaignFactory } from '../../hooks/useContract';
 import { useState, useEffect } from 'react';
 import { Info } from '../../constants/index';
 import { useWeb3React } from '@web3-react/core';
-import { getTestContract } from '../../utils/web3React';
-import Campaign from '../Campaigns/Campaign';
-import CampaignJSON from '../../contracts/Campaign.json';
+import Campaign from '../Campaigns/Creation/Campaign';
+import { getCampaignInfo } from '../../utils/web3React';
 
 const Dashboard = () => {
   const contractCampaignFactory = useContractCampaignFactory();
   const { library, chainId } = useWeb3React();
   const [campaigns, setCampaigns] = useState<Info[]>([]);
+  const [campaignAddress, setCampaignAddress] = useState<string[]>([]);
 
   useEffect(() => {
     if (contractCampaignFactory && chainId && library) {
@@ -21,25 +21,13 @@ const Dashboard = () => {
           campaignAddress = await contractCampaignFactory.methods
             .getDeployedCampaignsList()
             .call();
+          setCampaignAddress(campaignAddress);
         } catch (error) {
           console.log(error);
         }
 
-        const campaigns: Info[] = [];
+        const campaigns = await getCampaignInfo(campaignAddress, library);
 
-        for (const campaign of campaignAddress) {
-          try {
-            const contract = getTestContract(CampaignJSON, library, campaign);
-            const campaignInfo = await contract?.methods.campaignInfo().call();
-            const creationDate = await contract?.methods.createAt().call();
-            const deadline = new Date(creationDate * 1000).toDateString();
-            campaignInfo.durationDays = deadline;
-            campaigns.push(campaignInfo);
-          } catch (error) {
-            console.error('Failed to get contract', error);
-            return null;
-          }
-        }
         setCampaigns(campaigns);
       };
       getCampaigns();
@@ -60,7 +48,13 @@ const Dashboard = () => {
       <h1 className='mt-3'>Campaigns</h1>
       {campaigns.length > 0 &&
         campaigns.map((campaign) => (
-          <Campaign campaign={campaign} key={campaigns.indexOf(campaign)} />
+          <>
+            <Campaign
+              campaign={campaign}
+              key={campaigns.indexOf(campaign)}
+              address={campaignAddress[campaigns.indexOf(campaign)]}
+            />
+          </>
         ))}
     </div>
   );

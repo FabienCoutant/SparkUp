@@ -1,10 +1,10 @@
 import Reward from './Reward';
 import { useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { reward } from '../../store/reward-slice';
-import { rewardActions } from '../../store/reward-slice';
-import { uiActions } from '../../store/ui-slice';
-import NextButton from '../UI/NextButton';
+import { useAppSelector, useAppDispatch } from '../../../store/hooks';
+import { reward } from '../../../store/reward-slice';
+import { rewardActions } from '../../../store/reward-slice';
+import { uiActions } from '../../../store/ui-slice';
+import NextButton from '../../UI/NextButton';
 const CreateRewards = () => {
   const dispatch = useAppDispatch();
   const campaign = useAppSelector((state) => state.campaign);

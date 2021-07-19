@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { useAppSelector, useAppDispatch } from '../../../store/hooks';
 import CreateCampaign from './CreateCampaign';
 import Reward from './Reward';
-import { reward } from '../../store/reward-slice';
+import { reward } from '../../../store/reward-slice';
 import { useWeb3React } from '@web3-react/core';
-import { uiActions } from '../../store/ui-slice';
-import { Info, Rewards } from '../../constants';
-import { useContractCampaignFactory } from '../../hooks/useContract';
+import { uiActions } from '../../../store/ui-slice';
+import { Info, Rewards } from '../../../constants';
+import { useContractCampaignFactory } from '../../../hooks/useContract';
 
 const ConfirmCampaing = () => {
   const dispatch = useAppDispatch();

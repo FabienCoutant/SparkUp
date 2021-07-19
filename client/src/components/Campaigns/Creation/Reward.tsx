@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
-import { rewardActions } from '../../store/reward-slice';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { uiActions } from '../../store/ui-slice';
+import { rewardActions } from '../../../store/reward-slice';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { uiActions } from '../../../store/ui-slice';
 
 const Rewards = (props: { id: number }) => {
   const dispatch = useAppDispatch();

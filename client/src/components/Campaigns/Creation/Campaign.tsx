@@ -1,7 +1,8 @@
-import { useAppSelector } from '../../store/hooks';
-import { Info } from '../../constants/index';
+import { useAppSelector } from '../../../store/hooks';
+import { Info } from '../../../constants/index';
+import { Link } from 'react-router-dom';
 
-const Campaign = (props: { campaign: Info | null }) => {
+const Campaign = (props: { campaign: Info | null; address: string | null }) => {
   const campaign = useAppSelector((state) => state.campaign);
 
   return (
@@ -56,6 +57,16 @@ const Campaign = (props: { campaign: Info | null }) => {
               : campaign.deadline?.toDateString()}
           </h6>
         </div>
+        {props.campaign && (
+          <Link
+            to={`/campaign-details/:${props.address}`}
+            style={{ textDecoration: 'none', color: 'white' }}
+          >
+            <button type='button' className='btn btn-primary gap-2'>
+              More
+            </button>
+          </Link>
+        )}
       </div>
     </div>
   );

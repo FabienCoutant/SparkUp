@@ -1,9 +1,9 @@
 import { useRef } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { campaignActions } from '../../store/campaign-slice';
-import { uiActions } from '../../store/ui-slice';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { campaignActions } from '../../../store/campaign-slice';
+import { uiActions } from '../../../store/ui-slice';
 import Campaign from './Campaign';
-import NextButton from '../UI/NextButton';
+import NextButton from '../../UI/NextButton';
 const CreateCampaign = (props?: { showNextButton: boolean }) => {
   const campaignTitleRef = useRef<HTMLInputElement>(null);
   const campaignDescriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -146,7 +146,7 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
       )}
       {confirmed && (
         <div className='mt-3'>
-          <Campaign campaign={null} />
+          <Campaign campaign={null} address={null} />
           <button className='btn btn-primary' onClick={modifyCampaignHandler}>
             Modify Campaign
           </button>
