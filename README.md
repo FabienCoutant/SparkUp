@@ -164,7 +164,7 @@ To run the tests you have several options but both need to be launch in the proj
 
 ## Avoiding common attacks
 
-This part is explains in detail [here](#AVOIDING_COMMON_ATTACKS.md)
+This part is explains in detail [here](#./AVOIDING_COMMON_ATTACKS.md)
 
 ## Events
 
