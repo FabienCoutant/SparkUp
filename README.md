@@ -1,4 +1,5 @@
-# SparkUp
+# SparkUp 
+[![Coverage Status](https://coveralls.io/repos/github/FabienCoutant/SparkUp/badge.svg?branch=master)](https://coveralls.io/github/FabienCoutant/SparkUp?branch=master)
 
 Alyra's 2021 Final Project.
 

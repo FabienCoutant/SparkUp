@@ -41,7 +41,6 @@ contract("Campaign", (accounts) => {
 		isStockLimited: true
 	}
 	let CampaignContractInstance;
-
 	describe("--- Info Creation ---", async () => {
 		it("should allow manager to create a campaign with title, description, amount to raise and durationDays", async () => {
 			CampaignContractInstance = await CampaignContract.new(

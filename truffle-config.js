@@ -31,6 +31,12 @@ module.exports = {
       network_id: 1,
     },
   },
+  mocha: {
+    reporter: 'eth-gas-reporter',
+    reporterOptions: {
+      excludeContracts: ['Migrations']
+    }
+  },
   compilers: {
     solc: {
       version: '0.8.6', // Fetch exact version from solc-bin (default: truffle's version)
@@ -45,5 +51,5 @@ module.exports = {
       },
     },
   },
-  plugins: ['solidity-coverage'],
+  plugins: ["solidity-coverage"]
 };
