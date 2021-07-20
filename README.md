@@ -47,7 +47,7 @@ In case of a **unsuccessful fundraising** :
 
 ## Design pattern decisions
 
-This part is explains in detail [here](#DESIGN_PATTERN_DECISIONS.md)
+This part is explains in detail [here](DESIGN_PATTERN_DECISIONS.md)
 
 ## Technical Specifications
 
@@ -138,7 +138,8 @@ You will first need to deploy the back-end (solidity files) and then the front.
     * Ropsten Deployment : `npm truffle deploy --reset --network ropsten`
     * Ethereum Deployment : `npm truffle deploy --reset --network mainnet`
 
-:white_check_mark: Take not that our smart-contracts are deployed on Ropsten at the addresses defined [here](#DEPLOYED_ADDRESSES.md)
+:white_check_mark: Take not that our smart-contracts are deployed on Ropsten at the addresses defined 
+[here](DEPLOYED_ADDRESSES.md)
 
 * #### Front End
   * Local Deployment : move into the client folder and run `npm run start` and then open your browser at the following url : https://localhost:3000/
@@ -147,7 +148,8 @@ You will first need to deploy the back-end (solidity files) and then the front.
 
 ## Tests
 
-The solidity part has been tested following the TDD approach. More details on what has been tested and why explained [here](#TESTS_EXPLANATIONS.md).
+The solidity part has been tested following the TDD approach. More details on what has been tested and why explained
+[here](TESTS_EXPLANATIONS.md).
 To run the tests you have several options but both need to be launch in the project's root folder :
 * Using the truffle commands on local (ganache on port **7545**) or testnet :
   * If you installed truffle globally : `truffle test`
@@ -164,7 +166,7 @@ To run the tests you have several options but both need to be launch in the proj
 
 ## Avoiding common attacks
 
-This part is explains in detail [here](#/AVOIDING_COMMON_ATTACKS.md)
+This part is explains in detail [here](AVOIDING_COMMON_ATTACKS.md)
 
 ## Events
 
