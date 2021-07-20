@@ -1,7 +1,15 @@
 # Deployed Addresses
 
-## Front-end
-TODO
+## DApp (Front-end)
 
-## Back-end
-TODO
+The Dapp is deployed on [Heroku](#LINK-TO-PROVIDE)
+
+## Solidity (Back-end) on Ropsten
+
+**ContractFactory** : [XXX](#ETHERSCAN-URL)
+
+**Campaign 1** : [XXX](#ETHERSCAN-URL)
+
+**Campaign 2** : [XXX](#ETHERSCAN-URL)
+
+
