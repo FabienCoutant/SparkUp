@@ -6,6 +6,7 @@ Alyra's 2021 Final Project.
 
 ## Contents
 * [Concept](#concept)
+* [Design pattern decisions](#Design-pattern-decisions)
 * [Technical Specifications](#Technical-Specifications)
   * [Front end coding languages](#Front-end-coding-languages)
   * [Front end libraries](#Front-end-libraries)
@@ -24,6 +25,7 @@ Alyra's 2021 Final Project.
     * [Back end](#Back-end)
     * [Front end](#Front-end)
 * [Tests](#Tests)
+* [Avoiding common attacks](#Avoiding-common-attacks)
 * [Events](#Events)
 * [Contributors](#Contributors)
 
@@ -45,7 +47,7 @@ In case of a **unsuccessful fundraising** :
 
 ## Design pattern decisions
 
-This part is explains in detail at [the page](#link)
+This part is explains in detail [here](#DESIGN_PATTERN_DECISIONS.md)
 
 ## Technical Specifications
 
@@ -136,7 +138,7 @@ You will first need to deploy the back-end (solidity files) and then the front.
     * Ropsten Deployment : `npm truffle deploy --reset --network ropsten`
     * Ethereum Deployment : `npm truffle deploy --reset --network mainnet`
 
-:white_check_mark: Take not that our smart-contracts are deployed on Ropsten at the addresses defined in [the page](#link)
+:white_check_mark: Take not that our smart-contracts are deployed on Ropsten at the addresses defined [here](#DEPLOYED_ADDRESSES.md)
 
 * #### Front End
   * Local Deployment : move into the client folder and run `npm run start` and then open your browser at the following url : https://localhost:3000/
@@ -145,7 +147,7 @@ You will first need to deploy the back-end (solidity files) and then the front.
 
 ## Tests
 
-The solidity part has been tested following the TDD approach. [This page](#./tests_explication.md) explains in more detail what has been tested.
+The solidity part has been tested following the TDD approach. More details on what has been tested and why explained [here](#TESTS_EXPLANATIONS.md).
 To run the tests you have several options but both need to be launch in the project's root folder :
 * Using the truffle commands on local (ganache on port **7545**) or testnet :
   * If you installed truffle globally : `truffle test`
@@ -157,8 +159,12 @@ To run the tests you have several options but both need to be launch in the proj
 * Running test with a report of gas consumed by the smart-contracts and each function :
 `npm run gas`
 
-:white_check_mark: Take not that by using CI/CD, we perform tests with **code coverage** and **gas report** for each Pull Request
+:white_check_mark: Take not that by using CI/CD, we perform tests with **code coverage** and **gas report** on each Pull Request
 
+
+## Avoiding common attacks
+
+This part is explains in detail [here](#AVOIDING_COMMON_ATTACKS.md)
 
 ## Events
 
@@ -166,7 +172,6 @@ TODO
 
 
 ## Contributors
-
 
 - [Rayane Loutfi](https://github.com/RayXpub)
 - [Fabien Coutant](https://github.com/FabienCoutant)
