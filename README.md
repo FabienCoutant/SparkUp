@@ -5,54 +5,27 @@ Alyra's 2021 Final Project.
 
 
 ## Contents
+* [Concept](#concept)
 * [Technical Specifications](#Technical-Specifications)
-  * [Back-end](#Back-end)
-  * [Front-end](#Front-end)
+  * [Front end coding languages](#Front-end-coding-languages)
+  * [Front end libraries](#Front-end-libraries)
+  * [Back end coding language](#Back-end-coding-language)
   * [Framework](#Framework)
   * [Versioning](#Versioning)
+  * [Code quality libraries](#Code-quality-libraries)
+  * [Other libraries](#Other-libraries)
   * [Network](#Network)
-* [Concept](#concept)
 * [Installation](#Installation)
 * [Configuration](#Configuration)
   * [Environment Parameters](#Environment-Parameters)
-    * [Back-end](#Back-end) 
-    * [Front-end](#Front-end) 
+    * [Back end](#Back-end-configuration) 
+    * [Front end](#Front-end-configuration) 
   * [Deployment](#Deployment)
-    * [Back-end](#Back-end)
-    * [Front-end](#Front-end)
-* [Run Front-end](#Run-Front-end)
+    * [Back end](#Back-end)
+    * [Front end](#Front-end)
 * [Tests](#Tests)
 * [Events](#Events)
 * [Contributors](#Contributors)
-
-## Technical Specifications
-
-This part list the development languages and libraries used during the project
-
-### Back-end
-* Solidity
-
-### Front-end
-* ReactJs
-* Typescript
-* Redux
-* Redux-toolkit
-* Web3
-* Web3-react
-
-### Framework
-* Truffle unbox React
-
-### Versioning
-* Git
-* Gitflow
-
-### Network
-* Ganache
-* Ropsten
-* Ethereum Mainnet
-
-
 
 ## Concept
 
@@ -70,23 +43,66 @@ In case of a **unsuccessful fundraising** :
 
 * each backer is authorized to withdraw their contribution
 
+## Design pattern decisions
+
+This part is explains in detail at [the page](#link)
+
+## Technical Specifications
+
+This part list the main development languages and libraries used during the project :
+
+### Front end coding languages
+* ReactJs
+* Typescript
+
+### Front end libraries
+* Redux
+* Redux-toolkit
+* Web3
+* Web3-react
+* Bootstrap v5
+
+### Back end coding language
+* Solidity
+
+### Framework
+* Truffle unbox React
+
+### Versioning
+* Git
+* Gitflow
+
+### Code quality libraries
+* Coveralls
+* Solidity-coverage
+* Travis
+* Codechecks
+
+### Other libraries
+* Solidity-docgen
+* Eth-gas-reporter
+
+### Network
+* Ganache
+* Ropsten
+* Ethereum Mainnet
 
 ## Installation
 
-
 * Install npm
+* For local used : install ganache and run it on port **7545** and network ID **1337**
 * Clone this repository where you want : `git clone https://github.com/FabienCoutant/SparkUp.git`
-* Move into the new folder `$cd SparkUp`
+* Move into the new folder `cd SparkUp`
 * Install the dependencies at the project's root folder : `npm install`
 * Install the dependencies for the client site : `npm --prefix client/ install`
 
-Then move to the configuration part.
+Then follow the configuration part.
 
 ## Configuration
 
 ### Environment Parameters
 
-* #### Back-end
+* #### Back end configuration
 
 You must create an **.env** file in the project's root folder. This file must contain your Infura project ID and the
 account's private key which will deploy the project.
@@ -95,8 +111,9 @@ account's private key which will deploy the project.
 PRIVATE_KEYS="YOUR_PRIVATE_KEY"
 INFURA_KEY = "YOUR_INFURA_ID"
 ```
+:white_check_mark: Take not that your value must be surrounded with double quotes.
 
-* #### Front-end
+* #### Front end configuration
 
 You also need to create an **.env** file in the project's client folder. This file only need your Infura project ID as
 below:
@@ -106,32 +123,42 @@ below:
 REACT_APP_INFURA_KEY = "YOUR_INFURA_ID"
 ```
 
-ℹ️ Take not that your value must be surrounded with double quotes.
+:white_check_mark: Take not that your value must be surrounded with double quotes.
 
 ### Deployment
 
 You will first need to deploy the back-end (solidity files) and then the front.
 
-* #### Back-end
+* #### Back end 
   Take not that you need to be at the project's root folder.
 
     * Local Deployment (Ganache) : `npm truffle deploy --reset --network development`
-
     * Ropsten Deployment : `npm truffle deploy --reset --network ropsten`
-      
     * Ethereum Deployment : `npm truffle deploy --reset --network mainnet`
 
-* #### Front-End
-  Nothing to Do
+:white_check_mark: Take not that our smart-contracts are deployed on Ropsten at the addresses defined in [the page](#link)
 
-### Run Front-end
-* Local Deployment : move into the client folder and run `npm run start` and then open your browser at the following url : https://localhost:3000/ 
-* Ropsten : to interact with our DApp and smart-contract use the following url : 
-
+* #### Front End
+  * Local Deployment : move into the client folder and run `npm run start` and then open your browser at the following url : https://localhost:3000/
+  * Ropsten : in order to interact with our DApp and smart-contract use the following url :
+  
 
 ## Tests
 
-TODO
+The solidity part has been tested following the TDD approach. [This page](#./tests_explication.md) explains in more detail what has been tested.
+To run the tests you have several options but both need to be launch in the project's root folder :
+* Using the truffle commands on local (ganache on port **7545**) or testnet :
+  * If you installed truffle globally : `truffle test`
+  * Else : `npx truffle test`
+* Using the command created that launch a shadow ganache already configured :
+`npm run test`
+* Running test with code coverage :
+`npm run coverage`
+* Running test with a report of gas consumed by the smart-contracts and each function :
+`npm run gas`
+
+:white_check_mark: Take not that by using CI/CD, we perform tests with **code coverage** and **gas report** for each Pull Request
+
 
 ## Events
 
