@@ -117,7 +117,7 @@ contract("Campaign",(accounts)=>{
 :seven: We are refactoring our code:
 
 * The check that only the manager is able to call some functions will be used in several part of the contract.
-We then created a modifier that can be call easily :
+We then created a modifier that can be easily reused :
 ```
   modifier onlyManager(){
         require(msg.sender == manager, "!Not Authorized");
@@ -133,7 +133,7 @@ We then created a modifier that can be call easily :
   }
 ```
 
-* adding a reward using the same algorithm as updating a specific reward, all rewards or adding several rewards.
+* adding a reward use the same logic as updating a specific reward, all rewards or adding several rewards.
 That why we are using a single internal function that refactor the logic of add a reward:
 ```
 /**
