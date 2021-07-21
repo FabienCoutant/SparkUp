@@ -22,7 +22,7 @@
 
 * The only external contract used is the official USDC ERC-20 contract. Reentrancy is not possible on this one.
 
-*  We are not using `address.call()` function but ERC-20 transfer() and transferFrom() instead.
+* We are not using `address.call()` function but ERC-20 transfer() and transferFrom() instead.
 
 * We limit the access to certain functionalities thanks to **modifiers** and **workflow**
 
