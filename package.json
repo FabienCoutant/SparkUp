@@ -39,5 +39,8 @@
     "solidity-docgen": "^0.5.13",
     "truffle": "^5.4.1",
     "webpack": "4.44.2"
+  },
+  "dependencies": {
+    "@types/react-router-dom": "^5.1.8"
   }
 }

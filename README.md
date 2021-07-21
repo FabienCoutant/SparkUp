@@ -148,7 +148,7 @@ You will first need to deploy the back-end (solidity files) and then the front.
 
 ## Tests
 
-The solidity part has been tested following the TDD approach. More details on what has been tested and why explained
+The solidity part has been tested following the TDD (**T**est **D**rive **D**evelopment : [reference](https://github.com/acarbone/TDD-Cheat-Sheet)) approach. More details on what has been tested and why explained
 [here](TESTS_EXPLANATIONS.md).
 To run the tests you have several options but both need to be launch in the project's root folder :
 * Using the truffle commands on local (ganache on port **7545**) or testnet :
