@@ -155,7 +155,7 @@ That why we are using a single internal function that refactor the logic of add 
     }  
 ```
 
-:seven: We are running our code coverage in order to check that we tested every line of our smart contracts with :
+:eight: We are running our code coverage in order to check that we tested every line of our smart contracts with :
 `npm run coverage`
 
 **Thanks to TDD and the code coverage, we are sure to code only what we need and also that what we code has been tested.**
