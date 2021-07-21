@@ -138,6 +138,16 @@ contract("Campaign", (accounts) => {
 				{from: factory}
 			), "!Err: Description empty");
 		});
+		it("should revert if rewards array is greater then 10", async () => {
+			//12 rewards
+			const badRewardsInfo = [...initialRewards,...initialRewards,...initialRewards,...initialRewards,...initialRewards,...initialRewards]
+			await expectRevert(CampaignContract.new(
+				initialCampaignInfo,
+				badRewardsInfo,
+				alice,
+				{from: factory}
+			), "!Err: Too much Rewards");
+		});
 	});
 	describe("--- Update Info ---", async () => {
 		beforeEach(async () => {
@@ -264,7 +274,6 @@ contract("Campaign", (accounts) => {
 			it("should revert if reward has empty title", async () => {
 				const badRewardsInfo = initialRewards.map(a => ({...a}));
 				badRewardsInfo[1].title = "";
-
 				await expectRevert(CampaignContractInstance.updateAllRewardsData(badRewardsInfo, {from: alice}), "!Err: Title empty");
 			});
 			it("should revert if rewards array is empty title", async () => {
@@ -275,6 +284,16 @@ contract("Campaign", (accounts) => {
 				badRewardsInfo[1].description = "";
 
 				await expectRevert(CampaignContractInstance.updateAllRewardsData(badRewardsInfo, {from: alice}), "!Err: Description empty");
+			});
+			it("should revert if rewards array is greater then 10", async () => {
+				//12 rewards
+				const badRewardsInfo = [...initialRewards,...initialRewards,...initialRewards,...initialRewards,...initialRewards,...initialRewards]
+				await expectRevert(CampaignContract.new(
+					initialCampaignInfo,
+					badRewardsInfo,
+					alice,
+					{from: factory}
+				), "!Err: Too much Rewards");
 			});
 		});
 		describe("  --- Update specific reward --- ", () => {

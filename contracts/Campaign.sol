@@ -6,15 +6,15 @@ import "./interfaces/ICampaignFactory.sol";
 
 contract Campaign is ICampaign {
 
+    bool public isDisabled;
+    uint8 public rewardsCounter;
     uint256 public createAt;
     uint256 public lastUpdatedAt;
     address public manager;
     address public factory;
-    bool public isDisabled;
 
     Info public campaignInfo;
     mapping(uint => Rewards) public rewardsList;
-    uint256 public rewardsCounter;
 
 
     //    Events
@@ -39,6 +39,7 @@ contract Campaign is ICampaign {
     constructor(Info memory infoData, Rewards[] memory rewardsData, address _manager)
     {
         require(rewardsData.length > 0, "!Err: Rewards empty");
+        require(rewardsData.length <= 10, "!Err: Too much Rewards");
         manager = _manager;
         factory = msg.sender;
         createAt = block.timestamp;
@@ -70,13 +71,16 @@ contract Campaign is ICampaign {
      */
     function updateAllRewardsData(Rewards[] memory updatedRewardsData) external override isNotDisabled() onlyManager {
         require(updatedRewardsData.length > 0, "!Err: Rewards empty");
-        for (uint i = 0; i < rewardsCounter; i++) {
+        require(updatedRewardsData.length <= 10, "!Err: Too much Rewards");
+
+        for (uint8 i = 0; i < rewardsCounter; i++) {
             delete rewardsList[i];
         }
-        rewardsCounter = 0;
-        for (rewardsCounter; rewardsCounter < updatedRewardsData.length; rewardsCounter++) {
-            _setCampaignReward(rewardsCounter, updatedRewardsData[rewardsCounter]);
+        uint8 newRewardsCounter;
+        for (newRewardsCounter; newRewardsCounter < updatedRewardsData.length; newRewardsCounter++) {
+            _setCampaignReward(newRewardsCounter, updatedRewardsData[newRewardsCounter]);
         }
+        rewardsCounter = newRewardsCounter;
         emit CampaignRewardsUpdated();
     }
 
