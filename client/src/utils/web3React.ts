@@ -2,6 +2,7 @@ import Web3 from 'web3';
 import { USDC_CONTRACTS } from '../constants';
 import { Info, Rewards } from '../constants/index';
 import CampaignJSON from '../contracts/Campaign.json';
+import { Web3Provider } from '@ethersproject/providers';
 
 export const getLibrary = (provider: any) => {
   return new Web3(provider);

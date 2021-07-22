@@ -24,7 +24,7 @@ const SUPPORTED_CHAIN_IDS = [
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,
-  defaultChainId: 1,
+  defaultChainId: 1337,
 });
 
 export const injected = new InjectedConnector({

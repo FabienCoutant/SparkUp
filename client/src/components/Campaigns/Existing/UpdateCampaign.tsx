@@ -2,43 +2,41 @@ import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { Info } from '../../../constants';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { getRewardsList } from '../../../utils/web3React';
+import { getCampaignInfo } from '../../../utils/web3React';
 import { useContractCampaign } from '../../../hooks/useContract';
 import CreateCampaign from '../Creation/CreateCampaign';
-import { rewardActions } from '../../../store/reward-slice';
 import { useWeb3React } from '@web3-react/core';
+import { campaignActions } from '../../../store/campaign-slice';
 
 const UpdateCampaign = () => {
   const dispatch = useAppDispatch();
   const campaign = useAppSelector((state) => state.campaign);
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
   const { campaignAddress } = useParams<{ campaignAddress: string }>();
   const contractCampaign = useContractCampaign(campaignAddress);
 
   useEffect(() => {
     if (contractCampaign) {
-      const getRewards = async () => {
-        const rewards = await getRewardsList(contractCampaign);
-        for (const reward of rewards) {
+      const getCampaign = async () => {
+        const campaignInfo = await getCampaignInfo(campaignAddress, library);
+        const manager = await contractCampaign.methods.manager().call();
+        if (campaignInfo) {
           dispatch(
-            rewardActions.addReward({
-              id: rewards.indexOf(reward),
-              title: reward.title,
-              description: reward.description,
-              minimumContribution: reward.minimumContribution,
-              amount: reward.amount,
-              stockLimit: reward.stockLimit,
-              nbContributors: reward.nbContributors,
-              isStockLimited: reward.isStockLimited,
-              confirmed: true,
+            campaignActions.setCampaign({
+              title: campaignInfo.title,
+              description: campaignInfo.description,
+              fundingGoal: campaignInfo.fundingGoal,
+              deadline: campaignInfo.durationDays,
+              confirmed: false,
               published: true,
+              manager,
             })
           );
         }
       };
-      getRewards();
+      getCampaign();
     }
-  }, [dispatch, contractCampaign]);
+  }, [dispatch, contractCampaign, campaignAddress]);
 
   const submitUpdatedCampaign = async () => {
     const durationDays = Math.round(

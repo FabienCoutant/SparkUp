@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 import PlusSquareFill from '../../assets/images/PlusSquareFill';
 import { useContractCampaignFactory } from '../../hooks/useContract';
 import { useState, useEffect } from 'react';
-import { useWeb3React } from '@web3-react/core';
 import Campaign from '../Campaigns/Creation/Campaign';
+import { useActiveWeb3React } from '../../hooks/useWeb3';
+import { useWeb3React } from '@web3-react/core';
 
 const Dashboard = () => {
   const contractCampaignFactory = useContractCampaignFactory();
@@ -11,6 +12,7 @@ const Dashboard = () => {
   const [campaignAddress, setCampaignAddress] = useState<string[]>([]);
 
   useEffect(() => {
+    console.log(contractCampaignFactory);
     if (contractCampaignFactory && chainId && library) {
       const getCampaigns = async () => {
         try {

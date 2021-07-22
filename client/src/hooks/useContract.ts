@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { getContract, getTestContract } from '../utils/web3React';
 import { useWeb3React } from '@web3-react/core';
+import { useActiveWeb3React } from './useWeb3';
 import USDC from '../contracts/external/USDC.json';
 import CampaignFactory from '../contracts/CampaignFactory.json';
 import Campaign from '../contracts/Campaign.json';
