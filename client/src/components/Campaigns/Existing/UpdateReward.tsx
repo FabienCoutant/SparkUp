@@ -51,7 +51,7 @@ const UpdateReward = (props: { rewardId: number | null }) => {
       }
 
       await contractCampaign?.methods
-        .updateRewardData(newReward, rewardId)
+        .updateReward(newReward, rewardId)
         .send({ from: account });
     }
   };

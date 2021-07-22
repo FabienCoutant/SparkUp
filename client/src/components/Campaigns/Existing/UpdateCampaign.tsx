@@ -53,7 +53,7 @@ const UpdateCampaign = () => {
     if (contractCampaign) {
       try {
         await contractCampaign.methods
-          .updateAllInfoData(campaignInfo)
+          .updateCampaign(campaignInfo)
           .send({ from: account });
       } catch (error) {
         throw error;

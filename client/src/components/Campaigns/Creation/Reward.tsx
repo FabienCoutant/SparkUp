@@ -144,7 +144,7 @@ const Reward = (props: { id: number }) => {
         console.log(newReward.title.length);
         console.log(newReward.description.length);
         await contractCampaign.methods
-          .addReward({ newReward })
+          .addReward(newReward)
           .send({ from: account });
       } catch (error) {
         console.log(error);

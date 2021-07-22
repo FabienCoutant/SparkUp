@@ -37,13 +37,14 @@ const ConfirmCampaing = () => {
             (1000 * 60 * 60 * 24)
         )
       );
+      dispatch(uiActions.hideNotification());
     }
     if (account && campaign.manager === account) {
       setIsManager(true);
     } else {
       setIsManager(false);
     }
-  }, []);
+  }, [dispatch, rewards, account, campaign]);
 
   const submitCampaignHandler = async () => {
     if (chainId) {
@@ -156,11 +157,6 @@ const ConfirmCampaing = () => {
             >
               Add Reward
             </button>
-            <div className='text-center'>
-              <button type='button' className='btn btn-primary mt-4'>
-                Update All Camapaign Rewards
-              </button>
-            </div>
           </>
         )}
       </div>

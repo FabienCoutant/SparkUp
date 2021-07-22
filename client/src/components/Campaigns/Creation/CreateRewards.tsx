@@ -18,8 +18,10 @@ const CreateRewards = () => {
           type: 'error',
         })
       );
+    } else {
+      dispatch(uiActions.hideNotification());
     }
-  }, []);
+  }, [dispatch, campaign]);
 
   const addRewardHandler = () => {
     dispatch(
@@ -37,6 +39,8 @@ const CreateRewards = () => {
       })
     );
   };
+
+  console.log(rewards);
 
   return (
     <div>

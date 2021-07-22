@@ -59,7 +59,8 @@ const Campaign = (props: { address: string | null }) => {
           Campaign Ends On :{' '}
           {campaignInfo
             ? campaignInfo.durationDays
-            : campaign.deadline && campaign.deadline.toString()}
+            : campaign.deadline &&
+              new Date(campaign.deadline).toLocaleDateString()}
         </h6>
         <div className='mt-3'>
           {campaignInfo && pathname !== `/campaign-details/${props.address}` && (
