@@ -45,25 +45,23 @@ export const getTestContract = (
   return contract;
 };
 
-export const getCampaignInfo = async (
-  campaignAddressList: string[],
-  library: Web3
-) => {
-  const campaigns: Info[] = [];
-
-  for (const campaign of campaignAddressList) {
-    try {
-      const contract = getTestContract(CampaignJSON, library, campaign);
-      const campaignInfo = await contract?.methods.campaignInfo().call();
-      const creationDate = await contract?.methods.createAt().call();
-      const deadline = new Date(creationDate * 1000).toDateString();
-      campaignInfo.durationDays = deadline;
-      campaigns.push(campaignInfo);
-    } catch (error) {
-      console.error('Failed to get contract', error);
-    }
+export const getCampaignInfo = async (address: string, library: Web3) => {
+  let campaignInfo: Info = {
+    title: null,
+    description: null,
+    fundingGoal: null,
+    durationDays: null,
+  };
+  try {
+    const contract = getTestContract(CampaignJSON, library, address);
+    campaignInfo = await contract?.methods.campaignInfo().call();
+    const creationDate = await contract?.methods.createAt().call();
+    const deadline = new Date(creationDate * 1000).toString();
+    campaignInfo.durationDays = deadline;
+  } catch (error) {
+    console.error('Failed to get contract', error);
   }
-  return campaigns;
+  return campaignInfo;
 };
 
 export const getRewardsList = async (contract: any) => {
@@ -76,4 +74,12 @@ export const getRewardsList = async (contract: any) => {
     }
   }
   return rewards;
+};
+
+export const isValidDate = (date: Date) => {
+  if (Object.prototype.toString.call(date) === 'Invalid Date') {
+    // it is a date
+    return false;
+  }
+  return true;
 };

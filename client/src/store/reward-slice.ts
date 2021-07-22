@@ -7,6 +7,7 @@ export interface reward {
   minimumContribution: number | null;
   amount: number | null;
   stockLimit: number | null;
+  nbContributors: number | null;
   isStockLimited: boolean | null;
   confirmed: boolean | null;
 }
@@ -22,8 +23,9 @@ const initialState: rewardState = {
       title: null,
       description: null,
       minimumContribution: null,
-      amount: null,
+      amount: 0,
       stockLimit: null,
+      nbContributors: 0,
       isStockLimited: null,
       confirmed: false,
     },

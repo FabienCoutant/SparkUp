@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Info } from '../constants/index';
 
-interface campaignState {
+export interface campaignState {
   title: string | null;
   description: string | null;
   fundingGoal: number | null;
-  deadline: Date | null;
+  deadline: any;
   confirmed: boolean | null;
 }
 

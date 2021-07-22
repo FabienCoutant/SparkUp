@@ -4,6 +4,8 @@ import { campaignActions } from '../../../store/campaign-slice';
 import { uiActions } from '../../../store/ui-slice';
 import Campaign from './Campaign';
 import NextButton from '../../UI/NextButton';
+import { isValidDate } from '../../../utils/web3React';
+
 const CreateCampaign = (props?: { showNextButton: boolean }) => {
   const campaignTitleRef = useRef<HTMLInputElement>(null);
   const campaignDescriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -12,19 +14,8 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
 
   const dispatch = useAppDispatch();
 
-  // const [title, setTitle] = useState('');
-  // const [description, setDescription] = useState('');
-  // const [fundingGoal, setFundingGoal] = useState(0);
-  // const [deadline, setDeadline] = useState<Date | null>(null);
   const confirmed = useAppSelector((state) => state.campaign.confirmed);
 
-  const isValidDate = (date: Date) => {
-    if (Object.prototype.toString.call(date) === 'Invalid Date') {
-      // it is a date
-      return false;
-    }
-    return true;
-  };
   const campaignSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (
@@ -146,7 +137,7 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
       )}
       {confirmed && (
         <div className='mt-3'>
-          <Campaign campaign={null} address={null} />
+          <Campaign address={null} />
           <button className='btn btn-primary' onClick={modifyCampaignHandler}>
             Modify Campaign
           </button>

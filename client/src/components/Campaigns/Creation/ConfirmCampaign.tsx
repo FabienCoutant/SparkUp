@@ -74,7 +74,14 @@ const ConfirmCampaing = () => {
           <h1 className='mt-5 mb-5 text-center'>Campaign Summuary</h1>
           <CreateCampaign showNextButton={false} />
           {rewards.map((reward: reward) => {
-            return <Reward id={reward.id} key={reward.id} />;
+            return (
+              <Reward
+                id={reward.id}
+                key={reward.id}
+                rewardInfo={null}
+                isManager={true}
+              />
+            );
           })}
           <div className='text-center'>
             <button

@@ -30,6 +30,7 @@ const CreateRewards = () => {
         minimumContribution: null,
         amount: null,
         stockLimit: null,
+        nbContributors: null,
         isStockLimited: null,
         confirmed: false,
       })
@@ -39,9 +40,13 @@ const CreateRewards = () => {
   return (
     <div>
       {campaign.confirmed && (
-        <>
+        <div className='mt-5'>
           {rewards.map((reward: reward) => {
-            return <Reward id={reward.id} key={reward.id} />;
+            return (
+              <div className='mb-3' key={reward.id}>
+                <Reward id={reward.id} rewardInfo={null} isManager={null} />
+              </div>
+            );
           })}
           <div className='mb-3 mt-3'>
             <button className='btn btn-primary' onClick={addRewardHandler}>
@@ -49,7 +54,7 @@ const CreateRewards = () => {
             </button>
           </div>
           <NextButton route='/createcampaign/confirm' disabled={false} />
-        </>
+        </div>
       )}
     </div>
   );
