@@ -288,12 +288,7 @@ contract("Campaign", (accounts) => {
 			it("should revert if rewards array is greater then 10", async () => {
 				//12 rewards
 				const badRewardsInfo = [...initialRewards,...initialRewards,...initialRewards,...initialRewards,...initialRewards,...initialRewards]
-				await expectRevert(CampaignContract.new(
-					initialCampaignInfo,
-					badRewardsInfo,
-					alice,
-					{from: factory}
-				), "!Err: Too much Rewards");
+				await expectRevert(CampaignContractInstance.updateAllRewardsData(badRewardsInfo, {from: alice}), "!Err: Too much Rewards");
 			});
 		});
 		describe("  --- Update specific reward --- ", () => {
