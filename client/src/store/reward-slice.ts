@@ -7,8 +7,10 @@ export interface reward {
   minimumContribution: number | null;
   amount: number | null;
   stockLimit: number | null;
+  nbContributors: number | null;
   isStockLimited: boolean | null;
   confirmed: boolean | null;
+  published: boolean | null;
 }
 
 interface rewardState {
@@ -22,10 +24,12 @@ const initialState: rewardState = {
       title: null,
       description: null,
       minimumContribution: null,
-      amount: null,
+      amount: 0,
       stockLimit: null,
+      nbContributors: 0,
       isStockLimited: null,
       confirmed: false,
+      published: null,
     },
   ],
 };
@@ -52,6 +56,9 @@ const rewardSlice = createSlice({
       for (let i = action.payload.id; i < state.rewards.length; i++) {
         state.rewards[i].id--;
       }
+    },
+    setState(state, action: PayloadAction<{ newState: reward }>) {
+      state.rewards = [action.payload.newState];
     },
   },
 });

@@ -31,9 +31,12 @@ export const useContractCampaignFactory = () => {
   }, [chainId, library]);
 };
 
-export const useContractCampaign = (address: string) => {
+export const useContractCampaign = (address: string | null) => {
   const { library, chainId } = useWeb3React();
   return useMemo(() => {
+    if (!address) {
+      return null;
+    }
     if (!library || !chainId) return null;
     try {
       return getTestContract(Campaign, library, address);

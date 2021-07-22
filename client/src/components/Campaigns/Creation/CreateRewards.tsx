@@ -18,8 +18,10 @@ const CreateRewards = () => {
           type: 'error',
         })
       );
+    } else {
+      dispatch(uiActions.hideNotification());
     }
-  }, []);
+  }, [dispatch, campaign]);
 
   const addRewardHandler = () => {
     dispatch(
@@ -30,18 +32,26 @@ const CreateRewards = () => {
         minimumContribution: null,
         amount: null,
         stockLimit: null,
+        nbContributors: null,
         isStockLimited: null,
         confirmed: false,
+        published: false,
       })
     );
   };
 
+  console.log(rewards);
+
   return (
     <div>
       {campaign.confirmed && (
-        <>
+        <div className='mt-5'>
           {rewards.map((reward: reward) => {
-            return <Reward id={reward.id} key={reward.id} />;
+            return (
+              <div className='mb-3' key={reward.id}>
+                <Reward id={reward.id} />
+              </div>
+            );
           })}
           <div className='mb-3 mt-3'>
             <button className='btn btn-primary' onClick={addRewardHandler}>
@@ -49,7 +59,7 @@ const CreateRewards = () => {
             </button>
           </div>
           <NextButton route='/createcampaign/confirm' disabled={false} />
-        </>
+        </div>
       )}
     </div>
   );

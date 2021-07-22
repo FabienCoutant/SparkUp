@@ -1,25 +1,29 @@
-import Header from './components/UI/Header';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Notification from './components/UI/Notification';
-import useInitWeb3 from './hooks/useInitWeb3';
-import { useAppSelector, useAppDispatch } from './store/hooks';
-import CreateCampaign from './components/Campaigns/Creation/CreateCampaign';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
-import Web3ReactManager from './components/Web3ReactManager/Web3ReactManager';
-import CreateRewards from './components/Campaigns/Creation/CreateRewards';
 import ConfirmCampaign from './components/Campaigns/Creation/ConfirmCampaign';
+import CreateCampaign from './components/Campaigns/Creation/CreateCampaign';
+import CreateRewards from './components/Campaigns/Creation/CreateRewards';
+import CampaignDetails from './components/Campaigns/Existing/CampaignDetails';
+import UpdateCampaign from './components/Campaigns/Existing/UpdateCampaign';
+import UpdateReward from './components/Campaigns/Existing/UpdateReward';
 import Dashboard from './components/UI/Dashboard';
 import Footer from './components/UI/Footer';
-import { useLocation } from 'react-router';
-import { useEffect } from 'react';
+import Header from './components/UI/Header';
+import Notification from './components/UI/Notification';
+import Web3ReactManager from './components/Web3ReactManager/Web3ReactManager';
+import useInitWeb3 from './hooks/useInitWeb3';
+import { useAppDispatch, useAppSelector } from './store/hooks';
 import { uiActions } from './store/ui-slice';
-import CampaignDetails from './components/Campaigns/Existing/CampaignDetails';
 
 const App = () => {
   useInitWeb3();
   const dispatch = useAppDispatch();
   const location = useLocation();
   const display = useAppSelector((state) => state.ui.display);
+  const notificationType = useAppSelector((state) => state.ui.type);
+
   useEffect(() => {
     dispatch(uiActions.hideNotification());
   }, [dispatch, location]);
@@ -31,7 +35,7 @@ const App = () => {
         <Web3ReactManager>
           <>
             {display && <Notification />}
-            {!display && (
+            {[(display && notificationType !== 'error') || !display] && (
               <Switch>
                 <Route path='/' exact>
                   <Dashboard />
@@ -45,8 +49,20 @@ const App = () => {
                 <Route path='/createcampaign/confirm' exact>
                   <ConfirmCampaign />
                 </Route>
-                <Route path='/campaign-details/:campaignAddress'>
+                <Route path='/campaign-details/:campaignAddress' exact>
                   <CampaignDetails />
+                </Route>
+                <Route
+                  path='/campaign-details/:campaignAddress/updateReward/:rewardId'
+                  exact
+                >
+                  <UpdateReward rewardId={null} />
+                </Route>
+                <Route
+                  path='/campaign-details/:campaignAddress/updateCampaign'
+                  exact
+                >
+                  <UpdateCampaign />
                 </Route>
               </Switch>
             )}

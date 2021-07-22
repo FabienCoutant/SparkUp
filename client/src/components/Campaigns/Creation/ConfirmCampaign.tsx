@@ -7,6 +7,9 @@ import { useWeb3React } from '@web3-react/core';
 import { uiActions } from '../../../store/ui-slice';
 import { Info, Rewards } from '../../../constants';
 import { useContractCampaignFactory } from '../../../hooks/useContract';
+import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
+import { rewardActions } from '../../../store/reward-slice';
 
 const ConfirmCampaing = () => {
   const dispatch = useAppDispatch();
@@ -15,6 +18,8 @@ const ConfirmCampaing = () => {
   const [campaignDuration, setCampaignDuration] = useState<number | null>(null);
   const { chainId, account } = useWeb3React();
   const contractCampaignFactory = useContractCampaignFactory();
+  const { campaignAddress } = useParams<{ campaignAddress: string }>();
+  const [isManager, setIsManager] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (!campaign.confirmed || !rewards[0].confirmed) {
@@ -28,11 +33,18 @@ const ConfirmCampaing = () => {
     } else {
       setCampaignDuration(
         Math.round(
-          (campaign.deadline!.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+          (new Date(campaign.deadline!).getTime() - Date.now()) /
+            (1000 * 60 * 60 * 24)
         )
       );
+      dispatch(uiActions.hideNotification());
     }
-  }, []);
+    if (account && campaign.manager === account) {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
+  }, [dispatch, rewards, account, campaign]);
 
   const submitCampaignHandler = async () => {
     if (chainId) {
@@ -67,28 +79,89 @@ const ConfirmCampaing = () => {
     }
   };
 
-  return (
-    <>
-      {campaign.confirmed && rewards[0].confirmed && (
-        <>
-          <h1 className='mt-5 mb-5 text-center'>Campaign Summuary</h1>
-          <CreateCampaign showNextButton={false} />
-          {rewards.map((reward: reward) => {
-            return <Reward id={reward.id} key={reward.id} />;
-          })}
+  const addRewardHandler = () => {
+    dispatch(
+      rewardActions.addReward({
+        id: rewards.length,
+        title: null,
+        description: null,
+        minimumContribution: null,
+        amount: null,
+        stockLimit: null,
+        nbContributors: null,
+        isStockLimited: null,
+        confirmed: false,
+        published: false,
+      })
+    );
+  };
+
+  if (!campaign.published) {
+    return (
+      <>
+        {campaign.confirmed && rewards[0].confirmed && (
+          <>
+            <h1 className='mt-5 mb-5 text-center'>Campaign Summuary</h1>
+            <CreateCampaign showNextButton={false} />
+            {rewards.map((reward: reward) => {
+              return (
+                <div className='mb-3' key={reward.id}>
+                  <Reward id={reward.id} />
+                </div>
+              );
+            })}
+            <div className='text-center'>
+              <button
+                className='btn btn-primary mb-3'
+                onClick={submitCampaignHandler}
+                style={{ width: '25%' }}
+              >
+                Submit Campaign
+              </button>
+            </div>
+          </>
+        )}
+      </>
+    );
+  } else {
+    return (
+      <div className='mt-3'>
+        {campaign && <CreateCampaign showNextButton={false} />}
+        {isManager && (
           <div className='text-center'>
-            <button
-              className='btn btn-primary mb-3'
-              onClick={submitCampaignHandler}
-              style={{ width: '25%' }}
+            <Link
+              to={`/campaign-details/${campaignAddress}/updateCampaign`}
+              style={{ textDecoration: 'none', color: 'white' }}
             >
-              Submit Campaign
-            </button>
+              <button
+                type='button'
+                className='btn btn-primary mt-4 mb-4'
+                style={{ width: '250px' }}
+              >
+                Update Camapaign
+              </button>
+            </Link>
           </div>
-        </>
-      )}
-    </>
-  );
+        )}
+        {rewards.map((reward) => (
+          <div className='card mb-3 mt-3' key={rewards.indexOf(reward)}>
+            <Reward id={rewards.indexOf(reward)} />
+          </div>
+        ))}
+        {isManager && (
+          <>
+            <button
+              type='button'
+              className='btn btn-primary mt-3'
+              onClick={addRewardHandler}
+            >
+              Add Reward
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
 };
 
 export default ConfirmCampaing;
