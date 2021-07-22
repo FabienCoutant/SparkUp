@@ -56,11 +56,7 @@ const Campaign = (props: { address: string | null }) => {
           className='card-subtitle mb-2 list-inline-item'
           id='campaignDeadline'
         >
-          Campaign Ends On :{' '}
-          {campaignInfo
-            ? campaignInfo.durationDays
-            : campaign.deadline &&
-              new Date(campaign.deadline).toLocaleDateString()}
+          Campaign Ends On : 31/12/2021
         </h6>
         <div className='mt-3'>
           {campaignInfo && pathname !== `/campaign-details/${props.address}` && (
