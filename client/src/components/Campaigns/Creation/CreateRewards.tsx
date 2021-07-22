@@ -44,7 +44,7 @@ const CreateRewards = () => {
           {rewards.map((reward: reward) => {
             return (
               <div className='mb-3' key={reward.id}>
-                <Reward id={reward.id} rewardInfo={null} isManager={null} />
+                <Reward id={reward.id} />
               </div>
             );
           })}

@@ -13,28 +13,28 @@ import ConfirmCampaing from '../Creation/ConfirmCampaign';
 
 const CampaignDetails = () => {
   const dispatch = useAppDispatch();
-  const campaignInfo = useAppSelector((state) => state.campaign);
+  const campaign = useAppSelector((state) => state.campaign);
   const rewards = useAppSelector((state) => state.reward.rewards);
   const [isManager, setIsManager] = useState(false);
   const { campaignAddress } = useParams<{ campaignAddress: string }>();
   const { library, account } = useWeb3React();
   const contractCampaign = useContractCampaign(campaignAddress);
 
-  const addRewardHandler = () => {
-    dispatch(
-      rewardActions.addReward({
-        id: rewards.length,
-        title: null,
-        description: null,
-        minimumContribution: null,
-        amount: null,
-        stockLimit: null,
-        nbContributors: null,
-        isStockLimited: null,
-        confirmed: false,
-      })
-    );
-  };
+  // const addRewardHandler = () => {
+  //   dispatch(
+  //     rewardActions.addReward({
+  //       id: rewards.length,
+  //       title: null,
+  //       description: null,
+  //       minimumContribution: null,
+  //       amount: null,
+  //       stockLimit: null,
+  //       nbContributors: null,
+  //       isStockLimited: null,
+  //       confirmed: false,
+  //     })
+  //   );
+  // };
 
   useEffect(() => {
     if (contractCampaign) {

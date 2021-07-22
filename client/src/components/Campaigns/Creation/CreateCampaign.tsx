@@ -1,13 +1,17 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { campaignActions } from '../../../store/campaign-slice';
 import { uiActions } from '../../../store/ui-slice';
+import { rewardActions } from '../../../store/reward-slice';
 import Campaign from './Campaign';
 import NextButton from '../../UI/NextButton';
 import { isValidDate } from '../../../utils/web3React';
 import { useWeb3React } from '@web3-react/core';
+import { useLocation } from 'react-router';
 
 const CreateCampaign = (props?: { showNextButton: boolean }) => {
+  const { pathname } = useLocation();
+
   const campaignTitleRef = useRef<HTMLInputElement>(null);
   const campaignDescriptionRef = useRef<HTMLTextAreaElement>(null);
   const campaignFundingGoalRef = useRef<HTMLInputElement>(null);
@@ -17,6 +21,37 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
   const { account } = useWeb3React();
 
   const confirmed = useAppSelector((state) => state.campaign.confirmed);
+
+  useEffect(() => {
+    if (pathname === '/createcampaign') {
+      dispatch(
+        campaignActions.setCampaign({
+          title: null,
+          description: null,
+          fundingGoal: null,
+          deadline: null,
+          confirmed: false,
+          published: null,
+          manager: null,
+        })
+      );
+      dispatch(
+        rewardActions.setState({
+          newState: {
+            id: 0,
+            title: null,
+            description: null,
+            minimumContribution: null,
+            amount: 0,
+            stockLimit: null,
+            nbContributors: 0,
+            isStockLimited: null,
+            confirmed: false,
+          },
+        })
+      );
+    }
+  }, [dispatch, pathname]);
 
   const campaignSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

@@ -55,6 +55,9 @@ const rewardSlice = createSlice({
         state.rewards[i].id--;
       }
     },
+    setState(state, action: PayloadAction<{ newState: reward }>) {
+      state.rewards = [action.payload.newState];
+    },
   },
 });
 

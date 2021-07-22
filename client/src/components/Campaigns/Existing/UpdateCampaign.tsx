@@ -65,15 +65,6 @@ const UpdateCampaign = () => {
       <div className='mt-3'>
         <CreateCampaign showNextButton={false} />
       </div>
-      {/* {rewards?.map((reward) => (
-        <div className='mb-3' key={rewards.indexOf(reward)}>
-          <Reward
-            id={rewards.indexOf(reward)}
-            rewardInfo={null}
-            isManager={true}
-          />
-        </div>
-      ))} */}
       <button
         className='btn btn-primary col-3 mt-3'
         onClick={submitUpdatedCampaign}

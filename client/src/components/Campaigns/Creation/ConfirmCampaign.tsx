@@ -104,7 +104,7 @@ const ConfirmCampaing = () => {
             {rewards.map((reward: reward) => {
               return (
                 <div className='mb-3' key={reward.id}>
-                  <Reward id={reward.id} rewardInfo={null} isManager={true} />
+                  <Reward id={reward.id} />
                 </div>
               );
             })}
@@ -143,11 +143,7 @@ const ConfirmCampaing = () => {
         )}
         {rewards.map((reward) => (
           <div className='card mb-3 mt-3' key={rewards.indexOf(reward)}>
-            <Reward
-              rewardInfo={null}
-              id={rewards.indexOf(reward)}
-              isManager={isManager}
-            />
+            <Reward id={rewards.indexOf(reward)} />
           </div>
         ))}
         {isManager && (
