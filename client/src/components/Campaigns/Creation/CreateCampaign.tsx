@@ -8,10 +8,13 @@ import NextButton from '../../UI/NextButton';
 import { isValidDate } from '../../../utils/web3React';
 import { useWeb3React } from '@web3-react/core';
 import { useLocation } from 'react-router';
+import { useContractCampaign } from '../../../hooks/useContract';
+import { useParams } from 'react-router';
 
 const CreateCampaign = (props?: { showNextButton: boolean }) => {
   const { pathname } = useLocation();
-
+  const { campaignAddress } = useParams<{ campaignAddress: string }>();
+  const contractCampaign = useContractCampaign(campaignAddress);
   const campaignTitleRef = useRef<HTMLInputElement>(null);
   const campaignDescriptionRef = useRef<HTMLTextAreaElement>(null);
   const campaignFundingGoalRef = useRef<HTMLInputElement>(null);
@@ -20,7 +23,7 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
   const dispatch = useAppDispatch();
   const { account } = useWeb3React();
 
-  const confirmed = useAppSelector((state) => state.campaign.confirmed);
+  const campaign = useAppSelector((state) => state.campaign);
 
   useEffect(() => {
     if (pathname === '/createcampaign') {
@@ -47,6 +50,7 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
             nbContributors: 0,
             isStockLimited: null,
             confirmed: false,
+            published: null,
           },
         })
       );
@@ -120,9 +124,15 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
     dispatch(campaignActions.setConfirmed({ confirmed: false }));
   };
 
+  const deleteCampaignHandler = async () => {
+    if (contractCampaign) {
+      await contractCampaign.methods.deleteCampaign().send({ from: account });
+    }
+  };
+
   return (
     <>
-      {!confirmed && (
+      {!campaign.confirmed && (
         <form onSubmit={campaignSubmitHandler}>
           <div className='mb-3 mt-3'>
             <label htmlFor='campaignTitle' className='form-label'>
@@ -174,19 +184,32 @@ const CreateCampaign = (props?: { showNextButton: boolean }) => {
           </button>
         </form>
       )}
-      {confirmed && (
+      {campaign.confirmed && (
         <div className='mt-3'>
           <Campaign address={null} />
-          <button
-            className='btn btn-primary mb-3'
-            onClick={modifyCampaignHandler}
-          >
-            Modify Campaign
-          </button>
+          {!campaign.published && (
+            <button
+              className='btn btn-primary mb-3'
+              onClick={modifyCampaignHandler}
+            >
+              Modify Campaign
+            </button>
+          )}
+          {campaign.published && (
+            <button
+              className='btn btn-primary mb-3'
+              onClick={deleteCampaignHandler}
+            >
+              Delete Campaign
+            </button>
+          )}
         </div>
       )}
       {props?.showNextButton && (
-        <NextButton route='/createcampaign/rewards' disabled={!confirmed} />
+        <NextButton
+          route='/createcampaign/rewards'
+          disabled={!campaign.confirmed}
+        />
       )}
     </>
   );

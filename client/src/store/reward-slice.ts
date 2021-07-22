@@ -10,6 +10,7 @@ export interface reward {
   nbContributors: number | null;
   isStockLimited: boolean | null;
   confirmed: boolean | null;
+  published: boolean | null;
 }
 
 interface rewardState {
@@ -28,6 +29,7 @@ const initialState: rewardState = {
       nbContributors: 0,
       isStockLimited: null,
       confirmed: false,
+      published: null,
     },
   ],
 };

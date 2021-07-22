@@ -52,6 +52,7 @@ const CampaignDetails = () => {
               nbContributors: reward.nbContributors,
               isStockLimited: reward.isStockLimited,
               confirmed: true,
+              published: true,
             })
           );
         }

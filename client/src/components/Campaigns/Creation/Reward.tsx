@@ -6,6 +6,7 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { useContractCampaign } from '../../../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
+import { Rewards } from '../../../constants';
 
 const Reward = (props: { id: number }) => {
   const dispatch = useAppDispatch();
@@ -100,6 +101,7 @@ const Reward = (props: { id: number }) => {
             nbContributors: 0,
             isStockLimited,
             confirmed: true,
+            published: false,
           })
         );
       }
@@ -124,6 +126,29 @@ const Reward = (props: { id: number }) => {
       dispatch(rewardActions.removeReward({ id: props.id }));
     } else {
       contractCampaign?.methods.deleteReward(props.id).send({ from: account });
+    }
+  };
+
+  const submitRewardHandler = async () => {
+    const newReward: Rewards = {
+      title: rewards[props.id].title,
+      description: rewards[props.id].description,
+      minimumContribution: rewards[props.id].minimumContribution,
+      amount: rewards[props.id].amount,
+      stockLimit: rewards[props.id].stockLimit,
+      nbContributors: rewards[props.id].nbContributors,
+      isStockLimited: rewards[props.id].isStockLimited,
+    };
+    if (contractCampaign && newReward.title && newReward.description) {
+      try {
+        console.log(newReward.title.length);
+        console.log(newReward.description.length);
+        await contractCampaign.methods
+          .addReward({ newReward })
+          .send({ from: account });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -203,8 +228,7 @@ const Reward = (props: { id: number }) => {
           </button>
         </div>
       )}
-      {((campaign.published && rewards[props.id].confirmed) ||
-        rewards[props.id].confirmed) && (
+      {rewards[props.id].confirmed && (
         <div className='card-body'>
           <h5 className='card-title'>Reward {props.id + 1}</h5>
           <div className='list-inline'>
@@ -269,7 +293,7 @@ const Reward = (props: { id: number }) => {
             </div>
           )}
           <div className='list-inline'>
-            {!campaign.published && (
+            {!rewards[props.id].published && (
               <button
                 className='btn btn-primary'
                 onClick={() => changeRewardHandler()}
@@ -277,7 +301,7 @@ const Reward = (props: { id: number }) => {
                 Modify Reward
               </button>
             )}
-            {campaign.published && isManager && (
+            {rewards[props.id].published && isManager && (
               <>
                 <Link
                   to={`/campaign-details/${address}/updateReward/${props.id}`}
@@ -294,14 +318,23 @@ const Reward = (props: { id: number }) => {
                 </button>
               </>
             )}
-            {!campaign.published && (
-              <button
-                className='btn btn-primary ms-3'
-                onClick={() => removeRewardHandler()}
-                disabled={rewards.length < 2}
-              >
-                Remove Reward
-              </button>
+            {!rewards[props.id].published && (
+              <>
+                <button
+                  className='btn btn-primary ms-3'
+                  onClick={() => removeRewardHandler()}
+                  disabled={rewards.length < 2}
+                >
+                  Remove Reward
+                </button>
+                <button
+                  className='btn btn-primary ms-3'
+                  onClick={() => submitRewardHandler()}
+                  disabled={rewards.length < 2}
+                >
+                  Submit Reward
+                </button>
+              </>
             )}
           </div>
         </div>

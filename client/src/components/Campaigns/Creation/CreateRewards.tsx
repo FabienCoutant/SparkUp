@@ -33,6 +33,7 @@ const CreateRewards = () => {
         nbContributors: null,
         isStockLimited: null,
         confirmed: false,
+        published: false,
       })
     );
   };

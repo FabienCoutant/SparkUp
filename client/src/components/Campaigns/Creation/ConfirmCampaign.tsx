@@ -90,6 +90,7 @@ const ConfirmCampaing = () => {
         nbContributors: null,
         isStockLimited: null,
         confirmed: false,
+        published: false,
       })
     );
   };
