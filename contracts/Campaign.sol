@@ -52,8 +52,8 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateAllInfoData(Info memory updatedInfoData) external override isNotDisabled() onlyManager() {
-        _setCampaignInfo(updatedInfoData);
+    function updateCampaign(Info memory newInfo) external override isNotDisabled() onlyManager() {
+        _setCampaignInfo(newInfo);
         emit CampaignInfoUpdated();
     }
 
@@ -69,25 +69,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateAllRewardsData(Rewards[] memory updatedRewardsData) external override isNotDisabled() onlyManager {
-        require(updatedRewardsData.length > 0, "!Err: Rewards empty");
-        require(updatedRewardsData.length <= 10, "!Err: Too much Rewards");
-
-        for (uint8 i = 0; i < rewardsCounter; i++) {
-            delete rewardsList[i];
-        }
-        uint8 newRewardsCounter;
-        for (newRewardsCounter; newRewardsCounter < updatedRewardsData.length; newRewardsCounter++) {
-            _setCampaignReward(newRewardsCounter, updatedRewardsData[newRewardsCounter]);
-        }
-        rewardsCounter = newRewardsCounter;
-        emit CampaignRewardsUpdated();
-    }
-
-    /**
-     * @inheritdoc ICampaign
-     */
-    function updateRewardData(Rewards memory newRewardData, uint rewardIndex) external override isNotDisabled() onlyManager() {
+    function updateReward(Rewards memory newRewardData, uint rewardIndex) external override isNotDisabled() onlyManager() {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         _setCampaignReward(rewardIndex, newRewardData);
         emit CampaignRewardsUpdated();
