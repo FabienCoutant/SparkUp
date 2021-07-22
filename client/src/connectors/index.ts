@@ -3,6 +3,11 @@ import { SupportedChainId } from '../constants/chains';
 import { NetworkConnector } from '@web3-react/network-connector';
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY;
+let DEFAULT_NETWORK_CHAINID = process.env.REACT_APP_DEFAULT_NETWORK_CHAINID as number | undefined;
+
+if(typeof DEFAULT_NETWORK_CHAINID ==="undefined"){
+  DEFAULT_NETWORK_CHAINID = 3;
+}
 
 if (typeof INFURA_KEY === 'undefined') {
   throw new Error(
@@ -24,7 +29,7 @@ const SUPPORTED_CHAIN_IDS = [
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,
-  defaultChainId: 1337,
+  defaultChainId: DEFAULT_NETWORK_CHAINID,
 });
 
 export const injected = new InjectedConnector({

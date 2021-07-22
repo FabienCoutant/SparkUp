@@ -22,7 +22,7 @@ interface ICampaign {
         string title;
         string description;
         uint256 fundingGoal;
-        uint256 durationDays;
+        uint256 deadlineDate;
     }
 
     /**

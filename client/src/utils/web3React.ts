@@ -2,7 +2,6 @@ import Web3 from 'web3';
 import { USDC_CONTRACTS } from '../constants';
 import { Info, Rewards } from '../constants/index';
 import CampaignJSON from '../contracts/Campaign.json';
-import { Web3Provider } from '@ethersproject/providers';
 
 export const getLibrary = (provider: any) => {
   return new Web3(provider);
@@ -10,7 +9,7 @@ export const getLibrary = (provider: any) => {
 
 export const getContract = (
   contractJSON: any,
-  library: Web3,
+  library: any,
   chainId: number,
   type: string
 ) => {
@@ -48,10 +47,10 @@ export const getTestContract = (
 
 export const getCampaignInfo = async (address: string, library: Web3) => {
   let campaignInfo: Info = {
-    title: null,
-    description: null,
-    fundingGoal: null,
-    durationDays: null,
+    title: "",
+    description: "",
+    fundingGoal: 10000,
+    durationDays: new Date().setDate(Date.now()+7),
   };
   try {
     const contract = getTestContract(CampaignJSON, library, address);
@@ -77,10 +76,9 @@ export const getRewardsList = async (contract: any) => {
   return rewards;
 };
 
-export const isValidDate = (date: Date) => {
+export const isValidDate = (date: Date, createAt:Date) => {
   if (Object.prototype.toString.call(date) === 'Invalid Date') {
-    // it is a date
     return false;
   }
-  return true;
+  return date.getTime() > new Date(createAt).setDate(createAt.getDate()+7);
 };

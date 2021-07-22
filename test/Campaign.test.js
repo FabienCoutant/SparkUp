@@ -1,4 +1,4 @@
-const {expectRevert, expectEvent, BN} = require("@openzeppelin/test-helpers");
+const {expectRevert, expectEvent, time,BN} = require("@openzeppelin/test-helpers");
 const {expect} = require("chai");
 const CampaignContract = artifacts.require("Campaign");
 
@@ -9,7 +9,7 @@ contract("Campaign", (accounts) => {
 		title: "First Campaign",
 		description: "This is the first campaign of SparkUp",
 		fundingGoal: 11000,
-		durationDays: 30
+		deadlineDate: 0
 	};
 	const initialRewards = [
 		{
@@ -41,8 +41,10 @@ contract("Campaign", (accounts) => {
 		isStockLimited: true
 	}
 	let CampaignContractInstance;
+
 	describe("--- Info Creation ---", async () => {
-		it("should allow user to create a campaign with title, description, amount to raise and durationDays", async () => {
+		it("should allow user to create a campaign with title, description, amount to raise and deadlineDate", async () => {
+			initialCampaignInfo.deadlineDate=parseInt((await time.latest()).add(time.duration.days(30)));
 			CampaignContractInstance = await CampaignContract.new(
 				initialCampaignInfo,
 				initialRewards,
@@ -53,7 +55,7 @@ contract("Campaign", (accounts) => {
 			expect(CampaignInfo.title).to.be.equal(initialCampaignInfo.title);
 			expect(CampaignInfo.description).to.be.equal(initialCampaignInfo.description);
 			expect(CampaignInfo.fundingGoal).to.be.bignumber.equal(new BN(initialCampaignInfo.fundingGoal));
-			expect(CampaignInfo.durationDays).to.be.bignumber.equal(new BN(initialCampaignInfo.durationDays));
+			expect(CampaignInfo.deadlineDate).to.be.bignumber.equal(new BN(initialCampaignInfo.deadlineDate));
 		});
 		it("should revert if title is empty", async () => {
 			const badCampaignInfo = {...initialCampaignInfo, title: ""};
@@ -82,14 +84,15 @@ contract("Campaign", (accounts) => {
 				{from: factory}
 			), "!Err: Funding Goal not enough");
 		});
-		it("should revert if durationDays is not greater than creation date plus 7 days", async () => {
-			const badCampaignInfo = {...initialCampaignInfo, durationDays: 6};
+		it("should revert if deadlineDate is not greater than creation date plus 7 days", async () => {
+			const badDate = (await time.latest()).add(time.duration.days(5));
+			const badCampaignInfo = {...initialCampaignInfo, deadlineDate: badDate};
 			await expectRevert(CampaignContract.new(
 				badCampaignInfo,
 				initialRewards,
 				alice,
 				{from: factory}
-			), "!Err: durationDays to short");
+			), "!Err: deadlineDate to short");
 		});
 	});
 	describe("--- Rewards creation ---", async () => {
@@ -203,20 +206,22 @@ contract("Campaign", (accounts) => {
 			await expectRevert(CampaignContractInstance.updateCampaign(badUpdatedData, {from: alice}
 			), "!Err: Funding Goal not enough");
 		});
-		it("should update the durationDays", async () => {
+		it("should update the deadlineDate", async () => {
+			const newDeadLine = parseInt((await time.latest()).add(time.duration.days(10)));
 			const updatedData = {
-				...initialCampaignInfo, durationDays: 10
+				...initialCampaignInfo, deadlineDate: newDeadLine
 			}
 			await CampaignContractInstance.updateCampaign(updatedData, {from: alice});
 			const CampaignInfo = await CampaignContractInstance.campaignInfo();
-			expect(CampaignInfo.durationDays).to.be.bignumber.equal(new BN(updatedData.durationDays));
+			expect(CampaignInfo.deadlineDate).to.be.bignumber.equal(new BN(updatedData.deadlineDate));
 		});
-		it("should revert if durationDays is not greater than creation date plus 7 days", async () => {
-			const badUpdatedData = {...initialCampaignInfo, durationDays: 4};
+		it("should revert if deadlineDate is not greater than creation date plus 7 days", async () => {
+			const badDeadLine = parseInt((await time.latest()).add(time.duration.days(4)));
+			const badUpdatedData = {...initialCampaignInfo, deadlineDate: badDeadLine};
 			await expectRevert(CampaignContractInstance.updateCampaign(
 				badUpdatedData,
 				{from: alice}
-			), "!Err: durationDays to short");
+			), "!Err: deadlineDate to short");
 		});
 		it("should emit event after update", async () => {
 			const updatedData = {

@@ -38,7 +38,7 @@ const Campaign = (props: { address: string | null }) => {
     };
     checkOwnership();
   }, [account, contractCampaign]);
-
+  console.log(campaignInfo);
   return (
     <div className='card mb-3 mt-3'>
       <div className='card-body'>
@@ -58,9 +58,9 @@ const Campaign = (props: { address: string | null }) => {
         >
           Campaign Ends On :{' '}
           {campaignInfo
-            ? campaignInfo.durationDays
-            : campaign.deadline &&
-              new Date(campaign.deadline).toLocaleDateString()}
+            ? campaignInfo.durationDays && new Date(campaignInfo.durationDays).toLocaleDateString()
+            : campaign.durationDays &&
+              new Date(campaign.durationDays).toLocaleDateString()}
         </h6>
         <div className='mt-3'>
           {campaignInfo && pathname !== `/campaign-details/${props.address}` && (

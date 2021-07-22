@@ -1,18 +1,18 @@
-const {expectRevert, expectEvent} = require("@openzeppelin/test-helpers");
+const {expectRevert, expectEvent,time} = require("@openzeppelin/test-helpers");
 const {expect} = require("chai");
 const CampaignFactoryContract = artifacts.require("CampaignFactory");
 const CampaignContract = artifacts.require("Campaign");
 
 contract("CampaignFactory", (accounts) => {
 	const [owner, alice, bob] = accounts;
-
 	const initialCampaignInfo = {
 		title: "First Campaign",
 		description: "This is the first campaign of SparkUp",
 		fundingGoal: 100000,
-		durationDays: 30
+		deadlineDate: 0
 	};
-	const secondInitialCampaignInfo = {...initialCampaignInfo, title: "Second Campaign"};
+
+	let secondInitialCampaignInfo={};
 	const initialRewards = [
 		{
 			title: "First rewards",
@@ -46,6 +46,8 @@ contract("CampaignFactory", (accounts) => {
 		);
 		const factoryOwner = await CampaignFactoryContractInstance.owner();
 		expect(factoryOwner).to.be.equal(owner);
+		initialCampaignInfo.deadlineDate=parseInt((await time.latest()).add(time.duration.days(30)));
+		secondInitialCampaignInfo = {...initialCampaignInfo, title: "Second Campaign"};
 	});
 
 	describe("--- Creation ---", async () => {

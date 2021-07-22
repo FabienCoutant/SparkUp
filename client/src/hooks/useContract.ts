@@ -20,7 +20,7 @@ export const useContractUSDC = () => {
 };
 
 export const useContractCampaignFactory = () => {
-  const { library, chainId } = useWeb3React();
+  const { library, chainId } = useActiveWeb3React();
   return useMemo(() => {
     if (!library || !chainId) return null;
     try {

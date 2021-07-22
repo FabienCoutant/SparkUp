@@ -1,16 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {Rewards} from "../constants";
 
-export interface reward {
+export interface reward extends Rewards{
   id: number;
-  title: string | null;
-  description: string | null;
-  minimumContribution: number | null;
-  amount: number | null;
-  stockLimit: number | null;
-  nbContributors: number | null;
-  isStockLimited: boolean | null;
-  confirmed: boolean | null;
-  published: boolean | null;
+  confirmed: boolean;
+  published: boolean;
 }
 
 interface rewardState {
@@ -21,15 +15,15 @@ const initialState: rewardState = {
   rewards: [
     {
       id: 0,
-      title: null,
-      description: null,
-      minimumContribution: null,
+      title: "",
+      description: "",
+      minimumContribution: 0,
       amount: 0,
-      stockLimit: null,
+      stockLimit: 0,
       nbContributors: 0,
-      isStockLimited: null,
+      isStockLimited: false,
       confirmed: false,
-      published: null,
+      published: false,
     },
   ],
 };

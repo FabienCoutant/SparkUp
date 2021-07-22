@@ -5,15 +5,16 @@ import { useWeb3React } from '@web3-react/core';
 import { Rewards } from '../../../constants';
 
 const UpdateReward = (props: { rewardId: number | null }) => {
+  const { account } = useWeb3React();
   const [rewardId, setRewardId] = useState<number | null>(null);
   const { campaignAddress } = useParams<{ campaignAddress: string }>();
   const rewardIdParams = useParams<{ rewardId: string }>().rewardId;
-  const { account } = useWeb3React();
   const contractCampaign = useContractCampaign(campaignAddress);
-  const titleRef = useRef<HTMLInputElement>(null);
-  const descriptionRef = useRef<HTMLTextAreaElement>(null);
-  const minimumContributionRef = useRef<HTMLInputElement>(null);
-  const stockLimitRef = useRef<HTMLInputElement>(null);
+
+  const [rewardTitle, setRewardTitle] = useState(rewards[props.id].title);
+  const [rewardDescription, setRewardDescription] = useState(rewards[props.id].description);
+  const [rewardMinimumContribution, setRewardMinimumContribution] = useState(rewards[props.id].minimumContribution);
+  const [rewardStockLimit, setRewardStockLimit] = useState(rewards[props.id].stockLimit);
 
   const [isStockLimited, setIsStockLimited] = useState<null | boolean>(null);
 
