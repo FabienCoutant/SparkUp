@@ -46,21 +46,3 @@ export const useContractCampaign = (address: string | null) => {
     }
   }, [chainId, library, address]);
 };
-
-export const useCampaignEvents = (address: string | null) => {
-  const { library, chainId } = useWeb3React();
-
-  return useMemo(() => {
-    if (!address) {
-      return null;
-    }
-    if (!library || !chainId) return null;
-    try {
-      const contract = getTestContract(Campaign, library, address);
-      return getTestContract(Campaign, library, address);
-    } catch (error) {
-      console.error('Failed to subscribe to contract events', error);
-      return null;
-    }
-  }, [chainId, library, address]);
-};

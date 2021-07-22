@@ -7,6 +7,8 @@ export interface campaignState {
   fundingGoal: number | null;
   deadline: any;
   confirmed: boolean | null;
+  published: boolean | null;
+  manager: string | null;
 }
 
 const initialState: campaignState = {
@@ -15,6 +17,8 @@ const initialState: campaignState = {
   fundingGoal: null,
   deadline: null,
   confirmed: false,
+  published: null,
+  manager: null,
 };
 
 const campaignSlice = createSlice({
@@ -27,6 +31,8 @@ const campaignSlice = createSlice({
       state.fundingGoal = action.payload.fundingGoal;
       state.deadline = action.payload.deadline;
       state.confirmed = action.payload.confirmed;
+      state.published = action.payload.published;
+      state.manager = action.payload.manager;
     },
     setConfirmed(state, action: PayloadAction<{ confirmed: boolean }>) {
       state.confirmed = action.payload.confirmed;

@@ -56,7 +56,7 @@ export const getCampaignInfo = async (address: string, library: Web3) => {
     const contract = getTestContract(CampaignJSON, library, address);
     campaignInfo = await contract?.methods.campaignInfo().call();
     const creationDate = await contract?.methods.createAt().call();
-    const deadline = new Date(creationDate * 1000).toString();
+    const deadline = creationDate * 1000;
     campaignInfo.durationDays = deadline;
   } catch (error) {
     console.error('Failed to get contract', error);

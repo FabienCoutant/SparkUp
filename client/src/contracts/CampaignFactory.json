@@ -16745,8 +16745,8 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x43e6D6eDBf9Da8e6F33441fCdED2358786ca6223",
-      "transactionHash": "0x1adaf3f4f51c5aa2976783a93195d44ce0bd9e329e0a1df156169f3c3a73ebbd"
+      "address": "0x9f258A8Dc932f4Ef6dFC3e2eEAe9707e072BdaEF",
+      "transactionHash": "0x80495c1e02e797597d779627b716ec5db0885401151448d4602c5234cea8fb96"
     },
     "5777": {
       "events": {},
@@ -16756,7 +16756,7 @@
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-07-21T09:15:34.400Z",
+  "updatedAt": "2021-07-22T07:47:05.618Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Inherit of for the CampaignFactory Interface",

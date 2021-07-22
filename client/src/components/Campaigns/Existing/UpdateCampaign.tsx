@@ -1,17 +1,15 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
-import { Rewards, Info } from '../../../constants';
+import { Info } from '../../../constants';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { getRewardsList } from '../../../utils/web3React';
 import { useContractCampaign } from '../../../hooks/useContract';
 import CreateCampaign from '../Creation/CreateCampaign';
 import { rewardActions } from '../../../store/reward-slice';
-import Reward from '../Creation/Reward';
 import { useWeb3React } from '@web3-react/core';
 
 const UpdateCampaign = () => {
   const dispatch = useAppDispatch();
-  const rewards = useAppSelector((state) => state.reward.rewards);
   const campaign = useAppSelector((state) => state.campaign);
   const { account } = useWeb3React();
   const { campaignAddress } = useParams<{ campaignAddress: string }>();

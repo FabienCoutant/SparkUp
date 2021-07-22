@@ -43,21 +43,23 @@ const Campaign = (props: { address: string | null }) => {
     <div className='card mb-3 mt-3'>
       <div className='card-body'>
         <h5 className='card-title text-center' id='campaignTitle'>
-          {campaignInfo ? campaignInfo!.title : campaign.title}
+          {campaignInfo ? campaignInfo.title : campaign.title}
         </h5>
         <p className='card-text mt-5' id='campaingDescription'>
-          {campaignInfo ? campaignInfo!.description : campaign.description}
+          {campaignInfo ? campaignInfo.description : campaign.description}
         </p>
         <h6 className='card-subtitle mb-2' id='campaignFundingGoal'>
           Funding Goal :{' '}
-          {campaignInfo ? campaignInfo!.fundingGoal : campaign.fundingGoal} USDC
+          {campaignInfo ? campaignInfo.fundingGoal : campaign.fundingGoal} USDC
         </h6>
         <h6
           className='card-subtitle mb-2 list-inline-item'
           id='campaignDeadline'
         >
           Campaign Ends On :{' '}
-          {campaignInfo ? campaignInfo!.durationDays : campaign.deadline}
+          {campaignInfo
+            ? campaignInfo.durationDays
+            : campaign.deadline && campaign.deadline.toString()}
         </h6>
         <div className='mt-3'>
           {campaignInfo && pathname !== `/campaign-details/${props.address}` && (
