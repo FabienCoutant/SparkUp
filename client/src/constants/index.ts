@@ -41,18 +41,18 @@ export const USDC_CONTRACTS: { [key: string]: string } = {
 };
 
 export interface Info {
-  title: string | null;
-  description: string | null;
-  fundingGoal: number | null;
-  durationDays: string | number | null;
+  title: string;
+  description: string;
+  fundingGoal: number;
+  durationDays: number; //nb jours
 }
 
 export interface Rewards {
-  title: string | null;
-  description: string | null;
-  minimumContribution: number | null;
-  amount: number | null;
-  stockLimit: number | null;
-  nbContributors: number | null;
-  isStockLimited: boolean | null;
+  title: string;
+  description: string;
+  minimumContribution: number;
+  amount: number;
+  stockLimit: number;
+  nbContributors: number;
+  isStockLimited: boolean;
 }

@@ -9,7 +9,6 @@ contract Campaign is ICampaign {
     bool public isDisabled;
     uint8 public rewardsCounter;
     uint256 public createAt;
-    uint256 public lastUpdatedAt;
     address public manager;
     address public factory;
 
@@ -83,11 +82,11 @@ contract Campaign is ICampaign {
         require(bytes(data.title).length > 0, "!Err: Title empty");
         require(bytes(data.description).length > 0, "!Err: Description empty");
         require(data.fundingGoal >= 10000, "!Err: Funding Goal not enough");
-        require(createAt + data.durationDays * 1 days >= block.timestamp + 7 days, "!Err: durationDays to short");
+        require(createAt + 7 days <= data.deadlineDate, "!Err: deadlineDate to short");
         campaignInfo.title = data.title;
         campaignInfo.description = data.description;
         campaignInfo.fundingGoal = data.fundingGoal;
-        campaignInfo.durationDays = data.durationDays;
+        campaignInfo.deadlineDate = data.deadlineDate;
     }
 
     /**

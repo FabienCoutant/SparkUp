@@ -11,7 +11,7 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 import { rewardActions } from '../../../store/reward-slice';
 
-const ConfirmCampaing = () => {
+const ConfirmCampaign = () => {
   const dispatch = useAppDispatch();
   const campaign = useAppSelector((state) => state.campaign);
   const rewards = useAppSelector((state) => state.reward.rewards);
@@ -33,7 +33,7 @@ const ConfirmCampaing = () => {
     } else {
       setCampaignDuration(
         Math.round(
-          (new Date(campaign.deadline!).getTime() - Date.now()) /
+          (new Date(campaign.durationDays).getTime() - Date.now()) /
             (1000 * 60 * 60 * 24)
         )
       );
@@ -70,7 +70,7 @@ const ConfirmCampaing = () => {
       });
       console.log(rewardsInfo);
       try {
-        await contractCampaignFactory!.methods
+        await contractCampaignFactory?.methods
           .createCampaign(campaignInfo, rewardsInfo)
           .send({ from: account });
       } catch (error) {
@@ -83,13 +83,13 @@ const ConfirmCampaing = () => {
     dispatch(
       rewardActions.addReward({
         id: rewards.length,
-        title: null,
-        description: null,
-        minimumContribution: null,
-        amount: null,
-        stockLimit: null,
-        nbContributors: null,
-        isStockLimited: null,
+        title: "",
+        description: "",
+        minimumContribution: 0,
+        amount: 0,
+        stockLimit: 0,
+        nbContributors: 0,
+        isStockLimited: false,
         confirmed: false,
         published: false,
       })
@@ -164,4 +164,4 @@ const ConfirmCampaing = () => {
   }
 };
 
-export default ConfirmCampaing;
+export default ConfirmCampaign;

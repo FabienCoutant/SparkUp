@@ -1,24 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Info } from '../constants/index';
 
-export interface campaignState {
-  title: string | null;
-  description: string | null;
-  fundingGoal: number | null;
-  deadline: any;
-  confirmed: boolean | null;
-  published: boolean | null;
-  manager: string | null;
+export interface campaignState extends Info{
+  confirmed: boolean;
+  published: boolean;
+  manager: string;
 }
 
 const initialState: campaignState = {
-  title: null,
-  description: null,
-  fundingGoal: null,
-  deadline: null,
+  title: "",
+  description: "",
+  fundingGoal: 10000,
+  durationDays: new Date().setDate(Date.now()+7),
   confirmed: false,
-  published: null,
-  manager: null,
+  published: false,
+  manager: "",
 };
 
 const campaignSlice = createSlice({
@@ -29,7 +25,7 @@ const campaignSlice = createSlice({
       state.title = action.payload.title;
       state.description = action.payload.description;
       state.fundingGoal = action.payload.fundingGoal;
-      state.deadline = action.payload.deadline;
+      state.durationDays = action.payload.durationDays;
       state.confirmed = action.payload.confirmed;
       state.published = action.payload.published;
       state.manager = action.payload.manager;

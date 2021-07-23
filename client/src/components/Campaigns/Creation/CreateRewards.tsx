@@ -27,13 +27,13 @@ const CreateRewards = () => {
     dispatch(
       rewardActions.addReward({
         id: rewards.length,
-        title: null,
-        description: null,
-        minimumContribution: null,
-        amount: null,
-        stockLimit: null,
-        nbContributors: null,
-        isStockLimited: null,
+        title: "",
+        description: "",
+        minimumContribution: 0,
+        amount:0,
+        stockLimit:0,
+        nbContributors:0,
+        isStockLimited: false,
         confirmed: false,
         published: false,
       })
