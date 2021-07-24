@@ -17,16 +17,6 @@ contract Campaign is ICampaign {
     Info private campaignInfo;
     mapping(uint => Rewards) public rewardsList;
 
-    //Workflow
-    enum WorkflowStatus {
-        CampaignDrafted,
-        CampaignPublished,
-        FundingComplete,
-        FundingFailed,
-        CampaignCompleted,
-        CampaignDeleted
-    }
-
     //    Events
     event newCampaign();
     event CampaignNewRewardsAdded(uint rewardsCounter);
