@@ -25,6 +25,20 @@ interface ICampaign {
         uint256 deadlineDate;
     }
 
+    enum WorkflowStatus {
+        CampaignDrafted,
+        CampaignPublished,
+        FundingComplete,
+        FundingFailed,
+        CampaignCompleted,
+        CampaignDeleted
+    }
+
+    /**
+     * @notice Returns the campaign information in the struct Info plus de createAt and the managerAddress.
+     */
+    function getCampaignInfo() external returns(Info memory, uint, address);
+
     /**
      * @notice Update the campaign information in the struct Info.
      * @dev Only the manager must be able to call it.
@@ -73,4 +87,6 @@ interface ICampaign {
      * @param newFactory address Address of the new factory
      */
     function updateFactory(address newFactory) external;
+
+    function publishCampaign() external;
 }
