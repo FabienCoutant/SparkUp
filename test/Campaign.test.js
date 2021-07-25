@@ -48,7 +48,7 @@ contract('Campaign', (accounts) => {
   };
   let CampaignContractInstance;
 
-  xdescribe('--- Update Info ---', async () => {
+  describe('--- Update Info ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
@@ -82,6 +82,20 @@ contract('Campaign', (accounts) => {
       await expectRevert(
         CampaignContractInstance.updateCampaign(updatedData, { from: alice }),
         '!Err : Wrong workflow status'
+      );
+    });
+    it('should revert and delete campaign if past publish deadline', async () => {
+      const updatedData = {
+        ...initialCampaignInfo,
+        title: 'Updated',
+      };
+      const createAt = await CampaignContractInstance.createAt();
+      const futureDate = await createAt.add(time.duration.days(15));
+      const duration = futureDate - createAt;
+      time.increase(duration);
+      await expectRevert(
+        CampaignContractInstance.updateCampaign(updatedData, { from: alice }),
+        '!Err: Campaign deleted due to missed publish deadline'
       );
     });
     it('should update the title', async () => {
@@ -210,7 +224,7 @@ contract('Campaign', (accounts) => {
       newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
       CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
     });
-    xdescribe('  --- Add a new reward --- ', () => {
+    describe('  --- Add a new reward --- ', () => {
       it('should revert if not manager try to add a reward', async () => {
         await expectRevert(
           CampaignContractInstance.addReward(newReward, { from: bob }),
@@ -245,7 +259,7 @@ contract('Campaign', (accounts) => {
         expect(RewardsInfo.title).to.be.equal(newReward.title);
       });
     });
-    xdescribe('  --- Update reward --- ', () => {
+    describe('  --- Update reward --- ', () => {
       it('should revert if not manager try to update a reward', async () => {
         const newRewardsInfo = initialRewards.map((a) => ({ ...a }));
         newRewardsInfo[0].title = 'Updated';
@@ -319,7 +333,7 @@ contract('Campaign', (accounts) => {
       });
     });
   });
-  xdescribe('--- Delete Reward  ---', async () => {
+  describe('--- Delete Reward  ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
@@ -398,7 +412,7 @@ contract('Campaign', (accounts) => {
       expect(secondReward.title).to.be.equal(newReward.title);
     });
   });
-  xdescribe('--- Publish ---', async () => {
+  describe('--- Publish ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
@@ -438,7 +452,7 @@ contract('Campaign', (accounts) => {
       );
     });
   });
-  xdescribe('--- Migration ---', async () => {
+  describe('--- Migration ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,

@@ -54,6 +54,7 @@ contract Campaign is ICampaign {
             deleteCampaign();
             emit CampaignRewardDeleted();
         }
+        require(block.timestamp > publishDeadline, "!Err: Campaign deleted due to missed publish deadline");
         _;
     }
 
@@ -64,7 +65,7 @@ contract Campaign is ICampaign {
         manager = _manager;
         factory = msg.sender;
         createAt = block.timestamp;
-        publishDeadline = infoData.deadlineDate + 10 days;
+        publishDeadline = block.timestamp + 10 days;
         status = WorkflowStatus.CampaignDrafted;
         _setCampaignInfo(infoData);
         for (rewardsCounter; rewardsCounter < rewardsData.length; rewardsCounter++) {
@@ -82,7 +83,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateCampaign(Info memory newInfo) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) checkPublishDeadline() {
+    function updateCampaign(Info memory newInfo) external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         _setCampaignInfo(newInfo);
         emit CampaignInfoUpdated();
     }
@@ -90,7 +91,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function addReward(Rewards memory newRewardData) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) checkPublishDeadline() {
+    function addReward(Rewards memory newRewardData) external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         rewardsCounter++;
         _setCampaignReward(rewardsCounter, newRewardData);
         emit CampaignNewRewardsAdded(rewardsCounter);
@@ -99,7 +100,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateReward(Rewards memory newRewardData, uint rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) checkPublishDeadline() {
+    function updateReward(Rewards memory newRewardData, uint rewardIndex) external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         _setCampaignReward(rewardIndex, newRewardData);
         emit CampaignRewardsUpdated();
@@ -142,7 +143,7 @@ contract Campaign is ICampaign {
      * @inheritdoc ICampaign
      */
     function deleteCampaign() public override isNotDeleted() onlyManager() {
-        require(status == WorkflowStatus.CampaignDrafted || status == WorkflowStatus.FundingFailed || status == WorkflowStatus.CampaignCompleted, '!Err : Wrong workflow status');
+        require(status == WorkflowStatus.CampaignDrafted || status == WorkflowStatus.FundingFailed || status == WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
         status = WorkflowStatus.CampaignDeleted;
         ICampaignFactory(factory).deleteCampaign();
         emit CampaignDisabled();
@@ -151,7 +152,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function deleteReward(uint256 rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) checkPublishDeadline() {
+    function deleteReward(uint256 rewardIndex) external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         if(rewardsCounter!=rewardIndex){
             rewardsList[rewardIndex] = rewardsList[rewardsCounter];
@@ -176,7 +177,7 @@ contract Campaign is ICampaign {
         factory = newFactory;
     }
 
-    function publishCampaign() external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) checkPublishDeadline() {
+    function publishCampaign() external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         status = WorkflowStatus.CampaignPublished;
         emit WorkflowStatusChange(WorkflowStatus.CampaignDrafted, WorkflowStatus.CampaignPublished);
         emit CampaignPublished();
