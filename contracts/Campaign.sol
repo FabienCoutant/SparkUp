@@ -24,6 +24,7 @@ contract Campaign is ICampaign {
     event CampaignRewardsUpdated();
     event CampaignDisabled();
     event CampaignRewardDeleted();
+    event CampaignPublished();
     event WorkflowStatusChange(
         WorkflowStatus previousStatus,
         WorkflowStatus newStatus
@@ -44,7 +45,7 @@ contract Campaign is ICampaign {
         WorkflowStatus currentStatus,
         WorkflowStatus requiredStatus
     ) {
-        require(currentStatus == requiredStatus);
+        require(currentStatus == requiredStatus, "!Err : Wrong workflow status");
         _;
     }
 
@@ -74,7 +75,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function getCampaignInfo() external override isNotDeleted() returns(Info memory, uint, address) {
+    function getCampaignInfo() external view override isNotDeleted() returns(Info memory, uint, address) {
         return (campaignInfo, createAt, manager);
     }
 
@@ -141,7 +142,7 @@ contract Campaign is ICampaign {
      * @inheritdoc ICampaign
      */
     function deleteCampaign() public override isNotDeleted() onlyManager() {
-        require(status == WorkflowStatus.CampaignDrafted || status == WorkflowStatus.FundingFailed || status == WorkflowStatus.CampaignCompleted, "!Err: Cannot delete Campaign at this stage of the workflow");
+        require(status == WorkflowStatus.CampaignDrafted || status == WorkflowStatus.FundingFailed || status == WorkflowStatus.CampaignCompleted, '!Err : Wrong workflow status');
         status = WorkflowStatus.CampaignDeleted;
         ICampaignFactory(factory).deleteCampaign();
         emit CampaignDisabled();
@@ -178,5 +179,6 @@ contract Campaign is ICampaign {
     function publishCampaign() external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) checkPublishDeadline() {
         status = WorkflowStatus.CampaignPublished;
         emit WorkflowStatusChange(WorkflowStatus.CampaignDrafted, WorkflowStatus.CampaignPublished);
+        emit CampaignPublished();
     }
 }

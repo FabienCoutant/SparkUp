@@ -6,15 +6,16 @@ const {
 } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 const CampaignContract = artifacts.require('Campaign');
+const CampaignFactoryContract = artifacts.require('CampaignFactory');
 
 contract('Campaign', (accounts) => {
-  const [factory, alice, bob] = accounts;
+  const [alice, bob] = accounts;
 
   const initialCampaignInfo = {
     title: 'First Campaign',
     description: 'This is the first campaign of SparkUp',
     fundingGoal: 11000,
-    deadlineDate: 0,
+    deadlineDate: new Date().setDate(new Date().getDate() + 7),
   };
   const initialRewards = [
     {
@@ -47,142 +48,18 @@ contract('Campaign', (accounts) => {
   };
   let CampaignContractInstance;
 
-  describe('--- Info Creation ---', async () => {
-    it('should allow user to create a campaign with title, description, amount to raise and deadlineDate', async () => {
-      initialCampaignInfo.deadlineDate = parseInt(
-        (await time.latest()).add(time.duration.days(30))
-      );
-      CampaignContractInstance = await CampaignContract.new(
-        initialCampaignInfo,
-        initialRewards,
-        alice,
-        { from: factory }
-      );
-      const CampaignInfo = await CampaignContractInstance.getCampaignInfo();
-      console.log(CampaignInfo);
-      expect(CampaignInfo.title).to.be.equal(initialCampaignInfo.title);
-      expect(CampaignInfo.description).to.be.equal(
-        initialCampaignInfo.description
-      );
-      expect(CampaignInfo.fundingGoal).to.be.bignumber.equal(
-        new BN(initialCampaignInfo.fundingGoal)
-      );
-      expect(CampaignInfo.deadlineDate).to.be.bignumber.equal(
-        new BN(initialCampaignInfo.deadlineDate)
-      );
-    });
-    xit('should revert if title is empty', async () => {
-      const badCampaignInfo = { ...initialCampaignInfo, title: '' };
-      await expectRevert(
-        CampaignContract.new(badCampaignInfo, initialRewards, alice, {
-          from: factory,
-        }),
-        '!Err: Title empty'
-      );
-    });
-    xit('should revert if description is empty', async () => {
-      const badCampaignInfo = { ...initialCampaignInfo, description: '' };
-      await expectRevert(
-        CampaignContract.new(badCampaignInfo, initialRewards, alice, {
-          from: factory,
-        }),
-        '!Err: Description empty'
-      );
-    });
-    xit('should revert if fundingGoal is not greater than 10 000', async () => {
-      const badCampaignInfo = { ...initialCampaignInfo, fundingGoal: 9999 };
-      await expectRevert(
-        CampaignContract.new(badCampaignInfo, initialRewards, alice, {
-          from: factory,
-        }),
-        '!Err: Funding Goal not enough'
-      );
-    });
-    xit('should revert if deadlineDate is not greater than creation date plus 7 days', async () => {
-      const badDate = (await time.latest()).add(time.duration.days(5));
-      const badCampaignInfo = { ...initialCampaignInfo, deadlineDate: badDate };
-      await expectRevert(
-        CampaignContract.new(badCampaignInfo, initialRewards, alice, {
-          from: factory,
-        }),
-        '!Err: deadlineDate to short'
-      );
-    });
-  });
-  xdescribe('--- Rewards creation ---', async () => {
-    it('should allow manager to create a campaign with rewards', async () => {
-      CampaignContractInstance = await CampaignContract.new(
-        initialCampaignInfo,
-        initialRewards,
-        alice,
-        { from: factory }
-      );
-      const firstRewardsInfo = await CampaignContractInstance.rewardsList(0);
-      expect(firstRewardsInfo.title).to.be.equal(initialRewards[0].title);
-      expect(firstRewardsInfo.description).to.be.equal(
-        initialRewards[0].description
-      );
-
-      const secondRewardsInfo = await CampaignContractInstance.rewardsList(1);
-      expect(secondRewardsInfo.title).to.be.equal(initialRewards[1].title);
-      expect(secondRewardsInfo.description).to.be.equal(
-        initialRewards[1].description
-      );
-    });
-    it('should revert if no rewards is defined', async () => {
-      await expectRevert(
-        CampaignContract.new(initialCampaignInfo, [], alice, { from: factory }),
-        '!Err: Rewards empty'
-      );
-    });
-    it('should revert if title is empty', async () => {
-      const badRewardsInfo = initialRewards.map((reward) => {
-        return { ...reward, title: '' };
-      });
-      await expectRevert(
-        CampaignContract.new(initialCampaignInfo, badRewardsInfo, alice, {
-          from: factory,
-        }),
-        '!Err: Title empty'
-      );
-    });
-    it('should revert if description is empty', async () => {
-      const badRewardsInfo = initialRewards.map((reward) => {
-        return { ...reward, description: '' };
-      });
-      await expectRevert(
-        CampaignContract.new(initialCampaignInfo, badRewardsInfo, alice, {
-          from: factory,
-        }),
-        '!Err: Description empty'
-      );
-    });
-    it('should revert if rewards array is greater then 10', async () => {
-      //12 rewards
-      const badRewardsInfo = [
-        ...initialRewards,
-        ...initialRewards,
-        ...initialRewards,
-        ...initialRewards,
-        ...initialRewards,
-        ...initialRewards,
-      ];
-      await expectRevert(
-        CampaignContract.new(initialCampaignInfo, badRewardsInfo, alice, {
-          from: factory,
-        }),
-        '!Err: Too much Rewards'
-      );
-    });
-  });
   xdescribe('--- Update Info ---', async () => {
     beforeEach(async () => {
-      CampaignContractInstance = await CampaignContract.new(
+      CampaignFactoryContractInstance = await CampaignFactoryContract.new({
+        from: alice,
+      });
+      const newCampaign = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
-        alice,
-        { from: factory }
+        { from: alice }
       );
+      newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
+      CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
     });
     it('should revert if not manager update the campaign', async () => {
       const updatedData = {
@@ -194,6 +71,19 @@ contract('Campaign', (accounts) => {
         '!Not Authorized'
       );
     });
+    it('should revert if wrong workflow status', async () => {
+      const updatedData = {
+        ...initialCampaignInfo,
+        title: 'Updated',
+      };
+      await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      await expectRevert(
+        CampaignContractInstance.updateCampaign(updatedData, { from: alice }),
+        '!Err : Wrong workflow status'
+      );
+    });
     it('should update the title', async () => {
       const updatedData = {
         ...initialCampaignInfo,
@@ -202,7 +92,8 @@ contract('Campaign', (accounts) => {
       await CampaignContractInstance.updateCampaign(updatedData, {
         from: alice,
       });
-      const CampaignInfo = await CampaignContractInstance.campaignInfo();
+      const CampaignResult = await CampaignContractInstance.getCampaignInfo();
+      const CampaignInfo = CampaignResult['0'];
       expect(CampaignInfo.title).to.be.equal(updatedData.title);
     });
     it('should revert the update it the title is empty', async () => {
@@ -225,7 +116,8 @@ contract('Campaign', (accounts) => {
       await CampaignContractInstance.updateCampaign(updatedData, {
         from: alice,
       });
-      const CampaignInfo = await CampaignContractInstance.campaignInfo();
+      const CampaignResult = await CampaignContractInstance.getCampaignInfo();
+      const CampaignInfo = CampaignResult['0'];
       expect(CampaignInfo.description).to.be.equal(updatedData.description);
     });
     it('should revert if description is empty', async () => {
@@ -245,7 +137,8 @@ contract('Campaign', (accounts) => {
       await CampaignContractInstance.updateCampaign(updatedData, {
         from: alice,
       });
-      const CampaignInfo = await CampaignContractInstance.campaignInfo();
+      const CampaignResult = await CampaignContractInstance.getCampaignInfo();
+      const CampaignInfo = CampaignResult['0'];
       expect(CampaignInfo.fundingGoal).to.be.bignumber.equal(
         new BN(updatedData.fundingGoal)
       );
@@ -270,7 +163,8 @@ contract('Campaign', (accounts) => {
       await CampaignContractInstance.updateCampaign(updatedData, {
         from: alice,
       });
-      const CampaignInfo = await CampaignContractInstance.campaignInfo();
+      const CampaignResult = await CampaignContractInstance.getCampaignInfo();
+      const CampaignInfo = CampaignResult['0'];
       expect(CampaignInfo.deadlineDate).to.be.bignumber.equal(
         new BN(updatedData.deadlineDate)
       );
@@ -303,20 +197,33 @@ contract('Campaign', (accounts) => {
       expectEvent(receipt, 'CampaignInfoUpdated');
     });
   });
-  xdescribe('--- Update Rewards ---', async () => {
+  describe('--- Update Rewards ---', async () => {
     beforeEach(async () => {
-      CampaignContractInstance = await CampaignContract.new(
+      CampaignFactoryContractInstance = await CampaignFactoryContract.new({
+        from: alice,
+      });
+      const newCampaign = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
-        alice,
-        { from: factory }
+        { from: alice }
       );
+      newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
+      CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
     });
-    describe('  --- Add a new reward --- ', () => {
+    xdescribe('  --- Add a new reward --- ', () => {
       it('should revert if not manager try to add a reward', async () => {
         await expectRevert(
           CampaignContractInstance.addReward(newReward, { from: bob }),
           '!Not Authorized'
+        );
+      });
+      it('should revert if wrong workflow status', async () => {
+        await CampaignContractInstance.publishCampaign({
+          from: alice,
+        });
+        await expectRevert(
+          CampaignContractInstance.addReward(newReward, { from: alice }),
+          '!Err : Wrong workflow status'
         );
       });
       it('should add a new reward and emit event', async () => {
@@ -338,7 +245,7 @@ contract('Campaign', (accounts) => {
         expect(RewardsInfo.title).to.be.equal(newReward.title);
       });
     });
-    describe('  --- Update reward --- ', () => {
+    xdescribe('  --- Update reward --- ', () => {
       it('should revert if not manager try to update a reward', async () => {
         const newRewardsInfo = initialRewards.map((a) => ({ ...a }));
         newRewardsInfo[0].title = 'Updated';
@@ -348,6 +255,20 @@ contract('Campaign', (accounts) => {
             from: bob,
           }),
           '!Not Authorized'
+        );
+      });
+      it('should revert if wrong workflow status', async () => {
+        const newRewardsInfo = initialRewards.map((a) => ({ ...a }));
+        newRewardsInfo[0].title = 'Updated';
+
+        await CampaignContractInstance.publishCampaign({
+          from: alice,
+        });
+        await expectRevert(
+          CampaignContractInstance.updateReward(newRewardsInfo[0], 1, {
+            from: alice,
+          }),
+          '!Err : Wrong workflow status'
         );
       });
       it('should revert if update the reward index does not exist', async () => {
@@ -400,17 +321,33 @@ contract('Campaign', (accounts) => {
   });
   xdescribe('--- Delete Reward  ---', async () => {
     beforeEach(async () => {
-      CampaignContractInstance = await CampaignContract.new(
+      CampaignFactoryContractInstance = await CampaignFactoryContract.new({
+        from: alice,
+      });
+      const newCampaign = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
-        alice,
-        { from: factory }
+        { from: alice }
       );
+      newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
+      CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
     });
     it('should revert if not manager try to delete a reward', async () => {
       await expectRevert(
         CampaignContractInstance.deleteReward(1, { from: bob }),
         '!Not Authorized'
+      );
+    });
+    it('should revert if wrong workflow status', async () => {
+      const initialRewardNb = await CampaignContractInstance.rewardsCounter();
+      await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      await expectRevert(
+        CampaignContractInstance.deleteReward(initialRewardNb, {
+          from: alice,
+        }),
+        '!Err : Wrong workflow status'
       );
     });
     it('should revert if reward index does not exist', async () => {
@@ -461,14 +398,58 @@ contract('Campaign', (accounts) => {
       expect(secondReward.title).to.be.equal(newReward.title);
     });
   });
-  xdescribe('--- Migration ---', async () => {
+  xdescribe('--- Publish ---', async () => {
     beforeEach(async () => {
-      CampaignContractInstance = await CampaignContract.new(
+      CampaignFactoryContractInstance = await CampaignFactoryContract.new({
+        from: alice,
+      });
+      const newCampaign = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
-        alice,
-        { from: factory }
+        { from: alice }
       );
+      newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
+      CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
+    });
+    it('should allow manager to publish campaign on correct workflow status', async () => {
+      const receipt = await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      expectEvent(receipt, 'WorkflowStatusChange', {
+        previousStatus: new BN(0),
+        newStatus: new BN(1),
+      });
+      const status = await CampaignContractInstance.status();
+      expect(status).to.be.bignumber.equal(new BN(1));
+    });
+    it('should revert if called by other than manager', async () => {
+      await expectRevert(
+        CampaignContractInstance.publishCampaign({ from: bob }),
+        '!Not Authorized'
+      );
+    });
+    it('should revert if wrong workflow status', async () => {
+      await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      await expectRevert(
+        CampaignContractInstance.publishCampaign({ from: alice }),
+        '!Err : Wrong workflow status'
+      );
+    });
+  });
+  xdescribe('--- Migration ---', async () => {
+    beforeEach(async () => {
+      CampaignFactoryContractInstance = await CampaignFactoryContract.new({
+        from: alice,
+      });
+      const newCampaign = await CampaignFactoryContractInstance.createCampaign(
+        initialCampaignInfo,
+        initialRewards,
+        { from: alice }
+      );
+      newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
+      CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
     });
     it('should allow the manager to change the manager address', async () => {
       await CampaignContractInstance.updateManager(bob, { from: alice });
@@ -482,7 +463,11 @@ contract('Campaign', (accounts) => {
       );
     });
     it('should allow the factory to change the factory address', async () => {
-      await CampaignContractInstance.updateFactory(bob, { from: factory });
+      const campaignFactoryAddress = await CampaignContractInstance.factory();
+      console.log(campaignFactoryAddress);
+      await CampaignContractInstance.updateFactory(bob, {
+        from: campaignFactoryAddress,
+      });
       const newFactory = await CampaignContractInstance.factory();
       expect(newFactory).to.be.equal(bob);
     });

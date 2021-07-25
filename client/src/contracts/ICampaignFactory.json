@@ -127,40 +127,40 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: GPL-3.0\r\npragma solidity 0.8.6;\r\n\r\nimport \"../interfaces/ICampaign.sol\";\r\n\r\n/**\r\n* @title ICampaignFactory\r\n* @notice The Campaign factory facilitate the deployment of new campaigns\r\n* @dev Interface for the CampaignFactory contract\r\n*/\r\ninterface ICampaignFactory {\r\n\r\n    /**\r\n     * @notice Create a new Campaign contract and init it\r\n     * @param infoData ICampaign.Info basic information for a campaign following the Campaign Info structure\r\n     * @param rewardsData ICampaign.Rewards array of rewards information for a campaign following the Campaign Info structure\r\n     */\r\n    function createCampaign(ICampaign.Info memory infoData,ICampaign.Rewards[] memory rewardsData) external;\r\n\r\n    /**\r\n     * @notice Delete a new Campaign that call this function.\r\n     * @dev Only an contract already deployed must be able to call this function\r\n     * @return success bool\r\n     */\r\n    function deleteCampaign() external returns(bool);\r\n\r\n    /**\r\n     * @notice Allow the owner to set a new owner for the factory.\r\n     * @dev Only the actual owner must be able to call this function\r\n     * @param newOwner address The new owner address\r\n     */\r\n    function updateOwner(address newOwner) external;\r\n\r\n    /**\r\n     * @notice Allow to get the all list of campaign address deployed\r\n     * @return Campaigns ICampaign[] list of campaigns address deployed and still actives\r\n     */\r\n    function getDeployedCampaignsList() external view returns (ICampaign[] memory);\r\n}\r\n",
-  "sourcePath": "A:\\Programing\\Projet_Final\\SparkUp\\contracts\\interfaces\\ICampaignFactory.sol",
+  "sourcePath": "A:/Programing/Projet_Final/SparkUp/contracts/interfaces/ICampaignFactory.sol",
   "ast": {
     "absolutePath": "/A/Programing/Projet_Final/SparkUp/contracts/interfaces/ICampaignFactory.sol",
     "exportedSymbols": {
       "ICampaign": [
-        951
+        93
       ],
       "ICampaignFactory": [
-        987
+        129
       ]
     },
-    "id": 988,
+    "id": 130,
     "license": "GPL-3.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 953,
+        "id": 95,
         "literals": [
           "solidity",
           "0.8",
           ".6"
         ],
         "nodeType": "PragmaDirective",
-        "src": "37:22:4"
+        "src": "37:22:1"
       },
       {
         "absolutePath": "/A/Programing/Projet_Final/SparkUp/contracts/interfaces/ICampaign.sol",
         "file": "../interfaces/ICampaign.sol",
-        "id": 954,
+        "id": 96,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 988,
-        "sourceUnit": 952,
-        "src": "63:37:4",
+        "scope": 130,
+        "sourceUnit": 94,
+        "src": "63:37:1",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -170,68 +170,68 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 955,
+          "id": 97,
           "nodeType": "StructuredDocumentation",
-          "src": "104:160:4",
+          "src": "104:160:1",
           "text": " @title ICampaignFactory\n @notice The Campaign factory facilitate the deployment of new campaigns\n @dev Interface for the CampaignFactory contract"
         },
         "fullyImplemented": false,
-        "id": 987,
+        "id": 129,
         "linearizedBaseContracts": [
-          987
+          129
         ],
         "name": "ICampaignFactory",
-        "nameLocation": "276:16:4",
+        "nameLocation": "276:16:1",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "documentation": {
-              "id": 956,
+              "id": 98,
               "nodeType": "StructuredDocumentation",
-              "src": "302:308:4",
+              "src": "302:308:1",
               "text": " @notice Create a new Campaign contract and init it\n @param infoData ICampaign.Info basic information for a campaign following the Campaign Info structure\n @param rewardsData ICampaign.Rewards array of rewards information for a campaign following the Campaign Info structure"
             },
             "functionSelector": "a6e1a41a",
-            "id": 966,
+            "id": 108,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "createCampaign",
-            "nameLocation": "625:14:4",
+            "nameLocation": "625:14:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 964,
+              "id": 106,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 959,
+                  "id": 101,
                   "mutability": "mutable",
                   "name": "infoData",
-                  "nameLocation": "662:8:4",
+                  "nameLocation": "662:8:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 966,
-                  "src": "640:30:4",
+                  "scope": 108,
+                  "src": "640:30:1",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Info_$884_memory_ptr",
+                    "typeIdentifier": "t_struct$_Info_$26_memory_ptr",
                     "typeString": "struct ICampaign.Info"
                   },
                   "typeName": {
-                    "id": 958,
+                    "id": 100,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 957,
+                      "id": 99,
                       "name": "ICampaign.Info",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 884,
-                      "src": "640:14:4"
+                      "referencedDeclaration": 26,
+                      "src": "640:14:1"
                     },
-                    "referencedDeclaration": 884,
-                    "src": "640:14:4",
+                    "referencedDeclaration": 26,
+                    "src": "640:14:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Info_$884_storage_ptr",
+                      "typeIdentifier": "t_struct$_Info_$26_storage_ptr",
                       "typeString": "struct ICampaign.Info"
                     }
                   },
@@ -239,96 +239,96 @@
                 },
                 {
                   "constant": false,
-                  "id": 963,
+                  "id": 105,
                   "mutability": "mutable",
                   "name": "rewardsData",
-                  "nameLocation": "698:11:4",
+                  "nameLocation": "698:11:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 966,
-                  "src": "671:38:4",
+                  "scope": 108,
+                  "src": "671:38:1",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_Rewards_$875_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_Rewards_$17_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct ICampaign.Rewards[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 961,
+                      "id": 103,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 960,
+                        "id": 102,
                         "name": "ICampaign.Rewards",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 875,
-                        "src": "671:17:4"
+                        "referencedDeclaration": 17,
+                        "src": "671:17:1"
                       },
-                      "referencedDeclaration": 875,
-                      "src": "671:17:4",
+                      "referencedDeclaration": 17,
+                      "src": "671:17:1",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Rewards_$875_storage_ptr",
+                        "typeIdentifier": "t_struct$_Rewards_$17_storage_ptr",
                         "typeString": "struct ICampaign.Rewards"
                       }
                     },
-                    "id": 962,
+                    "id": 104,
                     "nodeType": "ArrayTypeName",
-                    "src": "671:19:4",
+                    "src": "671:19:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_Rewards_$875_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_Rewards_$17_storage_$dyn_storage_ptr",
                       "typeString": "struct ICampaign.Rewards[]"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "639:71:4"
+              "src": "639:71:1"
             },
             "returnParameters": {
-              "id": 965,
+              "id": 107,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "719:0:4"
+              "src": "719:0:1"
             },
-            "scope": 987,
-            "src": "616:104:4",
+            "scope": 129,
+            "src": "616:104:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 967,
+              "id": 109,
               "nodeType": "StructuredDocumentation",
-              "src": "728:186:4",
+              "src": "728:186:1",
               "text": " @notice Delete a new Campaign that call this function.\n @dev Only an contract already deployed must be able to call this function\n @return success bool"
             },
             "functionSelector": "244c3c2c",
-            "id": 972,
+            "id": 114,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deleteCampaign",
-            "nameLocation": "929:14:4",
+            "nameLocation": "929:14:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 968,
+              "id": 110,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "943:2:4"
+              "src": "943:2:1"
             },
             "returnParameters": {
-              "id": 971,
+              "id": 113,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 970,
+                  "id": 112,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 972,
-                  "src": "963:4:4",
+                  "scope": 114,
+                  "src": "963:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -336,10 +336,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 969,
+                    "id": 111,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "963:4:4",
+                    "src": "963:4:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -348,42 +348,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "962:6:4"
+              "src": "962:6:1"
             },
-            "scope": 987,
-            "src": "920:49:4",
+            "scope": 129,
+            "src": "920:49:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 973,
+              "id": 115,
               "nodeType": "StructuredDocumentation",
-              "src": "977:204:4",
+              "src": "977:204:1",
               "text": " @notice Allow the owner to set a new owner for the factory.\n @dev Only the actual owner must be able to call this function\n @param newOwner address The new owner address"
             },
             "functionSelector": "880cdc31",
-            "id": 978,
+            "id": 120,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateOwner",
-            "nameLocation": "1196:11:4",
+            "nameLocation": "1196:11:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 976,
+              "id": 118,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 975,
+                  "id": 117,
                   "mutability": "mutable",
                   "name": "newOwner",
-                  "nameLocation": "1216:8:4",
+                  "nameLocation": "1216:8:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 978,
-                  "src": "1208:16:4",
+                  "scope": 120,
+                  "src": "1208:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -391,10 +391,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 974,
+                    "id": 116,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1208:7:4",
+                    "src": "1208:7:1",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -404,138 +404,138 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1207:18:4"
+              "src": "1207:18:1"
             },
             "returnParameters": {
-              "id": 977,
+              "id": 119,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1234:0:4"
+              "src": "1234:0:1"
             },
-            "scope": 987,
-            "src": "1187:48:4",
+            "scope": 129,
+            "src": "1187:48:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 979,
+              "id": 121,
               "nodeType": "StructuredDocumentation",
-              "src": "1243:174:4",
+              "src": "1243:174:1",
               "text": " @notice Allow to get the all list of campaign address deployed\n @return Campaigns ICampaign[] list of campaigns address deployed and still actives"
             },
             "functionSelector": "bfbaebb7",
-            "id": 986,
+            "id": 128,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getDeployedCampaignsList",
-            "nameLocation": "1432:24:4",
+            "nameLocation": "1432:24:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 980,
+              "id": 122,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1456:2:4"
+              "src": "1456:2:1"
             },
             "returnParameters": {
-              "id": 985,
+              "id": 127,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 984,
+                  "id": 126,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 986,
-                  "src": "1482:18:4",
+                  "scope": 128,
+                  "src": "1482:18:1",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_contract$_ICampaign_$951_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_contract$_ICampaign_$93_$dyn_memory_ptr",
                     "typeString": "contract ICampaign[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 982,
+                      "id": 124,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 981,
+                        "id": 123,
                         "name": "ICampaign",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 951,
-                        "src": "1482:9:4"
+                        "referencedDeclaration": 93,
+                        "src": "1482:9:1"
                       },
-                      "referencedDeclaration": 951,
-                      "src": "1482:9:4",
+                      "referencedDeclaration": 93,
+                      "src": "1482:9:1",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ICampaign_$951",
+                        "typeIdentifier": "t_contract$_ICampaign_$93",
                         "typeString": "contract ICampaign"
                       }
                     },
-                    "id": 983,
+                    "id": 125,
                     "nodeType": "ArrayTypeName",
-                    "src": "1482:11:4",
+                    "src": "1482:11:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_contract$_ICampaign_$951_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_contract$_ICampaign_$93_$dyn_storage_ptr",
                       "typeString": "contract ICampaign[]"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "1481:20:4"
+              "src": "1481:20:1"
             },
-            "scope": 987,
-            "src": "1423:79:4",
+            "scope": 129,
+            "src": "1423:79:1",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 988,
-        "src": "266:1239:4",
+        "scope": 130,
+        "src": "266:1239:1",
         "usedErrors": []
       }
     ],
-    "src": "37:1470:4"
+    "src": "37:1470:1"
   },
   "legacyAST": {
     "absolutePath": "/A/Programing/Projet_Final/SparkUp/contracts/interfaces/ICampaignFactory.sol",
     "exportedSymbols": {
       "ICampaign": [
-        951
+        93
       ],
       "ICampaignFactory": [
-        987
+        129
       ]
     },
-    "id": 988,
+    "id": 130,
     "license": "GPL-3.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 953,
+        "id": 95,
         "literals": [
           "solidity",
           "0.8",
           ".6"
         ],
         "nodeType": "PragmaDirective",
-        "src": "37:22:4"
+        "src": "37:22:1"
       },
       {
         "absolutePath": "/A/Programing/Projet_Final/SparkUp/contracts/interfaces/ICampaign.sol",
         "file": "../interfaces/ICampaign.sol",
-        "id": 954,
+        "id": 96,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 988,
-        "sourceUnit": 952,
-        "src": "63:37:4",
+        "scope": 130,
+        "sourceUnit": 94,
+        "src": "63:37:1",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -545,68 +545,68 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 955,
+          "id": 97,
           "nodeType": "StructuredDocumentation",
-          "src": "104:160:4",
+          "src": "104:160:1",
           "text": " @title ICampaignFactory\n @notice The Campaign factory facilitate the deployment of new campaigns\n @dev Interface for the CampaignFactory contract"
         },
         "fullyImplemented": false,
-        "id": 987,
+        "id": 129,
         "linearizedBaseContracts": [
-          987
+          129
         ],
         "name": "ICampaignFactory",
-        "nameLocation": "276:16:4",
+        "nameLocation": "276:16:1",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "documentation": {
-              "id": 956,
+              "id": 98,
               "nodeType": "StructuredDocumentation",
-              "src": "302:308:4",
+              "src": "302:308:1",
               "text": " @notice Create a new Campaign contract and init it\n @param infoData ICampaign.Info basic information for a campaign following the Campaign Info structure\n @param rewardsData ICampaign.Rewards array of rewards information for a campaign following the Campaign Info structure"
             },
             "functionSelector": "a6e1a41a",
-            "id": 966,
+            "id": 108,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "createCampaign",
-            "nameLocation": "625:14:4",
+            "nameLocation": "625:14:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 964,
+              "id": 106,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 959,
+                  "id": 101,
                   "mutability": "mutable",
                   "name": "infoData",
-                  "nameLocation": "662:8:4",
+                  "nameLocation": "662:8:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 966,
-                  "src": "640:30:4",
+                  "scope": 108,
+                  "src": "640:30:1",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Info_$884_memory_ptr",
+                    "typeIdentifier": "t_struct$_Info_$26_memory_ptr",
                     "typeString": "struct ICampaign.Info"
                   },
                   "typeName": {
-                    "id": 958,
+                    "id": 100,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 957,
+                      "id": 99,
                       "name": "ICampaign.Info",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 884,
-                      "src": "640:14:4"
+                      "referencedDeclaration": 26,
+                      "src": "640:14:1"
                     },
-                    "referencedDeclaration": 884,
-                    "src": "640:14:4",
+                    "referencedDeclaration": 26,
+                    "src": "640:14:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Info_$884_storage_ptr",
+                      "typeIdentifier": "t_struct$_Info_$26_storage_ptr",
                       "typeString": "struct ICampaign.Info"
                     }
                   },
@@ -614,96 +614,96 @@
                 },
                 {
                   "constant": false,
-                  "id": 963,
+                  "id": 105,
                   "mutability": "mutable",
                   "name": "rewardsData",
-                  "nameLocation": "698:11:4",
+                  "nameLocation": "698:11:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 966,
-                  "src": "671:38:4",
+                  "scope": 108,
+                  "src": "671:38:1",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_struct$_Rewards_$875_memory_ptr_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_struct$_Rewards_$17_memory_ptr_$dyn_memory_ptr",
                     "typeString": "struct ICampaign.Rewards[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 961,
+                      "id": 103,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 960,
+                        "id": 102,
                         "name": "ICampaign.Rewards",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 875,
-                        "src": "671:17:4"
+                        "referencedDeclaration": 17,
+                        "src": "671:17:1"
                       },
-                      "referencedDeclaration": 875,
-                      "src": "671:17:4",
+                      "referencedDeclaration": 17,
+                      "src": "671:17:1",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_struct$_Rewards_$875_storage_ptr",
+                        "typeIdentifier": "t_struct$_Rewards_$17_storage_ptr",
                         "typeString": "struct ICampaign.Rewards"
                       }
                     },
-                    "id": 962,
+                    "id": 104,
                     "nodeType": "ArrayTypeName",
-                    "src": "671:19:4",
+                    "src": "671:19:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_struct$_Rewards_$875_storage_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_struct$_Rewards_$17_storage_$dyn_storage_ptr",
                       "typeString": "struct ICampaign.Rewards[]"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "639:71:4"
+              "src": "639:71:1"
             },
             "returnParameters": {
-              "id": 965,
+              "id": 107,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "719:0:4"
+              "src": "719:0:1"
             },
-            "scope": 987,
-            "src": "616:104:4",
+            "scope": 129,
+            "src": "616:104:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 967,
+              "id": 109,
               "nodeType": "StructuredDocumentation",
-              "src": "728:186:4",
+              "src": "728:186:1",
               "text": " @notice Delete a new Campaign that call this function.\n @dev Only an contract already deployed must be able to call this function\n @return success bool"
             },
             "functionSelector": "244c3c2c",
-            "id": 972,
+            "id": 114,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deleteCampaign",
-            "nameLocation": "929:14:4",
+            "nameLocation": "929:14:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 968,
+              "id": 110,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "943:2:4"
+              "src": "943:2:1"
             },
             "returnParameters": {
-              "id": 971,
+              "id": 113,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 970,
+                  "id": 112,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 972,
-                  "src": "963:4:4",
+                  "scope": 114,
+                  "src": "963:4:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -711,10 +711,10 @@
                     "typeString": "bool"
                   },
                   "typeName": {
-                    "id": 969,
+                    "id": 111,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
-                    "src": "963:4:4",
+                    "src": "963:4:1",
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -723,42 +723,42 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "962:6:4"
+              "src": "962:6:1"
             },
-            "scope": 987,
-            "src": "920:49:4",
+            "scope": 129,
+            "src": "920:49:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 973,
+              "id": 115,
               "nodeType": "StructuredDocumentation",
-              "src": "977:204:4",
+              "src": "977:204:1",
               "text": " @notice Allow the owner to set a new owner for the factory.\n @dev Only the actual owner must be able to call this function\n @param newOwner address The new owner address"
             },
             "functionSelector": "880cdc31",
-            "id": 978,
+            "id": 120,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateOwner",
-            "nameLocation": "1196:11:4",
+            "nameLocation": "1196:11:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 976,
+              "id": 118,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 975,
+                  "id": 117,
                   "mutability": "mutable",
                   "name": "newOwner",
-                  "nameLocation": "1216:8:4",
+                  "nameLocation": "1216:8:1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 978,
-                  "src": "1208:16:4",
+                  "scope": 120,
+                  "src": "1208:16:1",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -766,10 +766,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 974,
+                    "id": 116,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1208:7:4",
+                    "src": "1208:7:1",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -779,104 +779,104 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1207:18:4"
+              "src": "1207:18:1"
             },
             "returnParameters": {
-              "id": 977,
+              "id": 119,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1234:0:4"
+              "src": "1234:0:1"
             },
-            "scope": 987,
-            "src": "1187:48:4",
+            "scope": 129,
+            "src": "1187:48:1",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 979,
+              "id": 121,
               "nodeType": "StructuredDocumentation",
-              "src": "1243:174:4",
+              "src": "1243:174:1",
               "text": " @notice Allow to get the all list of campaign address deployed\n @return Campaigns ICampaign[] list of campaigns address deployed and still actives"
             },
             "functionSelector": "bfbaebb7",
-            "id": 986,
+            "id": 128,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getDeployedCampaignsList",
-            "nameLocation": "1432:24:4",
+            "nameLocation": "1432:24:1",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 980,
+              "id": 122,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1456:2:4"
+              "src": "1456:2:1"
             },
             "returnParameters": {
-              "id": 985,
+              "id": 127,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 984,
+                  "id": 126,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 986,
-                  "src": "1482:18:4",
+                  "scope": 128,
+                  "src": "1482:18:1",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_array$_t_contract$_ICampaign_$951_$dyn_memory_ptr",
+                    "typeIdentifier": "t_array$_t_contract$_ICampaign_$93_$dyn_memory_ptr",
                     "typeString": "contract ICampaign[]"
                   },
                   "typeName": {
                     "baseType": {
-                      "id": 982,
+                      "id": 124,
                       "nodeType": "UserDefinedTypeName",
                       "pathNode": {
-                        "id": 981,
+                        "id": 123,
                         "name": "ICampaign",
                         "nodeType": "IdentifierPath",
-                        "referencedDeclaration": 951,
-                        "src": "1482:9:4"
+                        "referencedDeclaration": 93,
+                        "src": "1482:9:1"
                       },
-                      "referencedDeclaration": 951,
-                      "src": "1482:9:4",
+                      "referencedDeclaration": 93,
+                      "src": "1482:9:1",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_ICampaign_$951",
+                        "typeIdentifier": "t_contract$_ICampaign_$93",
                         "typeString": "contract ICampaign"
                       }
                     },
-                    "id": 983,
+                    "id": 125,
                     "nodeType": "ArrayTypeName",
-                    "src": "1482:11:4",
+                    "src": "1482:11:1",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_array$_t_contract$_ICampaign_$951_$dyn_storage_ptr",
+                      "typeIdentifier": "t_array$_t_contract$_ICampaign_$93_$dyn_storage_ptr",
                       "typeString": "contract ICampaign[]"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "1481:20:4"
+              "src": "1481:20:1"
             },
-            "scope": 987,
-            "src": "1423:79:4",
+            "scope": 129,
+            "src": "1423:79:1",
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 988,
-        "src": "266:1239:4",
+        "scope": 130,
+        "src": "266:1239:1",
         "usedErrors": []
       }
     ],
-    "src": "37:1470:4"
+    "src": "37:1470:1"
   },
   "compiler": {
     "name": "solc",
@@ -884,7 +884,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-07-24T11:54:22.008Z",
+  "updatedAt": "2021-07-25T08:12:33.135Z",
   "devdoc": {
     "details": "Interface for the CampaignFactory contract",
     "kind": "dev",
