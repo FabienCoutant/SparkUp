@@ -4,6 +4,7 @@ const {
   time,
   BN,
 } = require('@openzeppelin/test-helpers');
+const { latestBlock } = require('@openzeppelin/test-helpers/src/time');
 const { expect } = require('chai');
 const CampaignContract = artifacts.require('Campaign');
 const CampaignFactoryContract = artifacts.require('CampaignFactory');
@@ -61,7 +62,7 @@ contract('Campaign', (accounts) => {
       newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
       CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
     });
-    it('should revert if not manager update the campaign', async () => {
+    xit('should revert if not manager update the campaign', async () => {
       const updatedData = {
         ...initialCampaignInfo,
         title: 'Updated',
@@ -71,7 +72,7 @@ contract('Campaign', (accounts) => {
         '!Not Authorized'
       );
     });
-    it('should revert if wrong workflow status', async () => {
+    xit('should revert if wrong workflow status', async () => {
       const updatedData = {
         ...initialCampaignInfo,
         title: 'Updated',
@@ -89,16 +90,13 @@ contract('Campaign', (accounts) => {
         ...initialCampaignInfo,
         title: 'Updated',
       };
-      const createAt = await CampaignContractInstance.createAt();
-      const futureDate = await createAt.add(time.duration.days(15));
-      const duration = futureDate - createAt;
-      time.increase(duration);
+      await time.increase(time.duration.days(15));
       await expectRevert(
         CampaignContractInstance.updateCampaign(updatedData, { from: alice }),
         '!Err: Campaign deleted due to missed publish deadline'
       );
     });
-    it('should update the title', async () => {
+    xit('should update the title', async () => {
       const updatedData = {
         ...initialCampaignInfo,
         title: 'Updated',
@@ -110,7 +108,7 @@ contract('Campaign', (accounts) => {
       const CampaignInfo = CampaignResult['0'];
       expect(CampaignInfo.title).to.be.equal(updatedData.title);
     });
-    it('should revert the update it the title is empty', async () => {
+    xit('should revert the update it the title is empty', async () => {
       const badUpdatedData = {
         ...initialCampaignInfo,
         title: '',
@@ -122,7 +120,7 @@ contract('Campaign', (accounts) => {
         '!Err: Title empty'
       );
     });
-    it('should update the description', async () => {
+    xit('should update the description', async () => {
       const updatedData = {
         ...initialCampaignInfo,
         description: 'Updated',
@@ -134,7 +132,7 @@ contract('Campaign', (accounts) => {
       const CampaignInfo = CampaignResult['0'];
       expect(CampaignInfo.description).to.be.equal(updatedData.description);
     });
-    it('should revert if description is empty', async () => {
+    xit('should revert if description is empty', async () => {
       const badUpdatedData = { ...initialCampaignInfo, description: '' };
       await expectRevert(
         CampaignContractInstance.updateCampaign(badUpdatedData, {
@@ -143,7 +141,7 @@ contract('Campaign', (accounts) => {
         '!Err: Description empty'
       );
     });
-    it('should update the fundingGoal', async () => {
+    xit('should update the fundingGoal', async () => {
       const updatedData = {
         ...initialCampaignInfo,
         fundingGoal: 20000,
@@ -157,7 +155,7 @@ contract('Campaign', (accounts) => {
         new BN(updatedData.fundingGoal)
       );
     });
-    it('should revert if fundingGoal is not greater than 10 000', async () => {
+    xit('should revert if fundingGoal is not greater than 10 000', async () => {
       const badUpdatedData = { ...initialCampaignInfo, fundingGoal: 9999 };
       await expectRevert(
         CampaignContractInstance.updateCampaign(badUpdatedData, {
@@ -166,7 +164,7 @@ contract('Campaign', (accounts) => {
         '!Err: Funding Goal not enough'
       );
     });
-    it('should update the deadlineDate', async () => {
+    xit('should update the deadlineDate', async () => {
       const newDeadLine = parseInt(
         (await time.latest()).add(time.duration.days(10))
       );
@@ -183,7 +181,7 @@ contract('Campaign', (accounts) => {
         new BN(updatedData.deadlineDate)
       );
     });
-    it('should revert if deadlineDate is not greater than creation date plus 7 days', async () => {
+    xit('should revert if deadlineDate is not greater than creation date plus 7 days', async () => {
       const badDeadLine = parseInt(
         (await time.latest()).add(time.duration.days(4))
       );
@@ -198,7 +196,7 @@ contract('Campaign', (accounts) => {
         '!Err: deadlineDate to short'
       );
     });
-    it('should emit event after update', async () => {
+    xit('should emit event after update', async () => {
       const updatedData = {
         ...initialCampaignInfo,
         description: 'Updated',
@@ -211,7 +209,7 @@ contract('Campaign', (accounts) => {
       expectEvent(receipt, 'CampaignInfoUpdated');
     });
   });
-  describe('--- Update Rewards ---', async () => {
+  xdescribe('--- Update Rewards ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
@@ -224,7 +222,7 @@ contract('Campaign', (accounts) => {
       newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
       CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
     });
-    describe('  --- Add a new reward --- ', () => {
+    xdescribe('  --- Add a new reward --- ', () => {
       it('should revert if not manager try to add a reward', async () => {
         await expectRevert(
           CampaignContractInstance.addReward(newReward, { from: bob }),
@@ -259,7 +257,7 @@ contract('Campaign', (accounts) => {
         expect(RewardsInfo.title).to.be.equal(newReward.title);
       });
     });
-    describe('  --- Update reward --- ', () => {
+    xdescribe('  --- Update reward --- ', () => {
       it('should revert if not manager try to update a reward', async () => {
         const newRewardsInfo = initialRewards.map((a) => ({ ...a }));
         newRewardsInfo[0].title = 'Updated';
@@ -333,7 +331,7 @@ contract('Campaign', (accounts) => {
       });
     });
   });
-  describe('--- Delete Reward  ---', async () => {
+  xdescribe('--- Delete Reward  ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
@@ -412,7 +410,7 @@ contract('Campaign', (accounts) => {
       expect(secondReward.title).to.be.equal(newReward.title);
     });
   });
-  describe('--- Publish ---', async () => {
+  xdescribe('--- Publish ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
@@ -452,7 +450,7 @@ contract('Campaign', (accounts) => {
       );
     });
   });
-  describe('--- Migration ---', async () => {
+  xdescribe('--- Migration ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,

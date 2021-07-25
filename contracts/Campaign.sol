@@ -50,11 +50,7 @@ contract Campaign is ICampaign {
     }
 
     modifier checkPublishDeadline() {
-        if (block.timestamp > publishDeadline) {
-            deleteCampaign();
-            emit CampaignRewardDeleted();
-        }
-        require(block.timestamp > publishDeadline, "!Err: Campaign deleted due to missed publish deadline");
+        require(block.timestamp < publishDeadline, "!Err: Campaign deleted due to missed publish");
         _;
     }
 
