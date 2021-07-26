@@ -66,8 +66,8 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function getCampaignInfo() external view override isNotDeleted() returns(Info memory, uint, address) {
-        return (campaignInfo, createAt, manager);
+    function getCampaignInfo() external view override isNotDeleted() returns(Info memory, uint, address, WorkflowStatus) {
+        return (campaignInfo, createAt, manager, status);
     }
 
     /**
