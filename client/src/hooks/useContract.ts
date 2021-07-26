@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getContract, getTestContract } from '../utils/web3React';
+import { getContractByABI, getContractByAddress } from '../utils/web3React';
 import { useWeb3React } from '@web3-react/core';
 import { useActiveWeb3React } from './useWeb3';
 import USDC from '../contracts/external/USDC.json';
@@ -11,7 +11,7 @@ export const useContractUSDC = () => {
   return useMemo(() => {
     if (!library || !chainId) return null;
     try {
-      return getContract(USDC, library, chainId, 'USDC');
+      return getContractByABI(USDC, library, chainId, 'USDC');
     } catch (error) {
       console.error('Failed to get contract', error);
       return null;
@@ -24,7 +24,7 @@ export const useContractCampaignFactory = () => {
   return useMemo(() => {
     if (!library || !chainId) return null;
     try {
-      return getContract(CampaignFactory, library, chainId, 'LOCAL');
+      return getContractByABI(CampaignFactory, library, chainId, 'LOCAL');
     } catch (error) {
       console.error('Failed to get contract', error);
       return null;
@@ -33,14 +33,14 @@ export const useContractCampaignFactory = () => {
 };
 
 export const useContractCampaign = (address: string | null) => {
-  const { library, chainId } = useWeb3React();
+  const { library, chainId } = useActiveWeb3React();
   return useMemo(() => {
     if (!address) {
       return null;
     }
     if (!library || !chainId) return null;
     try {
-      return getTestContract(Campaign, library, address);
+      return getContractByAddress(Campaign, library, address);
     } catch (error) {
       console.error('Failed to get contract', error);
       return null;

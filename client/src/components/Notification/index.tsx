@@ -1,18 +1,19 @@
-import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { uiActions } from '../../store/ui-slice';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {notificationActions} from '../../store/Notification/slice';
+import {NOTIFICATION_TYPE} from "../../constants";
 
 const Notification = () => {
   const dispatch = useAppDispatch();
 
-  const message = useAppSelector((state) => state.ui.message);
-  const type = useAppSelector((state) => state.ui.type);
+  const message = useAppSelector((state) => state.notification.message);
+  const type = useAppSelector((state) => state.notification.type);
   const dismissAlert = () => {
-    dispatch(uiActions.hideNotification());
+    dispatch(notificationActions.hideNotification());
   };
 
   return (
     <>
-      {type === 'error' && (
+      {type === NOTIFICATION_TYPE.ERROR && (
         <div
           className='card position-absolute top-50 start-50 translate-middle'
           style={{ width: '18rem' }}
@@ -23,7 +24,7 @@ const Notification = () => {
           </div>
         </div>
       )}
-      {type === 'alert' && (
+      {type === NOTIFICATION_TYPE.ALERT && (
         <div
           className='alert alert-danger alert-dismissible fade show'
           role='alert'
@@ -35,7 +36,7 @@ const Notification = () => {
             data-bs-dismiss='alert'
             aria-label='Close'
             onClick={dismissAlert}
-          ></button>
+          />
         </div>
       )}
     </>

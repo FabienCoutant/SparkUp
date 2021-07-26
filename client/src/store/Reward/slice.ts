@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {Rewards} from "../constants";
+import {Rewards} from "../../constants";
 
 export interface reward extends Rewards{
   id: number;

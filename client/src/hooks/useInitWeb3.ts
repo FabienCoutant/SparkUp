@@ -1,8 +1,9 @@
 import { useWeb3React } from '@web3-react/core';
-import { uiActions } from '../store/ui-slice';
+import { notificationActions } from "../store/Notification/slice";
 import { useAppDispatch } from '../store/hooks';
 import { useEagerConnect } from './useWeb3';
 import { useInactiveListener } from './useWeb3';
+import {NOTIFICATION_TYPE} from "../constants";
 
 const useInitWeb3 = () => {
   const triedEager = useEagerConnect();
@@ -13,9 +14,9 @@ const useInitWeb3 = () => {
 
   if (error) {
     dispatch(
-      uiActions.setNotification({
+        notificationActions.setNotification({
         message: error.message,
-        type: 'error',
+        type: NOTIFICATION_TYPE.ERROR,
       })
     );
   }

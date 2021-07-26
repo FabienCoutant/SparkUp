@@ -1,7 +1,7 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import uiSlice from './ui-slice';
-import campaignSlice from './campaign-slice';
-import rewardSlice from './reward-slice';
+import notificationSlice from './Notification/slice';
+import campaignSlice from './Campaign/slice';
+import rewardSlice from './Reward/slice';
 
 const customizedMiddleware = getDefaultMiddleware({
   serializableCheck: false,
@@ -9,7 +9,7 @@ const customizedMiddleware = getDefaultMiddleware({
 
 const store = configureStore({
   reducer: {
-    ui: uiSlice.reducer,
+    notification: notificationSlice.reducer,
     campaign: campaignSlice.reducer,
     reward: rewardSlice.reducer,
   },
