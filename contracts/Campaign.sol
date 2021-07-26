@@ -17,18 +17,15 @@ contract Campaign is ICampaign {
     mapping(uint => Rewards) public rewardsList;
 
     //    Events
-    event newCampaign();
     event CampaignNewRewardsAdded(uint rewardsCounter);
     event CampaignInfoUpdated();
     event CampaignRewardsUpdated();
     event CampaignDisabled();
     event CampaignRewardDeleted();
-    event CampaignPublished();
     event WorkflowStatusChange(
         WorkflowStatus previousStatus,
         WorkflowStatus newStatus
     );
-    event checkDate(uint deadline, uint currentTime);
 
     //Modifiers
     modifier isNotDeleted(){
@@ -167,7 +164,5 @@ contract Campaign is ICampaign {
         require(minDate >= block.timestamp, "!Err: deadlineDate to short");
         status = WorkflowStatus.CampaignPublished;
         emit WorkflowStatusChange(WorkflowStatus.CampaignDrafted, WorkflowStatus.CampaignPublished);
-        emit checkDate(minDate, block.timestamp);
-        emit CampaignPublished();
     }
 }

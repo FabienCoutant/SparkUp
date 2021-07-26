@@ -60,7 +60,7 @@ contract('CampaignFactory', (accounts) => {
     };
   });
 
-  xdescribe('--- Creation ---', async () => {
+  describe('--- Creation ---', async () => {
     it('should allow people to create new campaign', async () => {
       const receipt = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
@@ -257,7 +257,7 @@ contract('CampaignFactory', (accounts) => {
       );
     });
   });
-  xdescribe('--- Update ---', async () => {
+  describe('--- Update ---', async () => {
     it('should allow the owner to set a new owner', async () => {
       await CampaignFactoryContractInstance.updateOwner(alice, { from: owner });
       const newOwner = await CampaignFactoryContractInstance.owner();
@@ -270,7 +270,7 @@ contract('CampaignFactory', (accounts) => {
       );
     });
   });
-  xdescribe('--- Deletion ---', async () => {
+  describe('--- Deletion ---', async () => {
     beforeEach(async () => {
       const firstCampaignCreated =
         await CampaignFactoryContractInstance.createCampaign(
@@ -385,6 +385,15 @@ contract('CampaignFactory', (accounts) => {
       await expectRevert(
         secondCampaignContractInstance.deleteCampaign({ from: bob }),
         '!Not Authorized'
+      );
+    });
+    it('should revert if wrong workflow status', async () => {
+      await secondCampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      await expectRevert(
+        secondCampaignContractInstance.deleteCampaign({ from: alice }),
+        '!Err : Wrong workflow status'
       );
     });
     it('should revert if not the contract try to call the delete in the factory', async () => {

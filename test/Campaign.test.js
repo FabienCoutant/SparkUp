@@ -15,7 +15,7 @@ contract('Campaign', (accounts) => {
     title: 'First Campaign',
     description: 'This is the first campaign of SparkUp',
     fundingGoal: 11000,
-    deadlineDate: new Date().setDate(new Date().getDate() + 7),
+    deadlineDate: 0,
   };
   const initialRewards = [
     {
@@ -48,11 +48,15 @@ contract('Campaign', (accounts) => {
   };
   let CampaignContractInstance;
 
-  xdescribe('--- Update Info ---', async () => {
+  describe('--- Update Info ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
       });
+      const deadline = parseInt(
+        (await time.latest()).add(time.duration.days(8))
+      );
+      initialCampaignInfo.deadlineDate = deadline;
       const newCampaign = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
@@ -197,11 +201,15 @@ contract('Campaign', (accounts) => {
       expectEvent(receipt, 'CampaignInfoUpdated');
     });
   });
-  xdescribe('--- Update Rewards ---', async () => {
+  describe('--- Update Rewards ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
       });
+      const deadline = parseInt(
+        (await time.latest()).add(time.duration.days(8))
+      );
+      initialCampaignInfo.deadlineDate = deadline;
       const newCampaign = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
@@ -319,11 +327,15 @@ contract('Campaign', (accounts) => {
       });
     });
   });
-  xdescribe('--- Delete Reward  ---', async () => {
+  describe('--- Delete Reward  ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
       });
+      const deadline = parseInt(
+        (await time.latest()).add(time.duration.days(8))
+      );
+      initialCampaignInfo.deadlineDate = deadline;
       const newCampaign = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
@@ -403,6 +415,10 @@ contract('Campaign', (accounts) => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
       });
+      const deadline = parseInt(
+        (await time.latest()).add(time.duration.days(8))
+      );
+      initialCampaignInfo.deadlineDate = deadline;
       const newCampaign = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
@@ -411,7 +427,7 @@ contract('Campaign', (accounts) => {
       newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
       CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
     });
-    xit('should allow manager to publish campaign on correct workflow status', async () => {
+    it('should allow manager to publish campaign on correct workflow status', async () => {
       const receipt = await CampaignContractInstance.publishCampaign({
         from: alice,
       });
@@ -422,26 +438,13 @@ contract('Campaign', (accounts) => {
       const status = await CampaignContractInstance.status();
       expect(status).to.be.bignumber.equal(new BN(1));
     });
-    xit('should revert if called by other than manager', async () => {
+    it('should revert if called by other than manager', async () => {
       await expectRevert(
         CampaignContractInstance.publishCampaign({ from: bob }),
         '!Not Authorized'
       );
     });
-    it('should revert if publishCampaign called afeter deadline - 7 days', async () => {
-      // console.log(await time.latest());
-      await time.increase(time.duration.days(15));
-      // console.log(await time.latest());
-      // await expectRevert(
-      //   CampaignContractInstance.publishCampaign({ from: alice }),
-      //   '!Err: deadlineDate to short'
-      // );
-      const receipt = await CampaignContractInstance.publishCampaign({
-        from: alice,
-      });
-      expectEvent(receipt, 'checkDate');
-    });
-    xit('should revert if wrong workflow status', async () => {
+    it('should revert if wrong workflow status', async () => {
       await CampaignContractInstance.publishCampaign({
         from: alice,
       });
@@ -450,12 +453,23 @@ contract('Campaign', (accounts) => {
         '!Err : Wrong workflow status'
       );
     });
+    it('should revert if publishCampaign called afeter deadline - 7 days', async () => {
+      await time.increase(time.duration.days(15));
+      await expectRevert(
+        CampaignContractInstance.publishCampaign({ from: alice }),
+        '!Err: deadlineDate to short'
+      );
+    });
   });
-  xdescribe('--- Migration ---', async () => {
+  describe('--- Migration ---', async () => {
     beforeEach(async () => {
       CampaignFactoryContractInstance = await CampaignFactoryContract.new({
         from: alice,
       });
+      const deadline = parseInt(
+        (await time.latest()).add(time.duration.days(8))
+      );
+      initialCampaignInfo.deadlineDate = deadline;
       const newCampaign = await CampaignFactoryContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
