@@ -11,7 +11,6 @@ contract Campaign is ICampaign {
     uint256 public createAt;
     address public manager;
     address public factory;
-    uint256 public publishDeadline;
     WorkflowStatus public status;
 
     Info private campaignInfo;
@@ -29,6 +28,7 @@ contract Campaign is ICampaign {
         WorkflowStatus previousStatus,
         WorkflowStatus newStatus
     );
+    event checkDate(uint deadline, uint currentTime);
 
     //Modifiers
     modifier isNotDeleted(){
@@ -49,11 +49,6 @@ contract Campaign is ICampaign {
         _;
     }
 
-    modifier checkPublishDeadline() {
-        require(block.timestamp < publishDeadline, "!Err: Campaign deleted due to missed publish deadline");
-        _;
-    }
-
     constructor(Info memory infoData, Rewards[] memory rewardsData, address _manager)
     {
         require(rewardsData.length > 0, "!Err: Rewards empty");
@@ -61,7 +56,6 @@ contract Campaign is ICampaign {
         manager = _manager;
         factory = msg.sender;
         createAt = block.timestamp;
-        publishDeadline = block.timestamp + 10 days;
         status = WorkflowStatus.CampaignDrafted;
         _setCampaignInfo(infoData);
         for (rewardsCounter; rewardsCounter < rewardsData.length; rewardsCounter++) {
@@ -79,7 +73,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateCampaign(Info memory newInfo) external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+    function updateCampaign(Info memory newInfo) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         _setCampaignInfo(newInfo);
         emit CampaignInfoUpdated();
     }
@@ -87,7 +81,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function addReward(Rewards memory newRewardData) external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+    function addReward(Rewards memory newRewardData) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         rewardsCounter++;
         _setCampaignReward(rewardsCounter, newRewardData);
         emit CampaignNewRewardsAdded(rewardsCounter);
@@ -96,7 +90,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateReward(Rewards memory newRewardData, uint rewardIndex) external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+    function updateReward(Rewards memory newRewardData, uint rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         _setCampaignReward(rewardIndex, newRewardData);
         emit CampaignRewardsUpdated();
@@ -148,7 +142,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function deleteReward(uint256 rewardIndex) external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+    function deleteReward(uint256 rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         if(rewardsCounter!=rewardIndex){
             rewardsList[rewardIndex] = rewardsList[rewardsCounter];
@@ -168,14 +162,12 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateFactory(address newFactory) external override {
-        require(factory == msg.sender, "!Err: Not Factory Contract");
-        factory = newFactory;
-    }
-
-    function publishCampaign() external override checkPublishDeadline() isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+    function publishCampaign() external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+        uint minDate = campaignInfo.deadlineDate - 7 days;
+        require(minDate >= block.timestamp, "!Err: deadlineDate to short");
         status = WorkflowStatus.CampaignPublished;
         emit WorkflowStatusChange(WorkflowStatus.CampaignDrafted, WorkflowStatus.CampaignPublished);
+        emit checkDate(minDate, block.timestamp);
         emit CampaignPublished();
     }
 }

@@ -81,12 +81,5 @@ interface ICampaign {
      */
     function updateManager(address newManager) external;
 
-    /**
-     * @notice Allow the factory to setup a new one in case of migration.
-     * @dev Used for mainly for pointing the right factory during the deletion
-     * @param newFactory address Address of the new factory
-     */
-    function updateFactory(address newFactory) external;
-
     function publishCampaign() external;
 }

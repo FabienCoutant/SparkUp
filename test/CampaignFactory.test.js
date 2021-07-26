@@ -270,7 +270,7 @@ contract('CampaignFactory', (accounts) => {
       );
     });
   });
-  describe('--- Deletion ---', async () => {
+  xdescribe('--- Deletion ---', async () => {
     beforeEach(async () => {
       const firstCampaignCreated =
         await CampaignFactoryContractInstance.createCampaign(
