@@ -1,74 +1,86 @@
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useActiveWeb3React } from './useWeb3'
 import { useContractCampaign, useContractCampaignFactory } from './useContract'
 import { useWeb3React } from '@web3-react/core'
-import { useAppSelector } from '../store/hooks'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { serializeCampaignInfo } from '../utils/serializeCampaignInfo'
-import { CampaignInfo } from '../constants'
+import { campaignActions, initialState } from '../store/Campaign/slice'
+import { serializeTimestampsFor } from '../utils/dateHelper'
+import { campaignState } from '../constants'
 
 
 export const useFetchCampaignAddress = (): string[] => {
   const { library, chainId } = useActiveWeb3React()
   const contractCampaignFactory = useContractCampaignFactory()
-  let campaignAddress: string[] = []
-  return useMemo(() => {
-    if (contractCampaignFactory && chainId && library) {
-      try {
-        campaignAddress = contractCampaignFactory.methods
+  const [campaignAddress, setCampaignAddress] = useState([])
+
+  useEffect(() => {
+    const fetchCampaignsAddress = async () => {
+      if (contractCampaignFactory && chainId && library) {
+        const res = await contractCampaignFactory.methods
           .getDeployedCampaignsList()
           .call()
-
-      } catch (e) {
-        console.log(e)
+        setCampaignAddress(res)
       }
     }
-    return campaignAddress
+    fetchCampaignsAddress()
+
   }, [contractCampaignFactory, chainId, library])
+  return campaignAddress
 }
 
-export const useIsManager = (): boolean => {
+export const useIsManager = (campaignManager:string): boolean => {
   const { account } = useWeb3React()
-  const campaign = useAppSelector((state) => state.campaign)
-  return campaign?.manager === account
+  return campaignManager === account
 }
 
 export const useFetchCampaignInfo = (address: string) => {
   const { library, chainId } = useActiveWeb3React()
+  const dispatch = useAppDispatch()
   const contractCampaign = useContractCampaign(address)
-  let campaign: CampaignInfo
+  const [campaignInfo, setCampaignInfo] = useState<campaignState>(initialState)
+    useEffect(() => {
+        const fetchCampaign = async () => {
+          if (contractCampaign && chainId && library) {
+            const res = await contractCampaign?.methods?.getCampaignInfo().call()
+            setCampaignInfo({
+              info: serializeCampaignInfo(res[0]),
+              createAt: serializeTimestampsFor(res[1], false),
+              manager: res[2],
+              workflowStatus: parseInt(res[3]),
+              amountRaise: 0,
+              onChain: true,
+              confirmed: true
+            })
+          }
+        }
+        fetchCampaign()
+      }, [contractCampaign, chainId, library, dispatch]
+    )
+  return campaignInfo
+}
 
-  return useMemo(() => {
-    if (contractCampaign && chainId && library) {
-      try {
-        const res = contractCampaign.methods
-          .getCampaignInfo()
-          .call()
-        campaign.info = serializeCampaignInfo(res['0'])
-        campaign.createAt = res['1']
-        campaign.manager = res['2']
-      } catch (e) {
-        console.log(e)
+
+export const useFetchCampaignInfoAndDispatch=(address:string)=>{
+  const { library, chainId } = useActiveWeb3React()
+  const dispatch = useAppDispatch()
+  const contractCampaign = useContractCampaign(address)
+  useEffect(() => {
+      const fetchCampaign = async () => {
+        if (contractCampaign && chainId && library) {
+          const res = await contractCampaign?.methods?.getCampaignInfo().call()
+          dispatch(campaignActions.setCampaign({
+            info: serializeCampaignInfo(res[0]),
+            createAt: serializeTimestampsFor(res[1], false),
+            manager: res[2],
+            workflowStatus: parseInt(res[3]),
+            amountRaise: 0,
+            onChain: true,
+            confirmed: true
+          }))
+        }
       }
-    }
-    return campaign
-  }, [contractCampaign, chainId, library])
+      fetchCampaign()
+    }, [contractCampaign, chainId, library, dispatch]
+  )
 }
-
-export const useFetchCampaignsListData = (campaignsAddress: string[]) => {
-  const { library, account, chainId } = useActiveWeb3React()
-  const campaignsData:CampaignInfo[] = []
-
-  useMemo(() => {
-    if (chainId && library) {
-      campaignsAddress.map((address) => {
-        const campaignInstance = useContractCampaign(address)
-        const campaignInfo = useFetchCampaignInfo(campaignInstance)
-        campaignsData.push(campaignInfo)
-      })
-    }
-  }, [campaignsAddress, library, account, chainId])
-  return campaignsData
-
-}
-
-

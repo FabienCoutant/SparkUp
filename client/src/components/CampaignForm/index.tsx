@@ -1,32 +1,23 @@
 import { notificationActions } from '../../store/Notification/slice'
-import { CampaignInfo, Info, NOTIFICATION_TYPE, RENDER_MESSAGE, RENDER_TYPE } from '../../constants'
+import { Info, NOTIFICATION_TYPE, RENDER_MESSAGE, RENDER_TYPE, WORKFLOW_STATUS } from '../../constants'
 import { formatDate, isValidDate, serializeTimestampsFor } from '../../utils/dateHelper'
 import { campaignActions } from '../../store/Campaign/slice'
-import { useEffect, useState } from 'react'
-import { useAppDispatch } from '../../store/hooks'
+import { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useContractCampaign } from '../../hooks/useContract'
 import { useParams } from 'react-router'
 
-const CampaignForm = ({ renderType, campaignInfo }: { renderType: RENDER_TYPE, campaignInfo: CampaignInfo }) => {
+const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
   const dispatch = useAppDispatch()
   const { account } = useWeb3React()
   const { campaignAddress } = useParams<{ campaignAddress: string }>()
   const contractCampaign = useContractCampaign(campaignAddress)
-
-  const [campaignTitle, setCampaignTitle] = useState(campaignInfo.info.title)
-  const [campaignDescription, setCampaignDescription] = useState(campaignInfo.info.description)
-  const [campaignFundingGoal, setCampaignFundingGoal] = useState(campaignInfo.info.fundingGoal)
-  const [campaignDeadLine, setCampaignDeadLine] = useState(campaignInfo.info.deadlineDate)
-
-  useEffect(() => {
-    if (contractCampaign !== null) {
-      contractCampaign.events.CampaignInfoUpdated().on('data', async () => {
-        console.log("TODO Redirect with notif");
-      })
-    }
-  }, [contractCampaign])
-
+  const campaign = useAppSelector(state=>state.campaign)
+  const [campaignTitle, setCampaignTitle] = useState(campaign.info.title)
+  const [campaignDescription, setCampaignDescription] = useState(campaign.info.description)
+  const [campaignFundingGoal, setCampaignFundingGoal] = useState(campaign.info.fundingGoal)
+  const [campaignDeadLine, setCampaignDeadLine] = useState(campaign.info.deadlineDate)
 
   const campaignSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -34,15 +25,15 @@ const CampaignForm = ({ renderType, campaignInfo }: { renderType: RENDER_TYPE, c
     if (isValid) {
       switch (renderType) {
         case RENDER_TYPE.UPDATE:
-          await submitUpdatedCampaign()
+          updatedOnChainCampaign()
           break
         case RENDER_TYPE.CREATE:
-          await confirmInfoCampaign()
+          validateCampaignInfo()
           break
       }
     }
   }
-  const confirmInfoCampaign = async () => {
+  const validateCampaignInfo = () => {
     dispatch(
       campaignActions.setCampaign({
         info: {
@@ -52,29 +43,42 @@ const CampaignForm = ({ renderType, campaignInfo }: { renderType: RENDER_TYPE, c
           deadlineDate: campaignDeadLine
         },
         confirmed: true,
-        published: false,
+        onChain: false,
+        amountRaise:0,
         manager: account as string,
-        createAt: new Date().getTime()
+        createAt: new Date().getTime(),
+        workflowStatus:WORKFLOW_STATUS.CampaignDrafted
       })
     )
 
   }
 
-  const submitUpdatedCampaign = async () => {
+  const handleCancelUpdate = () => {
+    dispatch(
+      campaignActions.setConfirmed({
+        confirmed: true
+      }))
+  }
+
+  const updatedOnChainCampaign = () => {
     const campaignInfo: Info = {
       title: campaignTitle,
       description: campaignDescription,
       fundingGoal: campaignFundingGoal,
       deadlineDate: serializeTimestampsFor(campaignDeadLine, true)
     }
+    console.log("update")
     if (contractCampaign) {
-      try {
-        await contractCampaign.methods
-          .updateCampaign(campaignInfo)
-          .send({ from: account })
-      } catch (error) {
-        throw error
-      }
+        contractCampaign?.methods?.updateCampaign(campaignInfo).send({ from: account })
+          .then(() => {
+            dispatch(campaignActions.updateCampaign({campaignInfo}))
+            dispatch(notificationActions.setNotification({
+              message:"Your campaign's info has been updated",
+              type:NOTIFICATION_TYPE.SUCCESS
+            }))
+          }).catch((error: any) => {
+          console.log(error)
+        })
     }
   }
 
@@ -106,7 +110,7 @@ const CampaignForm = ({ renderType, campaignInfo }: { renderType: RENDER_TYPE, c
             type: NOTIFICATION_TYPE.ALERT
           })
         )
-      } else if (!isValidDate(deadline, campaignInfo.createAt)) {
+      } else if (!isValidDate(deadline, campaign.createAt)) {
         dispatch(
           notificationActions.setNotification({
             message: 'Please enter a deadline for your campaign more than 7 days from now!',
@@ -122,7 +126,7 @@ const CampaignForm = ({ renderType, campaignInfo }: { renderType: RENDER_TYPE, c
 
 
   return (
-    <form onSubmit={campaignSubmitHandler} className='card'>
+    <form onSubmit={campaignSubmitHandler} className='card mt-3'>
       <div className='card-body'>
         <h5 className='card-title'>Campaign Info</h5>
         <div className='mb-3 mt-3'>
@@ -174,9 +178,20 @@ const CampaignForm = ({ renderType, campaignInfo }: { renderType: RENDER_TYPE, c
             onChange={(e) => setCampaignDeadLine(new Date(e.target.value).getTime())}
           />
         </div>
-        <button type='submit' className='btn btn-primary'>
-          {RENDER_MESSAGE[renderType]}
-        </button>
+        <div className='list-inline'>
+          <div className="list-inline-item">
+            <button type='submit' className='btn btn-primary'>
+              {renderType === RENDER_TYPE.CREATE && RENDER_MESSAGE[renderType]}
+              {renderType === RENDER_TYPE.UPDATE && RENDER_MESSAGE[renderType]}
+            </button>
+          </div>
+
+          {renderType === RENDER_TYPE.UPDATE  &&
+          <div className="list-inline-item">
+            <button type='button' className='btn btn-secondary' onClick={() => handleCancelUpdate()}>Cancel</button>
+          </div>
+          }
+        </div>
       </div>
     </form>
   )

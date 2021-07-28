@@ -1,4 +1,3 @@
-import Twitter from '../../assets/images/Twitter';
 import Github from '../../assets/images/Github';
 
 const Footer = () => {
@@ -12,9 +11,6 @@ const Footer = () => {
             rel='noreferrer'
           >
             <Github />
-          </a>
-          <a href='#'>
-            <Twitter />
           </a>
         </div>
         <ul className='list-inline'>

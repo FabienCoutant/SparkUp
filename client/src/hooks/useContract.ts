@@ -3,8 +3,8 @@ import { getContractByABI, getContractByAddress } from '../utils/web3React';
 import { useWeb3React } from '@web3-react/core';
 import { useActiveWeb3React } from './useWeb3';
 import USDC from '../contracts/external/USDC.json';
-import CampaignFactory from '../contracts/CampaignFactory.json';
-import Campaign from '../contracts/Campaign.json';
+import CampaignFactory from '../contracts/internal/CampaignFactory.json';
+import Campaign from '../contracts/internal/Campaign.json';
 
 export const useContractUSDC = () => {
   const { library, chainId } = useWeb3React();

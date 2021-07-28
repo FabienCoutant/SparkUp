@@ -1,13 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Info } from '../../constants'
+import { campaignState, Info, WORKFLOW_STATUS } from '../../constants'
+import { serializeTimestampsFor } from '../../utils/dateHelper'
 
-export interface campaignState {
-  info: Info
-  confirmed: boolean;
-  published: boolean;
-  manager: string;
-  createAt: number;
-}
 
 export const initialState: campaignState = {
   info: {
@@ -17,9 +11,11 @@ export const initialState: campaignState = {
     deadlineDate: new Date().setDate(new Date().getDate() + 7)
   },
   confirmed: false,
-  published: false,
+  onChain: false,
   manager: '',
-  createAt: new Date().getTime()
+  createAt: new Date().getTime(),
+  amountRaise: 0,
+  workflowStatus: WORKFLOW_STATUS.CampaignDrafted
 }
 
 const campaignSlice = createSlice({
@@ -32,13 +28,27 @@ const campaignSlice = createSlice({
       state.info.fundingGoal = action.payload.info.fundingGoal
       state.info.deadlineDate = action.payload.info.deadlineDate
       state.confirmed = action.payload.confirmed
-      state.published = action.payload.published
+      state.onChain = action.payload.onChain
       state.manager = action.payload.manager
       state.createAt = action.payload.createAt
+      state.amountRaise = action.payload.amountRaise
+      state.workflowStatus = action.payload.workflowStatus
     },
     setConfirmed(state, action: PayloadAction<{ confirmed: boolean }>) {
       state.confirmed = action.payload.confirmed
-    }
+    },
+    setWorkflow(state,action:PayloadAction<{workflowStatus:WORKFLOW_STATUS}>){
+      console.log(action.payload.workflowStatus)
+      state.workflowStatus = action.payload.workflowStatus
+    },
+    updateCampaign(state,action:PayloadAction<{campaignInfo:Info}>){
+      state.info.title = action.payload.campaignInfo.title
+      state.info.description = action.payload.campaignInfo.description
+      state.info.fundingGoal = action.payload.campaignInfo.fundingGoal
+      state.info.deadlineDate = serializeTimestampsFor(action.payload.campaignInfo.deadlineDate,false)
+      state.confirmed=true
+    },
+    resetState : () => initialState,
   }
 })
 

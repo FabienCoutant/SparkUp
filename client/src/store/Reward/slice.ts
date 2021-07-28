@@ -1,62 +1,57 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {Rewards} from "../../constants";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Rewards } from '../../constants'
 
-export interface reward extends Rewards{
-  id: number;
+export interface reward extends Rewards {
+  onChain: boolean;
   confirmed: boolean;
-  published: boolean;
 }
 
-interface rewardState {
+export interface rewardState {
   rewards: reward[];
 }
 
 const initialState: rewardState = {
   rewards: [
     {
-      id: 0,
-      title: "",
-      description: "",
+      title: '',
+      description: '',
       minimumContribution: 0,
       amount: 0,
       stockLimit: 0,
       nbContributors: 0,
       isStockLimited: false,
-      confirmed: false,
-      published: false,
-    },
-  ],
-};
+      onChain: false,
+      confirmed: false
+    }
+  ]
+}
 
 const rewardSlice = createSlice({
   name: 'reward',
   initialState,
   reducers: {
-    addReward(state, action: PayloadAction<reward>) {
-      if (state.rewards[action.payload.id]) {
-        state.rewards[action.payload.id] = action.payload;
-      } else {
-        state.rewards.push(action.payload);
-      }
+    addReward(state, action: PayloadAction<{ reward:reward }>) {
+        state.rewards.push(action.payload.reward)
     },
-    setConfirmed(
-      state,
-      action: PayloadAction<{ id: number; confirmed: boolean }>
-    ) {
-      state.rewards[action.payload.id].confirmed = action.payload.confirmed;
+    updateReward(state, action: PayloadAction<{ reward: reward, id: number }>) {
+      state.rewards[action.payload.id] = action.payload.reward
+    },
+    setConfirmed(state, action: PayloadAction<{ id: number, confirmed: boolean }>) {
+      state.rewards[action.payload.id].confirmed = action.payload.confirmed
     },
     removeReward(state, action: PayloadAction<{ id: number }>) {
-      state.rewards.splice(action.payload.id, 1);
-      for (let i = action.payload.id; i < state.rewards.length; i++) {
-        state.rewards[i].id--;
+      state.rewards.splice(action.payload.id, 1)
+    },
+    setState(state, action: PayloadAction<rewardState>) {
+      state.rewards = [];
+      for(const reward of action.payload.rewards){
+        state.rewards.push(reward)
       }
     },
-    setState(state, action: PayloadAction<{ newState: reward }>) {
-      state.rewards = [action.payload.newState];
-    },
-  },
-});
+    resetState:()=>initialState,
+  }
+})
 
-export const rewardActions = rewardSlice.actions;
+export const rewardActions = rewardSlice.actions
 
-export default rewardSlice;
+export default rewardSlice

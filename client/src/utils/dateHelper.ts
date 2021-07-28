@@ -21,6 +21,12 @@ export const formatDate = (date:number) => {
 }
 
 export const serializeTimestampsFor=(timestamp:number,isTargetSolidity:boolean):number=>{
-    return isTargetSolidity?  Math.floor(timestamp/1000):timestamp*1000;
+    return isTargetSolidity?  Math.floor((timestamp/1000)+3500):timestamp*1000;
 }
 
+export const getEndDateIn=(deadline:number)=>{
+    const oneDayTimestamp=1000*60*60*24;
+    const currentDate = Date.now()
+    const nbCal =  Math.round((deadline-currentDate)/oneDayTimestamp);
+    return nbCal>0?nbCal:0;
+}

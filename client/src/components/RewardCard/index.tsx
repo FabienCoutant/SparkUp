@@ -1,25 +1,25 @@
-import { useState } from 'react'
 import { rewardActions } from '../../store/Reward/slice'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { HANDLE_REWARD_FORM_TYPE, REWARD_FORM_SUBMIT_MESSAGE, Rewards } from '../../constants'
-import { useLocation, useParams } from 'react-router'
+import { NOTIFICATION_TYPE, RENDER_TYPE, WORKFLOW_STATUS } from '../../constants'
+import { useParams } from 'react-router'
 import { useContractCampaign } from '../../hooks/useContract'
 import { useWeb3React } from '@web3-react/core'
-import RewardForm from '../RewardForm'
 import { useIsManager } from '../../hooks/useFetchCampaign'
+import { hasAtLeastNbRewardsOnChain } from '../../utils/checkHelper'
+import { notificationActions } from '../../store/Notification/slice'
 
 
-const Reward = ({ id }: { id: number }) => {
+const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE }) => {
   const dispatch = useAppDispatch()
   const { account } = useWeb3React()
   const campaign = useAppSelector((state) => state.campaign)
   const rewards = useAppSelector((state) => state.reward.rewards)
   const { campaignAddress } = useParams<{ campaignAddress: string }>()
   const contractCampaign = useContractCampaign(campaignAddress)
-  const isManager: boolean = useIsManager()
+  const isManager: boolean = useIsManager(campaign.manager)
 
 
-  const changeRewardHandler = () => {
+  const handleUpdateReward = () => {
     dispatch(
       rewardActions.setConfirmed({
         id,
@@ -28,188 +28,128 @@ const Reward = ({ id }: { id: number }) => {
     )
   }
 
-  const removeRewardHandler = async () => {
-    if (!campaign.published) {
+  const handleDeleteReward = () => {
+    if (!campaign.onChain) {
       dispatch(rewardActions.removeReward({ id }))
     } else {
-      contractCampaign?.methods.deleteReward(id).send({ from: account })
-    }
-  }
-
-  const handleUpdateReward = (): void => {
-    changeRewardHandler()
-  }
-
-  const submitUpdateReward = (
-    title: string,
-    description: string,
-    minimumContribution: number,
-    stockLimit: number,
-    isStockLimited: boolean,
-    rewardId: number) => {
-    const newReward: Rewards = {
-      title,
-      description,
-      minimumContribution,
-      amount: 0,
-      stockLimit,
-      nbContributors: 0,
-      isStockLimited
-    }
-
-    contractCampaign?.methods?.updateReward(newReward, rewardId).send({ from: account })
-  }
-
-
-  const submitRewardHandler = async () => {
-    const newReward: Rewards = {
-      title: rewards[id].title,
-      description: rewards[id].description,
-      minimumContribution: rewards[id].minimumContribution,
-      amount: rewards[id].amount,
-      stockLimit: rewards[id].stockLimit,
-      nbContributors: rewards[id].nbContributors,
-      isStockLimited: rewards[id].isStockLimited
-    }
-    if (contractCampaign && newReward.title && newReward.description) {
-      try {
-        await contractCampaign?.methods
-          .addReward(newReward)
-          .send({ from: account })
-      } catch (error) {
+      contractCampaign?.methods.deleteReward(id).send({ from: account }).then(() => {
+        dispatch(rewardActions.removeReward({ id }))
+        dispatch(notificationActions.setNotification(({
+          message: `Reward ${rewards[id].title} has been correctly deleted`,
+          type: NOTIFICATION_TYPE.SUCCESS
+        })))
+      }).catch((error: any) => {
         console.log(error)
+      })
+    }
+  }
+
+  const renderLimitedStockLeft = () => {
+    return rewards[id].stockLimit - rewards[id].nbContributors
+  }
+
+  const renderRewardButton = () => {
+    if (campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && isManager) {
+      if (rewards[id].confirmed) {
+        return (
+          <div className='list-inline mt-3'>
+            <div className='list-inline-item'>
+              <button className='btn btn-primary me-3'
+                      type='button'
+                      onClick={() => handleUpdateReward()}>
+                Update Reward
+              </button>
+            </div>
+            {(renderType === RENDER_TYPE.CREATE && rewards.length >= 2) || (renderType === RENDER_TYPE.UPDATE && hasAtLeastNbRewardsOnChain(rewards, 2)) &&
+            <div className='list-inline-item'>
+              <button className='btn btn-danger me-3'
+                      type='button'
+                      onClick={() => handleDeleteReward()}>
+                Delete Reward
+              </button>
+            </div>
+            }
+          </div>
+        )
+      }
+      if (renderType === RENDER_TYPE.UPDATE) {
+        return (
+          <button className='btn btn-primary me-3'
+                  type='button'
+                  onClick={() => handleUpdateReward()}>
+            Add new rewards
+          </button>
+        )
       }
     }
+
+    return <></>
+
   }
 
   return (
     <div className='card'>
-      {!rewards[id].confirmed && <RewardForm id={id} rewards={rewards[id]}/>}
-      {rewards[id].confirmed && (
-        <div className='card-body'>
-          <h5 className='card-title'>Reward {id + 1}</h5>
-          <div className='list-inline'>
-            <label
-              htmlFor='rewardTitle'
-              className='form-label list-inline-item'
-            >
-              Reward Title :
-            </label>
-            <h5 className='card-title list-inline-item' id='rewardTitle'>
-              {rewards[id].title}
-            </h5>
-          </div>
-          <label htmlFor='rewardDescription' className='form-label'>
-            Reward Description :
+      <div className='card-body'>
+        <h5 className='card-title'>Reward {id + 1}</h5>
+        <div className='list-inline'>
+          <label
+            htmlFor='rewardTitle'
+            className='form-label list-inline-item'
+          >
+            Reward Title :
           </label>
-          <p className='card-text' id='rewardDescription'>
-            {rewards[id].description}
-          </p>
-          <div className='list-inline'>
-            <label
-              className='form-label list-inline-item'
-              htmlFor='rewardMinimumContribution'
-            >
-              Minimum Contribution (USDC) :
-            </label>
-            <h6
-              className='card-subtitle mb-2 list-inline-item'
-              id='rewardMiniumContribution'
-            >
-              {rewards[id].minimumContribution} USDC
-            </h6>
-          </div>
-          <div className='list-inline'>
-            <label
-              className='form-label list-inline-item'
-              htmlFor='rewardIsStockLimit'
-            >
-              Minimum Contribution (USDC) :
-            </label>
-            <h6
-              className='card-subtitle mb-2 list-inline-item'
-              id='rewardIsStockLimit'
-            >
-              {rewards[id].isStockLimited ? 'Yes' : 'No'}
-            </h6>
-          </div>
-          {rewards[id].isStockLimited && (
-            <div className='list-inline'>
-              <label
-                className='form-label list-inline-item'
-                htmlFor='rewardStockLimit'
-              >
-                Inventory :
-              </label>
-              <h6
-                className='card-subtitle mb-2 list-inline-item'
-                id='rewardStockLimit'
-              >
-                {rewards[id].stockLimit}
-              </h6>
-            </div>
-          )}
-          <div className='list-inline'>
-            {!rewards[id].published && (
-              <button
-                className='btn btn-primary'
-                type='button'
-                onClick={() => changeRewardHandler()}
-              >
-                Modify Reward
-              </button>
-            )}
-            {rewards[id].published && isManager && (
-              <>
-                {rewards[id].confirmed &&
-                <button className='btn btn-primary me-3'
-                        type='button'
-                        onClick={() => handleUpdateReward()}>
-                  Update Reward
-                </button>
-                }
-                {!rewards[id].confirmed &&
-                <button className='btn btn-primary me-3'
-                        type='button'
-                        onClick={() => handleUpdateReward()}>
-                  Validate update Reward
-                </button>
-                }
-                <button
-                  type='button'
-                  className='btn btn-primary'
-                  onClick={() => removeRewardHandler()}
-                >
-                  Remove Reward
-                </button>
-              </>
-            )}
-            {!rewards[id].published && !campaign.published && (
-
-              <button
-                type='button'
-                className='btn btn-primary ms-3'
-                onClick={() => removeRewardHandler()}
-                disabled={rewards.length < 2}
-              >
-                Remove Reward
-              </button>
-
-            )}
-            {!rewards[id].published && campaign.published &&
-            <button
-              className='btn btn-primary ms-3'
-              type='button'
-              onClick={() => submitRewardHandler()}
-            >
-              Submit Reward
-            </button>
-            }
-          </div>
+          <h5 className='card-title list-inline-item' id='rewardTitle'>
+            {rewards[id].title}
+          </h5>
         </div>
-      )}
+        <label htmlFor='rewardDescription' className='form-label'>
+          Reward Description :
+        </label>
+        <p className='card-text' id='rewardDescription'>
+          {rewards[id].description}
+        </p>
+        <div className='list-inline'>
+          <label
+            className='form-label list-inline-item'
+            htmlFor='rewardMinimumContribution'
+          >
+            Minimum Contribution (USDC) :
+          </label>
+          <h6
+            className='card-subtitle mb-2 list-inline-item'
+            id='rewardMiniumContribution'
+          >
+            {rewards[id].minimumContribution} USDC
+          </h6>
+        </div>
+        <div className='list-inline'>
+          <label
+            className='form-label list-inline-item'
+            htmlFor='nbContributor'
+          >
+            Number of contributors :
+          </label>
+          <h6
+            className='card-subtitle mb-2 list-inline-item'
+            id='nbContributor'
+          >
+            {rewards[id].nbContributors}
+          </h6>
+        </div>
+        {rewards[id].isStockLimited &&
+        <div className='list-inline'>
+          <label
+            className='form-label list-inline-item'
+            htmlFor='rewardStockLimit'
+          >
+            {`Stock limited (${renderLimitedStockLeft()} left on ${rewards[id].stockLimit})`}
+          </label>
+        </div>
+        }
+        {renderRewardButton()}
+      </div>
     </div>
   )
 }
 
-export default Reward
+export default RewardCard

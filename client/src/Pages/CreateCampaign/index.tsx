@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { campaignActions } from '../../store/Campaign/slice'
+import { reward, rewardActions } from '../../store/Reward/slice'
 import { Info, NOTIFICATION_TYPE, RENDER_TYPE, Rewards } from '../../constants'
-import { rewardActions } from '../../store/Reward/slice'
 import CampaignForm from '../../components/CampaignForm'
 import CampaignCard from '../../components/CampaignCard'
 import RewardCard from '../../components/RewardCard'
@@ -10,52 +10,30 @@ import { useWeb3React } from '@web3-react/core'
 import { useContractCampaignFactory } from '../../hooks/useContract'
 import { notificationActions } from '../../store/Notification/slice'
 import { serializeTimestampsFor } from '../../utils/dateHelper'
+import { useHistory } from 'react-router'
+import RewardForm from '../../components/RewardForm'
+import Loader from '../../components/Loader'
+import { useShowLoader } from '../../hooks/useShowLoader'
 
 const CreateCampaign = () => {
   const { chainId, account } = useWeb3React()
+  const history = useHistory()
   const dispatch = useAppDispatch()
   const contractCampaignFactory = useContractCampaignFactory()
   const campaign = useAppSelector((state) => state.campaign)
   const rewards = useAppSelector((state) => state.reward.rewards)
   const [isInit, setIsInit] = useState<boolean>(false)
 
-  useEffect(() => {
-    if (!isInit) {
-      dispatch(
-        campaignActions.setCampaign({
-          info: {
-            title: '',
-            description: '',
-            fundingGoal: 10000,
-            deadlineDate: new Date().setDate(new Date().getDate() + 7)
-          },
-          confirmed: false,
-          published: false,
-          manager: '',
-          createAt: 0
-        })
-      )
-      dispatch(
-        rewardActions.setState({
-          newState: {
-            id: 0,
-            title: '',
-            description: '',
-            minimumContribution: 0,
-            amount: 0,
-            stockLimit: 0,
-            nbContributors: 0,
-            isStockLimited: false,
-            confirmed: false,
-            published: false
-          }
-        })
-      )
-      setIsInit(true)
-    }
-  }, [dispatch])
+  const showLoader = useShowLoader()
 
-  const submitCampaignHandler = async () => {
+
+  if (!isInit && account) {
+    dispatch(campaignActions.resetState())
+    dispatch(rewardActions.resetState())
+    setIsInit(true)
+  }
+
+  const submitCampaignHandler = () => {
     if (chainId) {
       if (!campaign.confirmed || rewards.some(reward => !reward.confirmed)) {
         dispatch(
@@ -86,31 +64,35 @@ const CreateCampaign = () => {
           rewardsInfo.push(tempReward)
           return rewardsInfo
         })
-        try {
-          await contractCampaignFactory?.methods
-            .createCampaign(campaignInfo, rewardsInfo)
-            .send({ from: account })
-        } catch (error) {
-          console.log(error)
-        }
+        contractCampaignFactory?.methods?.createCampaign(campaignInfo, rewardsInfo).send({ from: account })
+          .then((response: any) => {
+            console.log(response.events.newCampaign.returnValues.campaignAddress)
+            const newCampaignAddress = response.events.newCampaign.returnValues.campaignAddress
+            console.log('newCampaignAddress ', newCampaignAddress)
+            history.push({ pathname: `/campaign/${newCampaignAddress}` })
+          }).catch((error: any) => {
+            console.log(error)
+        })
       }
     }
   }
 
   const addNewReward = () => {
     dispatch(
-      rewardActions.addReward({
-        id: rewards.length,
-        title: '',
-        description: '',
-        minimumContribution: 0,
-        amount: 0,
-        stockLimit: 0,
-        nbContributors: 0,
-        isStockLimited: false,
-        confirmed: false,
-        published: false
-      })
+      rewardActions.addReward(
+        {
+          reward: {
+            title: '',
+            description: '',
+            minimumContribution: 0,
+            amount: 0,
+            stockLimit: 0,
+            nbContributors: 0,
+            isStockLimited: false,
+            onChain: false,
+            confirmed: false
+          }
+        })
     )
   }
 
@@ -136,23 +118,38 @@ const CreateCampaign = () => {
   }
 
   const renderCampaign = () => {
-    if (!campaign.confirmed) {
-      return <CampaignForm renderType={RENDER_TYPE.CREATE} campaignInfo={campaign} />
+    if (campaign.confirmed) {
+      return <CampaignCard address={''} />
     } else {
-      return <CampaignCard address={''} renderType={RENDER_TYPE.UPDATE} campaignInfo={campaign} />
+      return <CampaignForm renderType={RENDER_TYPE.CREATE} />
     }
   }
 
+  const renderReward = (reward: reward, index: number) => {
+    if (reward.confirmed) {
+      return <RewardCard id={index} renderType={RENDER_TYPE.CREATE} />
+    } else {
+      return <RewardForm id={index} reward={reward} renderType={RENDER_TYPE.CREATE} />
+    }
+  }
+
+  if (showLoader) {
+    return <Loader />
+  }
+
+  if (typeof account !== 'string' || account === '') {
+    history.push({ pathname: '/' })
+  }
   return (
     <div id='create-campaign'>
       <h1 className='mt-5 mb-5 text-center'>Create a new Campaign</h1>
       <div className='mb-5'>
         {renderCampaign()}
       </div>
-      {rewards.map((reward) => {
+      {rewards.map((reward, index) => {
         return (
-          <div className='mb-3' key={reward.id}>
-            <RewardCard id={reward.id} />
+          <div className='card mb-3' key={index}>
+            {renderReward(reward, index)}
           </div>
         )
       })}

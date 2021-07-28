@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import {useWeb3React} from '@web3-react/core';
-
 import {network} from '../../connectors';
 import {useEagerConnect, useInactiveListener} from '../../hooks/useWeb3';
 import {useAppDispatch} from '../../store/hooks';
@@ -48,6 +47,7 @@ export default function Web3ReactManager({children}: {
     if (!triedEager) {
         return null;
     }
+
 
     // if the account context isn't active, and there's an error on the network context, it's an irrecoverable error
     if (!active && networkError) {

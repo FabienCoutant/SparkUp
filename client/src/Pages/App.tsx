@@ -4,7 +4,6 @@ import {useLocation} from 'react-router';
 import {Route, Switch} from 'react-router-dom';
 import CreateCampaign from "./CreateCampaign";
 import CampaignDetails from "./CampaignDetails";
-import UpdateCampaign from "./UpdateCampaign";
 import Dashboard from "./Dashboard";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -43,12 +42,6 @@ const App = () => {
                                 </Route>
                                 <Route path='/campaign/:campaignAddress' exact>
                                     <CampaignDetails/>
-                                </Route>
-                                <Route
-                                    path='/campaign/:campaignAddress/update'
-                                    exact
-                                >
-                                    <UpdateCampaign/>
                                 </Route>
                             </Switch>
                         )}
