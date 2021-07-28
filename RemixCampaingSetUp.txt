@@ -1,0 +1,13 @@
+0xcef5356BE8c9317face61eBf386DE41739A04576
+
+["First Campaign","This is the first campaign of SparkUp",11000,1631775897][["First rewards","level1",100,0,0,0,false],["Second rewards","level2",5,1000,0,0,true]]
+
+{title: 'First Campaign', description: 'This is the first campaign of SparkUp', fundingGoal: 11000, deadlineDate: 0},[{title: 'First rewards', description: 'level1', minimumContribution: 100, stockLimit: 0, nbContributors: 0, amount: 0, isStockLimited: false,},{ title: 'Second rewards',
+      description: 'level2',
+      minimumContribution: 5,
+      stockLimit: 1000,
+      nbContributors: 0,
+      amount: 0,
+      isStockLimited: true,
+    },
+  ];

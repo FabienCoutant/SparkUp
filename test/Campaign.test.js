@@ -1,366 +1,505 @@
-const {expectRevert, expectEvent, time,BN} = require("@openzeppelin/test-helpers");
-const {expect} = require("chai");
-const CampaignContract = artifacts.require("Campaign");
+const {
+  expectRevert,
+  expectEvent,
+  time,
+  BN,
+  ether,
+} = require('@openzeppelin/test-helpers');
+const { expect } = require('chai');
+const CampaignContract = artifacts.require('Campaign');
+const CampaignFactoryContract = artifacts.require('CampaignFactory');
+const TestUSDCContract = artifacts.require('TestUSDC.sol');
 
-contract("Campaign", (accounts) => {
-	const [factory, alice, bob] = accounts;
+contract('Campaign', (accounts) => {
+  const [alice, bob] = accounts;
 
-	const initialCampaignInfo = {
-		title: "First Campaign",
-		description: "This is the first campaign of SparkUp",
-		fundingGoal: 11000,
-		deadlineDate: 0
-	};
-	const initialRewards = [
-		{
-			title: "First rewards",
-			description: "level1",
-			minimumContribution: 100,
-			stockLimit: 0,
-			nbContributors: 0,
-			amount: 0,
-			isStockLimited: false
-		},
-		{
-			title: "Second rewards",
-			description: "level2",
-			minimumContribution: 5,
-			stockLimit: 1000,
-			nbContributors: 0,
-			amount: 0,
-			isStockLimited: true
-		}
-	];
-	const newReward = {
-		title: "Third rewards",
-		description: "level3",
-		minimumContribution: 150,
-		stockLimit: 100,
-		nbContributors: 0,
-		amount: 0,
-		isStockLimited: true
-	}
-	let CampaignContractInstance;
+  const initialCampaignInfo = {
+    title: 'First Campaign',
+    description: 'This is the first campaign of SparkUp',
+    fundingGoal: 11000,
+    deadlineDate: 0,
+  };
+  const initialRewards = [
+    {
+      title: 'First rewards',
+      description: 'level1',
+      minimumContribution: 100,
+      stockLimit: 0,
+      nbContributors: 0,
+      amount: 0,
+      isStockLimited: false,
+    },
+    {
+      title: 'Second rewards',
+      description: 'level2',
+      minimumContribution: 5,
+      stockLimit: 1000,
+      nbContributors: 0,
+      amount: 0,
+      isStockLimited: true,
+    },
+  ];
+  const newReward = {
+    title: 'Third rewards',
+    description: 'level3',
+    minimumContribution: 150,
+    stockLimit: 100,
+    nbContributors: 0,
+    amount: 0,
+    isStockLimited: true,
+  };
+  let CampaignContractInstance;
 
-	describe("--- Info Creation ---", async () => {
-		it("should allow user to create a campaign with title, description, amount to raise and deadlineDate", async () => {
-			initialCampaignInfo.deadlineDate=parseInt((await time.latest()).add(time.duration.days(30)));
-			CampaignContractInstance = await CampaignContract.new(
-				initialCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			);
-			const CampaignInfo = await CampaignContractInstance.campaignInfo();
-			expect(CampaignInfo.title).to.be.equal(initialCampaignInfo.title);
-			expect(CampaignInfo.description).to.be.equal(initialCampaignInfo.description);
-			expect(CampaignInfo.fundingGoal).to.be.bignumber.equal(new BN(initialCampaignInfo.fundingGoal));
-			expect(CampaignInfo.deadlineDate).to.be.bignumber.equal(new BN(initialCampaignInfo.deadlineDate));
-		});
-		it("should revert if title is empty", async () => {
-			const badCampaignInfo = {...initialCampaignInfo, title: ""};
-			await expectRevert(CampaignContract.new(
-				badCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			), "!Err: Title empty");
-		});
-		it("should revert if description is empty", async () => {
-			const badCampaignInfo = {...initialCampaignInfo, description: ""};
-			await expectRevert(CampaignContract.new(
-				badCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			), "!Err: Description empty");
-		});
-		it("should revert if fundingGoal is not greater than 10 000", async () => {
-			const badCampaignInfo = {...initialCampaignInfo, fundingGoal: 9999};
-			await expectRevert(CampaignContract.new(
-				badCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			), "!Err: Funding Goal not enough");
-		});
-		it("should revert if deadlineDate is not greater than creation date plus 7 days", async () => {
-			const badDate = (await time.latest()).add(time.duration.days(5));
-			const badCampaignInfo = {...initialCampaignInfo, deadlineDate: badDate};
-			await expectRevert(CampaignContract.new(
-				badCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			), "!Err: deadlineDate to short");
-		});
-	});
-	describe("--- Rewards creation ---", async () => {
-		it("should allow manager to create a campaign with rewards", async () => {
-			CampaignContractInstance = await CampaignContract.new(
-				initialCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			);
-			const firstRewardsInfo = await CampaignContractInstance.rewardsList(0);
-			expect(firstRewardsInfo.title).to.be.equal(initialRewards[0].title);
-			expect(firstRewardsInfo.description).to.be.equal(initialRewards[0].description);
+  beforeEach(async () => {
+    TestUSDCContractInstance = await TestUSDCContract.new(bob, { from: bob });
+    CampaignFactoryContractInstance = await CampaignFactoryContract.new(
+      TestUSDCContractInstance.address,
+      {
+        from: alice,
+      }
+    );
+    const deadline = parseInt((await time.latest()).add(time.duration.days(8)));
+    initialCampaignInfo.deadlineDate = deadline;
+    const newCampaign = await CampaignFactoryContractInstance.createCampaign(
+      initialCampaignInfo,
+      initialRewards,
+      { from: alice }
+    );
+    newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
+    CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
+  });
 
-			const secondRewardsInfo = await CampaignContractInstance.rewardsList(1);
-			expect(secondRewardsInfo.title).to.be.equal(initialRewards[1].title);
-			expect(secondRewardsInfo.description).to.be.equal(initialRewards[1].description);
-		});
-		it("should revert if no rewards is defined", async () => {
-			await expectRevert(CampaignContract.new(
-				initialCampaignInfo,
-				[],
-				alice,
-				{from: factory}
-			), "!Err: Rewards empty");
-		});
-		it("should revert if title is empty", async () => {
-			const badRewardsInfo = initialRewards.map(reward => {
-				return {...reward, title: ""};
-			});
-			await expectRevert(CampaignContract.new(
-				initialCampaignInfo,
-				badRewardsInfo,
-				alice,
-				{from: factory}
-			), "!Err: Title empty");
-		});
-		it("should revert if description is empty", async () => {
-			const badRewardsInfo = initialRewards.map(reward => {
-				return {...reward, description: ""};
-			});
-			await expectRevert(CampaignContract.new(
-				initialCampaignInfo,
-				badRewardsInfo,
-				alice,
-				{from: factory}
-			), "!Err: Description empty");
-		});
-		it("should revert if rewards array is greater then 10", async () => {
-			//12 rewards
-			const badRewardsInfo = [...initialRewards,...initialRewards,...initialRewards,...initialRewards,...initialRewards,...initialRewards]
-			await expectRevert(CampaignContract.new(
-				initialCampaignInfo,
-				badRewardsInfo,
-				alice,
-				{from: factory}
-			), "!Err: Too much Rewards");
-		});
-	});
-	describe("--- Update Info ---", async () => {
-		beforeEach(async () => {
-			CampaignContractInstance = await CampaignContract.new(
-				initialCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			);
-		});
-		it("should revert if not manager update the campaign", async () => {
-			const updatedData = {
-				...initialCampaignInfo, title: "Updated"
-			}
-			await expectRevert(CampaignContractInstance.updateCampaign(updatedData, {from: bob}), "!Not Authorized");
-		});
-		it("should update the title", async () => {
-			const updatedData = {
-				...initialCampaignInfo, title: "Updated"
-			}
-			await CampaignContractInstance.updateCampaign(updatedData, {from: alice});
-			const CampaignInfo = await CampaignContractInstance.campaignInfo();
-			expect(CampaignInfo.title).to.be.equal(updatedData.title);
-		});
-		it("should revert the update it the title is empty", async () => {
-			const badUpdatedData = {
-				...initialCampaignInfo, title: ""
-			}
-			await expectRevert(CampaignContractInstance.updateCampaign(badUpdatedData, {from: alice}), "!Err: Title empty");
-		});
-		it("should update the description", async () => {
-			const updatedData = {
-				...initialCampaignInfo, description: "Updated"
-			}
-			await CampaignContractInstance.updateCampaign(updatedData, {from: alice});
-			const CampaignInfo = await CampaignContractInstance.campaignInfo();
-			expect(CampaignInfo.description).to.be.equal(updatedData.description);
-		});
-		it("should revert if description is empty", async () => {
-			const badUpdatedData = {...initialCampaignInfo, description: ""};
-			await expectRevert(CampaignContractInstance.updateCampaign(badUpdatedData, {from: alice}), "!Err: Description empty");
-		});
-		it("should update the fundingGoal", async () => {
-			const updatedData = {
-				...initialCampaignInfo, fundingGoal: 20000
-			}
-			await CampaignContractInstance.updateCampaign(updatedData, {from: alice});
-			const CampaignInfo = await CampaignContractInstance.campaignInfo();
-			expect(CampaignInfo.fundingGoal).to.be.bignumber.equal(new BN(updatedData.fundingGoal));
-		});
-		it("should revert if fundingGoal is not greater than 10 000", async () => {
-			const badUpdatedData = {...initialCampaignInfo, fundingGoal: 9999};
-			await expectRevert(CampaignContractInstance.updateCampaign(badUpdatedData, {from: alice}
-			), "!Err: Funding Goal not enough");
-		});
-		it("should update the deadlineDate", async () => {
-			const newDeadLine = parseInt((await time.latest()).add(time.duration.days(10)));
-			const updatedData = {
-				...initialCampaignInfo, deadlineDate: newDeadLine
-			}
-			await CampaignContractInstance.updateCampaign(updatedData, {from: alice});
-			const CampaignInfo = await CampaignContractInstance.campaignInfo();
-			expect(CampaignInfo.deadlineDate).to.be.bignumber.equal(new BN(updatedData.deadlineDate));
-		});
-		it("should revert if deadlineDate is not greater than creation date plus 7 days", async () => {
-			const badDeadLine = parseInt((await time.latest()).add(time.duration.days(4)));
-			const badUpdatedData = {...initialCampaignInfo, deadlineDate: badDeadLine};
-			await expectRevert(CampaignContractInstance.updateCampaign(
-				badUpdatedData,
-				{from: alice}
-			), "!Err: deadlineDate to short");
-		});
-		it("should emit event after update", async () => {
-			const updatedData = {
-				...initialCampaignInfo, description: "Updated"
-			}
-			const receipt = await CampaignContractInstance.updateCampaign(updatedData, {from: alice});
+  describe('--- Update Info ---', async () => {
+    it('should revert if not manager update the campaign', async () => {
+      const updatedData = {
+        ...initialCampaignInfo,
+        title: 'Updated',
+      };
+      await expectRevert(
+        CampaignContractInstance.updateCampaign(updatedData, { from: bob }),
+        '!Not Authorized'
+      );
+    });
+    it('should revert if wrong workflow status', async () => {
+      const updatedData = {
+        ...initialCampaignInfo,
+        title: 'Updated',
+      };
+      await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      await expectRevert(
+        CampaignContractInstance.updateCampaign(updatedData, { from: alice }),
+        '!Err : Wrong workflow status'
+      );
+    });
+    it('should update the title', async () => {
+      const updatedData = {
+        ...initialCampaignInfo,
+        title: 'Updated',
+      };
+      await CampaignContractInstance.updateCampaign(updatedData, {
+        from: alice,
+      });
+      const CampaignResult = await CampaignContractInstance.getCampaignInfo();
+      const CampaignInfo = CampaignResult['0'];
+      expect(CampaignInfo.title).to.be.equal(updatedData.title);
+    });
+    it('should revert the update it the title is empty', async () => {
+      const badUpdatedData = {
+        ...initialCampaignInfo,
+        title: '',
+      };
+      await expectRevert(
+        CampaignContractInstance.updateCampaign(badUpdatedData, {
+          from: alice,
+        }),
+        '!Err: Title empty'
+      );
+    });
+    it('should update the description', async () => {
+      const updatedData = {
+        ...initialCampaignInfo,
+        description: 'Updated',
+      };
+      await CampaignContractInstance.updateCampaign(updatedData, {
+        from: alice,
+      });
+      const CampaignResult = await CampaignContractInstance.getCampaignInfo();
+      const CampaignInfo = CampaignResult['0'];
+      expect(CampaignInfo.description).to.be.equal(updatedData.description);
+    });
+    it('should revert if description is empty', async () => {
+      const badUpdatedData = { ...initialCampaignInfo, description: '' };
+      await expectRevert(
+        CampaignContractInstance.updateCampaign(badUpdatedData, {
+          from: alice,
+        }),
+        '!Err: Description empty'
+      );
+    });
+    it('should update the fundingGoal', async () => {
+      const updatedData = {
+        ...initialCampaignInfo,
+        fundingGoal: 20000,
+      };
+      await CampaignContractInstance.updateCampaign(updatedData, {
+        from: alice,
+      });
+      const CampaignResult = await CampaignContractInstance.getCampaignInfo();
+      const CampaignInfo = CampaignResult['0'];
+      expect(CampaignInfo.fundingGoal).to.be.bignumber.equal(
+        new BN(updatedData.fundingGoal)
+      );
+    });
+    it('should revert if fundingGoal is not greater than 10 000', async () => {
+      const badUpdatedData = { ...initialCampaignInfo, fundingGoal: 9999 };
+      await expectRevert(
+        CampaignContractInstance.updateCampaign(badUpdatedData, {
+          from: alice,
+        }),
+        '!Err: Funding Goal not enough'
+      );
+    });
+    it('should update the deadlineDate', async () => {
+      const newDeadLine = parseInt(
+        (await time.latest()).add(time.duration.days(10))
+      );
+      const updatedData = {
+        ...initialCampaignInfo,
+        deadlineDate: newDeadLine,
+      };
+      await CampaignContractInstance.updateCampaign(updatedData, {
+        from: alice,
+      });
+      const CampaignResult = await CampaignContractInstance.getCampaignInfo();
+      const CampaignInfo = CampaignResult['0'];
+      expect(CampaignInfo.deadlineDate).to.be.bignumber.equal(
+        new BN(updatedData.deadlineDate)
+      );
+    });
+    it('should revert if deadlineDate is not greater than creation date plus 7 days', async () => {
+      const badDeadLine = parseInt(
+        (await time.latest()).add(time.duration.days(4))
+      );
+      const badUpdatedData = {
+        ...initialCampaignInfo,
+        deadlineDate: badDeadLine,
+      };
+      await expectRevert(
+        CampaignContractInstance.updateCampaign(badUpdatedData, {
+          from: alice,
+        }),
+        '!Err: deadlineDate to short'
+      );
+    });
+    it('should emit event after update', async () => {
+      const updatedData = {
+        ...initialCampaignInfo,
+        description: 'Updated',
+      };
+      const receipt = await CampaignContractInstance.updateCampaign(
+        updatedData,
+        { from: alice }
+      );
 
-			expectEvent(receipt, "CampaignInfoUpdated");
-		});
-	});
-	describe("--- Update Rewards ---", async () => {
-		beforeEach(async () => {
-			CampaignContractInstance = await CampaignContract.new(
-				initialCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			);
-		});
-		describe("  --- Add a new reward --- ", () => {
-			it("should revert if not manager try to add a reward", async () => {
-				await expectRevert(CampaignContractInstance.addReward(newReward, {from: bob}), "!Not Authorized");
-			});
-			it("should add a new reward and emit event", async () => {
-				const initialRewardNb = await CampaignContractInstance.rewardsCounter();
+      expectEvent(receipt, 'CampaignInfoUpdated');
+    });
+  });
+  describe('--- Update Rewards ---', async () => {
+    describe('  --- Add a new reward --- ', () => {
+      it('should revert if not manager try to add a reward', async () => {
+        await expectRevert(
+          CampaignContractInstance.addReward(newReward, { from: bob }),
+          '!Not Authorized'
+        );
+      });
+      it('should revert if wrong workflow status', async () => {
+        await CampaignContractInstance.publishCampaign({
+          from: alice,
+        });
+        await expectRevert(
+          CampaignContractInstance.addReward(newReward, { from: alice }),
+          '!Err : Wrong workflow status'
+        );
+      });
+      it('should add a new reward and emit event', async () => {
+        const initialRewardNb = await CampaignContractInstance.rewardsCounter();
 
-				const receipt = await CampaignContractInstance.addReward(newReward, {from: alice});
-				expectEvent(receipt, "CampaignNewRewardsAdded");
+        const receipt = await CampaignContractInstance.addReward(newReward, {
+          from: alice,
+        });
+        expectEvent(receipt, 'CampaignNewRewardsAdded');
 
-				const afterRewardNb = await CampaignContractInstance.rewardsCounter();
-				expect(afterRewardNb).to.be.bignumber.equal(initialRewardNb.add(new BN(1)));
+        const afterRewardNb = await CampaignContractInstance.rewardsCounter();
+        expect(afterRewardNb).to.be.bignumber.equal(
+          initialRewardNb.add(new BN(1))
+        );
 
-				const RewardsInfo = await CampaignContractInstance.rewardsList(afterRewardNb);
-				expect(RewardsInfo.title).to.be.equal(newReward.title);
-			});
-		});
-		describe("  --- Update reward --- ", () => {
-			it("should revert if not manager try to update a reward", async () => {
-				const newRewardsInfo = initialRewards.map(a => ({...a}));
-				newRewardsInfo[0].title = "Updated";
+        const RewardsInfo = await CampaignContractInstance.rewardsList(
+          afterRewardNb
+        );
+        expect(RewardsInfo.title).to.be.equal(newReward.title);
+      });
+    });
+    describe('  --- Update reward --- ', () => {
+      it('should revert if not manager try to update a reward', async () => {
+        const newRewardsInfo = initialRewards.map((a) => ({ ...a }));
+        newRewardsInfo[0].title = 'Updated';
 
-				await expectRevert(CampaignContractInstance.updateReward(newRewardsInfo[0], 0, {from: bob}), "!Not Authorized");
-			});
-			it("should revert if update the reward index does not exist", async () => {
-				const newRewardsInfo = initialRewards.map(a => ({...a}));
-				newRewardsInfo[0].title = "Updated";
+        await expectRevert(
+          CampaignContractInstance.updateReward(newRewardsInfo[0], 0, {
+            from: bob,
+          }),
+          '!Not Authorized'
+        );
+      });
+      it('should revert if wrong workflow status', async () => {
+        const newRewardsInfo = initialRewards.map((a) => ({ ...a }));
+        newRewardsInfo[0].title = 'Updated';
 
-				await expectRevert(CampaignContractInstance.updateReward(newRewardsInfo[0], 10, {from: alice}), "!Err: Index not exist");
-			});
-			it("should revert if reward has empty title", async () => {
-				const badRewardsInfo = initialRewards.map(a => ({...a}));
-				badRewardsInfo[1].title = "";
-				await expectRevert(CampaignContractInstance.updateReward(badRewardsInfo[1], 1, {from: alice}),"!Err: Title empty");
-			});
-			it("should revert if reward has empty description", async () => {
-				const badRewardsInfo = initialRewards.map(a => ({...a}));
-				badRewardsInfo[1].description = "";
+        await CampaignContractInstance.publishCampaign({
+          from: alice,
+        });
+        await expectRevert(
+          CampaignContractInstance.updateReward(newRewardsInfo[0], 1, {
+            from: alice,
+          }),
+          '!Err : Wrong workflow status'
+        );
+      });
+      it('should revert if update the reward index does not exist', async () => {
+        const newRewardsInfo = initialRewards.map((a) => ({ ...a }));
+        newRewardsInfo[0].title = 'Updated';
 
-				await expectRevert(CampaignContractInstance.updateReward(badRewardsInfo[1], 1, {from: alice}), "!Err: Description empty");
-			});
-			it("should update the reward at index 1 and emit event", async () => {
-				const newRewardsInfo = initialRewards.map(a => ({...a}));
-				newRewardsInfo[0].title = "Updated";
+        await expectRevert(
+          CampaignContractInstance.updateReward(newRewardsInfo[0], 10, {
+            from: alice,
+          }),
+          '!Err: Index not exist'
+        );
+      });
+      it('should revert if reward has empty title', async () => {
+        const badRewardsInfo = initialRewards.map((a) => ({ ...a }));
+        badRewardsInfo[1].title = '';
+        await expectRevert(
+          CampaignContractInstance.updateReward(badRewardsInfo[1], 1, {
+            from: alice,
+          }),
+          '!Err: Title empty'
+        );
+      });
+      it('should revert if reward has empty description', async () => {
+        const badRewardsInfo = initialRewards.map((a) => ({ ...a }));
+        badRewardsInfo[1].description = '';
 
-				const receipt = await CampaignContractInstance.updateReward(newRewardsInfo[0], 1, {from: alice});
-				expectEvent(receipt, "CampaignRewardsUpdated");
+        await expectRevert(
+          CampaignContractInstance.updateReward(badRewardsInfo[1], 1, {
+            from: alice,
+          }),
+          '!Err: Description empty'
+        );
+      });
+      it('should update the reward at index 1 and emit event', async () => {
+        const newRewardsInfo = initialRewards.map((a) => ({ ...a }));
+        newRewardsInfo[0].title = 'Updated';
 
-				const RewardsInfo = await CampaignContractInstance.rewardsList(1);
-				expect(RewardsInfo.title).to.be.equal(newRewardsInfo[0].title);
-			});
-		});
-	});
-	describe("--- Delete Reward  ---", async () => {
-		beforeEach(async () => {
-			CampaignContractInstance = await CampaignContract.new(
-				initialCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			);
-		});
-		it("should revert if not manager try to delete a reward", async () => {
-			await expectRevert(CampaignContractInstance.deleteReward(1,{from: bob}), "!Not Authorized");
-		});
-		it("should revert if reward index does not exist", async () => {
-			await expectRevert(CampaignContractInstance.deleteReward(10,{from: alice}), "!Err: Index not exist");
-		});
-		it("should allow to delete the last reward",async ()=>{
-			const initialRewardNb = await CampaignContractInstance.rewardsCounter();
+        const receipt = await CampaignContractInstance.updateReward(
+          newRewardsInfo[0],
+          1,
+          { from: alice }
+        );
+        expectEvent(receipt, 'CampaignRewardsUpdated');
 
-			const receipt = await CampaignContractInstance.deleteReward(initialRewardNb,{from: alice});
-			expectEvent(receipt,"CampaignRewardDeleted");
+        const RewardsInfo = await CampaignContractInstance.rewardsList(1);
+        expect(RewardsInfo.title).to.be.equal(newRewardsInfo[0].title);
+      });
+    });
+  });
+  describe('--- Delete Reward  ---', async () => {
+    it('should revert if not manager try to delete a reward', async () => {
+      await expectRevert(
+        CampaignContractInstance.deleteReward(1, { from: bob }),
+        '!Not Authorized'
+      );
+    });
+    it('should revert if wrong workflow status', async () => {
+      const initialRewardNb = await CampaignContractInstance.rewardsCounter();
+      await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      await expectRevert(
+        CampaignContractInstance.deleteReward(initialRewardNb, {
+          from: alice,
+        }),
+        '!Err : Wrong workflow status'
+      );
+    });
+    it('should revert if reward index does not exist', async () => {
+      await expectRevert(
+        CampaignContractInstance.deleteReward(10, { from: alice }),
+        '!Err: Index not exist'
+      );
+    });
+    it('should allow to delete the last reward', async () => {
+      const initialRewardNb = await CampaignContractInstance.rewardsCounter();
 
-			const afterRewardNb = await CampaignContractInstance.rewardsCounter();
-			expect(afterRewardNb).to.be.bignumber.equal(initialRewardNb.sub(new BN(1)));
+      const receipt = await CampaignContractInstance.deleteReward(
+        initialRewardNb,
+        { from: alice }
+      );
+      expectEvent(receipt, 'CampaignRewardDeleted');
 
-			await expectRevert(CampaignContractInstance.deleteReward(initialRewardNb,{from: alice}), "!Err: Index not exist");
-		});
-		it("should swap the index of the reward if the one to be delete is not the last one",async ()=>{
-			//Got 3 rewards
-			await CampaignContractInstance.addReward(newReward, {from: alice});
-			const initialRewardNb = await CampaignContractInstance.rewardsCounter();
-			expect(initialRewardNb).to.be.bignumber.equal(new BN(3));
+      const afterRewardNb = await CampaignContractInstance.rewardsCounter();
+      expect(afterRewardNb).to.be.bignumber.equal(
+        initialRewardNb.sub(new BN(1))
+      );
 
-			const receipt = await CampaignContractInstance.deleteReward(initialRewardNb.sub(new BN(1)),{from: alice});
-			expectEvent(receipt,"CampaignRewardDeleted");
+      await expectRevert(
+        CampaignContractInstance.deleteReward(initialRewardNb, { from: alice }),
+        '!Err: Index not exist'
+      );
+    });
+    it('should swap the index of the reward if the one to be delete is not the last one', async () => {
+      //Got 3 rewards
+      await CampaignContractInstance.addReward(newReward, { from: alice });
+      const initialRewardNb = await CampaignContractInstance.rewardsCounter();
+      expect(initialRewardNb).to.be.bignumber.equal(new BN(3));
 
-			const afterRewardNb = await CampaignContractInstance.rewardsCounter();
-			expect(afterRewardNb).to.be.bignumber.equal(initialRewardNb.sub(new BN(1)));
+      const receipt = await CampaignContractInstance.deleteReward(
+        initialRewardNb.sub(new BN(1)),
+        { from: alice }
+      );
+      expectEvent(receipt, 'CampaignRewardDeleted');
 
-			const secondReward = await CampaignContractInstance.rewardsList(afterRewardNb);
-			expect(secondReward.title).to.be.equal(newReward.title);
-		});
-	});
-	describe("--- Migration ---",async ()=>{
-		beforeEach(async () => {
-			CampaignContractInstance = await CampaignContract.new(
-				initialCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			);
-		});
-		it("should allow the manager to change the manager address",async ()=>{
-			await CampaignContractInstance.updateManager(bob,{from: alice});
-			const newManager = await CampaignContractInstance.manager();
-			expect(newManager).to.be.equal(bob);
-		});
-		it("should revert if not manager try to change the manager", async () => {
-			await expectRevert(CampaignContractInstance.updateManager(bob,{from: bob}), "!Not Authorized");
-		});
-		it("should allow the factory to change the factory address",async ()=>{
-			await CampaignContractInstance.updateFactory(bob,{from: factory});
-			const newFactory = await CampaignContractInstance.factory();
-			expect(newFactory).to.be.equal(bob);
-		});
+      const afterRewardNb = await CampaignContractInstance.rewardsCounter();
+      expect(afterRewardNb).to.be.bignumber.equal(
+        initialRewardNb.sub(new BN(1))
+      );
 
-		it("should revert if not factory try to change the factory address", async () => {
-			await expectRevert(CampaignContractInstance.updateFactory(bob,{from: alice}), "!Err: Not Factory Contract");
-		});
-	});
+      const secondReward = await CampaignContractInstance.rewardsList(
+        afterRewardNb
+      );
+      expect(secondReward.title).to.be.equal(newReward.title);
+    });
+  });
+  describe('--- Publish ---', async () => {
+    it('should allow manager to publish campaign on correct workflow status', async () => {
+      const receipt = await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      const status = await CampaignContractInstance.status();
+      expect(status).to.be.bignumber.equal(new BN(1));
+    });
+    it('should revert if called by other than manager', async () => {
+      await expectRevert(
+        CampaignContractInstance.publishCampaign({ from: bob }),
+        '!Not Authorized'
+      );
+    });
+    it('should revert if wrong workflow status', async () => {
+      await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      await expectRevert(
+        CampaignContractInstance.publishCampaign({ from: alice }),
+        '!Err : Wrong workflow status'
+      );
+    });
+    it('should revert if publishCampaign called afeter deadline - 7 days', async () => {
+      await time.increase(time.duration.days(15));
+      await expectRevert(
+        CampaignContractInstance.publishCampaign({ from: alice }),
+        '!Err: deadlineDate to short'
+      );
+    });
+  });
+  describe('--- Migration ---', async () => {
+    it('should allow the manager to change the manager address', async () => {
+      await CampaignContractInstance.updateManager(bob, { from: alice });
+      const newManager = await CampaignContractInstance.manager();
+      expect(newManager).to.be.equal(bob);
+    });
+    it('should revert if not manager try to change the manager', async () => {
+      await expectRevert(
+        CampaignContractInstance.updateManager(bob, { from: bob }),
+        '!Not Authorized'
+      );
+    });
+  });
+  describe('--- Contribute ---', async () => {
+    it('should allow contributor to contribute to campaign', async () => {
+      await CampaignContractInstance.publishCampaign({ from: alice });
+      const spender = CampaignContractInstance.address;
+      const bobContribution = ether(new BN('100'));
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      const receipt = await CampaignContractInstance.contribute(
+        bobContribution,
+        0,
+        {
+          from: bob,
+        }
+      );
+      expectEvent(receipt, 'ContributionReceived');
+      const balanceBob = await CampaignContractInstance.contributorBalances(
+        bob
+      );
+      expect(balanceBob).to.be.bignumber.equal(bobContribution);
+      const rewardBob = await CampaignContractInstance.rewardToContributor(
+        0,
+        bob
+      );
+      expect(rewardBob).to.be.bignumber.equal(new BN(1));
+      const reward = await CampaignContractInstance.rewardsList(0);
+      const rewardAmount = reward.amount;
+      expect(rewardAmount).to.be.bignumber.equal(bobContribution);
+      const rewardContributors = reward.nbContributors;
+      expect(rewardContributors).to.be.bignumber.equal(new BN(1));
+      const contractBalance =
+        await CampaignContractInstance.getContractUSDCBalance();
+      expect(contractBalance).to.be.bignumber.equal(bobContribution);
+    });
+    it('should update workflow to FundingComplete if funding goal reached before campaignDeadlineDate', async () => {
+      await CampaignContractInstance.publishCampaign({ from: alice });
+      const spender = CampaignContractInstance.address;
+      const bobContribution = ether(new BN('11000'));
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      await CampaignContractInstance.contribute(bobContribution, 0, {
+        from: bob,
+      });
+      const status = await CampaignContractInstance.status();
+      expect(status).to.be.bignumber.equal(new BN(2));
+    });
+    it('should revert if wrong workflow status', async () => {
+      const spender = CampaignContractInstance.address;
+      const bobContribution = ether(new BN('100'));
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      await expectRevert(
+        CampaignContractInstance.contribute(bobContribution, 0, {
+          from: bob,
+        }),
+        '!Err : Wrong workflow status'
+      );
+    });
+    it('should revert if campaignDeadlineDate has passed', async () => {
+      await time.increase(time.duration.days(15));
+      const spender = CampaignContractInstance.address;
+      const bobContribution = ether(new BN('11000'));
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      await expectRevert(
+        CampaignContractInstance.contribute(bobContribution, 0, {
+          from: bob,
+        }),
+        '!Err : Campaign contribution has ended'
+      );
+    });
+  });
 });

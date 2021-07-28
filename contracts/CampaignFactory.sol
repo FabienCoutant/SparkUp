@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.6;
 
 import "./Campaign.sol";
@@ -16,19 +16,21 @@ contract CampaignFactory is ICampaignFactory {
     ICampaign[] public deployedCampaigns;
     mapping(address => uint) public contractIndex;
     mapping(address => bool) public contractExist;
+    IERC20 public immutable usdcToken;
 
     //Events
     event newCampaign(address campaignAddress);
 
-    constructor(){
+    constructor(address _usdcToken){
         owner = msg.sender;
+        usdcToken = IERC20(_usdcToken);
     }
 
     /**
      * @inheritdoc ICampaignFactory
      */
     function createCampaign(ICampaign.Info memory infoData, ICampaign.Rewards[] memory rewardsData) external override {
-        ICampaign _newCampaign = new Campaign(infoData, rewardsData, msg.sender);
+        ICampaign _newCampaign = new Campaign(infoData, rewardsData, msg.sender, usdcToken);
         deployedCampaigns.push(_newCampaign);
         contractIndex[address(_newCampaign)] = getLastDeployedCampaignsIndex();
         contractExist[address(_newCampaign)] = true;

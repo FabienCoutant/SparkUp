@@ -91,5 +91,5 @@ interface ICampaign {
      * @notice Allow contributors to contribute to the campaign.
      * @dev Can only be called if campaing is published, is not comleted, is not deleted and is not failed.
      */
-    function contribute(uint256 _amount) external;
+    function contribute(uint256 _amount, uint8 rewardIndex) external;
 }
