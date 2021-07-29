@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ethersproject/abstract-provider": "^5.4.0",
+    "@ethersproject/providers": "^5.4.2",
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
