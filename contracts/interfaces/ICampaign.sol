@@ -92,4 +92,10 @@ interface ICampaign {
      * @dev Can only be called if campaign is published, is not completed, is not deleted and is not failed.
      */
     function contribute(uint256 _amount, uint8 rewardIndex) external;
+
+    /**
+     * @notice Allow anyone to update WorkflowStatus to FundingFailed.
+     * @dev Can only be called if campiagn deadline is passed and fundingGoal not reached.
+     */
+    function failFunding() external;
 }

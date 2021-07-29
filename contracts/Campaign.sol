@@ -181,6 +181,14 @@ contract Campaign is ICampaign {
     }
 
     /**
+     * @inheritdoc ICampaign
+     */
+    function failFunding() public override checkStatus(status, WorkflowStatus.CampaignPublished) {
+        require(block.timestamp > campaignInfo.deadlineDate && getContractUSDCBalance() < campaignInfo.fundingGoal, "!Err: conditions not met");
+        status = WorkflowStatus.FundingFailed;
+    }
+
+    /**
      * @notice Return the amount in USDC raised by the campaign
      * @dev amount uint USDC raised by the campaign in WEI
      */
