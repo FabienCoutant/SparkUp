@@ -23,14 +23,6 @@ contract Campaign is ICampaign {
     mapping(uint => mapping(address => uint)) public rewardToContributor;
     mapping(address => uint256) public contributorBalances;
 
-    //    Events
-    event CampaignNewRewardsAdded();
-    event CampaignInfoUpdated();
-    event CampaignRewardsUpdated();
-    event CampaignDeleted();
-    event CampaignRewardDeleted();
-    event ContributionReceived();
-
     //Modifiers
     modifier isNotDeleted(){
         require(status != WorkflowStatus.CampaignDeleted, "!Err: Campaign Deleted");
@@ -82,7 +74,6 @@ contract Campaign is ICampaign {
      */
     function updateCampaign(Info memory newInfo) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         _setCampaignInfo(newInfo);
-        emit CampaignInfoUpdated();
     }
 
     /**
@@ -91,7 +82,6 @@ contract Campaign is ICampaign {
     function addReward(Rewards memory newRewardData) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         rewardsCounter++;
         _setCampaignReward(rewardsCounter, newRewardData);
-        emit CampaignNewRewardsAdded();
     }
 
     /**
@@ -100,7 +90,6 @@ contract Campaign is ICampaign {
     function updateReward(Rewards memory newRewardData, uint rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         _setCampaignReward(rewardIndex, newRewardData);
-        emit CampaignRewardsUpdated();
     }
 
     /**
@@ -110,7 +99,7 @@ contract Campaign is ICampaign {
     function _setCampaignInfo(Info memory data) private {
         require(bytes(data.title).length > 0, "!Err: Title empty");
         require(bytes(data.description).length > 0, "!Err: Description empty");
-        require(data.fundingGoal >= 10000, "!Err: Funding Goal not enough");
+        require(data.fundingGoal >= 10000 ether, "!Err: Funding Goal not enough");
         require(createAt + 7 days <= data.deadlineDate, "!Err: deadlineDate to short");
         campaignInfo.title = data.title;
         campaignInfo.description = data.description;
@@ -143,7 +132,6 @@ contract Campaign is ICampaign {
         require(status == WorkflowStatus.CampaignDrafted || status == WorkflowStatus.FundingFailed || status == WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
         status = WorkflowStatus.CampaignDeleted;
         ICampaignFactory(factory).deleteCampaign();
-        emit CampaignDeleted();
     }
 
     /**
@@ -156,7 +144,6 @@ contract Campaign is ICampaign {
         }
         delete rewardsList[rewardsCounter];
         rewardsCounter--;
-        emit CampaignRewardDeleted();
     }
 
     /**
@@ -185,7 +172,6 @@ contract Campaign is ICampaign {
         rewardToContributor[rewardIndex][msg.sender] = rewardToContributor[rewardIndex][msg.sender].add(1);
         rewardsList[rewardIndex].nbContributors = rewardsList[rewardIndex].nbContributors.add(1);
         rewardsList[rewardIndex].amount = rewardsList[rewardIndex].amount.add(_amount);
-        emit ContributionReceived();
         if(getContractUSDCBalance() >= campaignInfo.fundingGoal) {
             status = WorkflowStatus.FundingComplete;
         }

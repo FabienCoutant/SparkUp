@@ -5,14 +5,14 @@ const USDC_CONTRACTS = {
   ropsten: '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
 };
 
-module.exports = async (deployer, _network, accounts) => {
+module.exports = async (deployer, network, accounts) => {
   let addressUSDC;
-  if (_network === 'development') {
+  if (network === 'development' || network === 'soliditycoverage') {
     await deployer.deploy(TestUSDC, accounts[1]);
     const TUSDC = await TestUSDC.deployed();
     addressUSDC = TUSDC.address;
   } else {
     addressUSDC = USDC_CONTRACTS._network;
   }
-  deployer.deploy(CampaignFactory, addressUSDC);
+  await deployer.deploy(CampaignFactory, addressUSDC);
 };

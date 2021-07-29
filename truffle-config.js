@@ -34,8 +34,8 @@ module.exports = {
   mocha: {
     reporter: 'eth-gas-reporter',
     reporterOptions: {
-      excludeContracts: ['Migrations']
-    }
+      excludeContracts: ['Migrations'],
+    },
   },
   compilers: {
     solc: {
@@ -44,12 +44,12 @@ module.exports = {
       settings: {
         // See the solidity docs for advice about optimization and evmVersion
         optimizer: {
-          enabled: false,
+          enabled: true,
           runs: 200,
         },
         //  evmVersion: "byzantium"
       },
     },
   },
-  plugins: ["solidity-coverage"]
+  plugins: ['solidity-coverage'],
 };
