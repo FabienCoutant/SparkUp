@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>56/56</span>
+        <span class='fraction'>58/58</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>63/63</span>
+        <span class='fraction'>65/65</span>
       </div>
     </div>
   </div>
@@ -226,7 +226,8 @@
 181
 182
 183
-184</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+184
+185</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -252,22 +253,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">92×</span>
 <span class="cline-any cline-yes">90×</span>
+<span class="cline-any cline-yes">88×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">69×</span>
-<span class="cline-any cline-yes">55×</span>
+<span class="cline-any cline-yes">67×</span>
+<span class="cline-any cline-yes">53×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">49×</span>
-<span class="cline-any cline-yes">39×</span>
+<span class="cline-any cline-yes">47×</span>
+<span class="cline-any cline-yes">37×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -286,8 +286,10 @@
 <span class="cline-any cline-yes">65×</span>
 <span class="cline-any cline-yes">65×</span>
 <span class="cline-any cline-yes">57×</span>
+<span class="cline-any cline-yes">57×</span>
 <span class="cline-any cline-yes">110×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">53×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -366,7 +368,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -421,7 +423,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract Campaign is ICampaign {
     using SafeMath for uint256;
     
-    bool public isDisabled;
     uint8 public rewardsCounter;
     uint256 public createAt;
     address public manager;
@@ -468,9 +469,11 @@ contract Campaign is ICampaign {
         status = WorkflowStatus.CampaignDrafted;
         usdcToken = _usdcToken;
         _setCampaignInfo(infoData);
-        for (rewardsCounter; rewardsCounter &lt; rewardsData.length; rewardsCounter++) {
-            _setCampaignReward(rewardsCounter, rewardsData[rewardsCounter]);
+        uint8 _rewardsCounter;
+        for (_rewardsCounter; _rewardsCounter &lt; rewardsData.length; _rewardsCounter++) {
+            _setCampaignReward(_rewardsCounter, rewardsData[_rewardsCounter]);
         }
+        rewardsCounter = uint8(rewardsData.length) ;
     }
 &nbsp;
     /**
@@ -491,8 +494,8 @@ contract Campaign is ICampaign {
      * @inheritdoc ICampaign
      */
     function addReward(Rewards memory newRewardData) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
-        rewardsCounter++;
         _setCampaignReward(rewardsCounter, newRewardData);
+        rewardsCounter++;
     }
 &nbsp;
     /**
@@ -549,11 +552,11 @@ contract Campaign is ICampaign {
      * @inheritdoc ICampaign
      */
     function deleteReward(uint256 rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
-        require(rewardIndex &lt;= rewardsCounter, "!Err: Index not exist");
-        if(rewardsCounter!=rewardIndex){
-            rewardsList[rewardIndex] = rewardsList[rewardsCounter];
+        require(rewardIndex &lt; rewardsCounter, "!Err: Index not exist");
+        if((rewardsCounter-1)!=rewardIndex){
+            rewardsList[rewardIndex] = rewardsList[rewardsCounter-1];
         }
-        delete rewardsList[rewardsCounter];
+        delete rewardsList[rewardsCounter-1];
         rewardsCounter--;
     }
 &nbsp;
@@ -598,7 +601,7 @@ contract Campaign is ICampaign {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 29 2021 13:25:32 GMT+0200 (heure d’été d’Europe centrale)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Jul 29 2021 14:00:57 GMT+0200 (heure d’été d’Europe centrale)
 </div>
 </div>
 <script src="../prettify.js"></script>

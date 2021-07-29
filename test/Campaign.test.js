@@ -216,7 +216,7 @@ contract('Campaign', (accounts) => {
           '!Err : Wrong workflow status'
         );
       });
-      it('should add a new reward and emit event', async () => {
+      it('should add a new reward', async () => {
         const initialRewardNb = await CampaignContractInstance.rewardsCounter();
 
         await CampaignContractInstance.addReward(newReward, {
@@ -229,7 +229,7 @@ contract('Campaign', (accounts) => {
         );
 
         const RewardsInfo = await CampaignContractInstance.rewardsList(
-          afterRewardNb
+          afterRewardNb.sub(new BN(1))
         );
         expect(RewardsInfo.title).to.be.equal(newReward.title);
       });
@@ -333,18 +333,16 @@ contract('Campaign', (accounts) => {
     it('should allow to delete the last reward', async () => {
       const initialRewardNb = await CampaignContractInstance.rewardsCounter();
 
-      await CampaignContractInstance.deleteReward(initialRewardNb, {
-        from: alice,
-      });
+      await CampaignContractInstance.deleteReward(
+        initialRewardNb.sub(new BN(1)),
+        {
+          from: alice,
+        }
+      );
 
       const afterRewardNb = await CampaignContractInstance.rewardsCounter();
       expect(afterRewardNb).to.be.bignumber.equal(
         initialRewardNb.sub(new BN(1))
-      );
-
-      await expectRevert(
-        CampaignContractInstance.deleteReward(initialRewardNb, { from: alice }),
-        '!Err: Index not exist'
       );
     });
     it('should swap the index of the reward if the one to be delete is not the last one', async () => {
@@ -354,7 +352,7 @@ contract('Campaign', (accounts) => {
       expect(initialRewardNb).to.be.bignumber.equal(new BN(3));
 
       await CampaignContractInstance.deleteReward(
-        initialRewardNb.sub(new BN(1)),
+        initialRewardNb.sub(new BN(2)),
         { from: alice }
       );
 
@@ -364,7 +362,7 @@ contract('Campaign', (accounts) => {
       );
 
       const secondReward = await CampaignContractInstance.rewardsList(
-        afterRewardNb
+        afterRewardNb.sub(new BN(1))
       );
       expect(secondReward.title).to.be.equal(newReward.title);
     });

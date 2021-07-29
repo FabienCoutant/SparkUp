@@ -10,7 +10,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract Campaign is ICampaign {
     using SafeMath for uint256;
     
-    bool public isDisabled;
     uint8 public rewardsCounter;
     uint256 public createAt;
     address public manager;
@@ -57,9 +56,11 @@ contract Campaign is ICampaign {
         status = WorkflowStatus.CampaignDrafted;
         usdcToken = _usdcToken;
         _setCampaignInfo(infoData);
-        for (rewardsCounter; rewardsCounter < rewardsData.length; rewardsCounter++) {
-            _setCampaignReward(rewardsCounter, rewardsData[rewardsCounter]);
+        uint8 _rewardsCounter;
+        for (_rewardsCounter; _rewardsCounter < rewardsData.length; _rewardsCounter++) {
+            _setCampaignReward(_rewardsCounter, rewardsData[_rewardsCounter]);
         }
+        rewardsCounter = uint8(rewardsData.length) ;
     }
 
     /**
@@ -80,8 +81,8 @@ contract Campaign is ICampaign {
      * @inheritdoc ICampaign
      */
     function addReward(Rewards memory newRewardData) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
-        rewardsCounter++;
         _setCampaignReward(rewardsCounter, newRewardData);
+        rewardsCounter++;
     }
 
     /**
@@ -138,11 +139,11 @@ contract Campaign is ICampaign {
      * @inheritdoc ICampaign
      */
     function deleteReward(uint256 rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
-        require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
-        if(rewardsCounter!=rewardIndex){
-            rewardsList[rewardIndex] = rewardsList[rewardsCounter];
+        require(rewardIndex < rewardsCounter, "!Err: Index not exist");
+        if((rewardsCounter-1)!=rewardIndex){
+            rewardsList[rewardIndex] = rewardsList[rewardsCounter-1];
         }
-        delete rewardsList[rewardsCounter];
+        delete rewardsList[rewardsCounter-1];
         rewardsCounter--;
     }
 
