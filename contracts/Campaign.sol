@@ -14,10 +14,12 @@ contract Campaign is ICampaign {
     uint256 public createAt;
     address public manager;
     address public factory;
-    WorkflowStatus public status;
-    IERC20 public immutable usdcToken;
 
+    WorkflowStatus public status;
+
+    IERC20 public immutable usdcToken;
     Info private campaignInfo;
+
     mapping(uint => Rewards) public rewardsList;
     mapping(uint => mapping(address => uint)) public rewardToContributor;
     mapping(address => uint256) public contributorBalances;
@@ -177,7 +179,11 @@ contract Campaign is ICampaign {
             status = WorkflowStatus.FundingComplete;
         }
     }
-    
+
+    /**
+     * @notice Return the amount in USDC raised by the campaign
+     * @dev amount uint USDC raised by the campaign in WEI
+     */
     function getContractUSDCBalance() public view returns(uint) {
         return usdcToken.balanceOf(address(this));
     }

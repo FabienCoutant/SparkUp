@@ -5,7 +5,7 @@ import { useParams } from 'react-router'
 import { useContractCampaign } from '../../hooks/useContract'
 import { useWeb3React } from '@web3-react/core'
 import { useIsManager } from '../../hooks/useFetchCampaign'
-import { hasAtLeastNbRewardsOnChain } from '../../utils/checkHelper'
+import { hasAtLeastNbRewardsConfirmed, hasAtLeastNbRewardsOnChain } from '../../utils/checkHelper'
 import { notificationActions } from '../../store/Notification/slice'
 
 
@@ -47,9 +47,10 @@ const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE })
   const renderLimitedStockLeft = () => {
     return rewards[id].stockLimit - rewards[id].nbContributors
   }
-
+  console.log((renderType === RENDER_TYPE.CREATE && rewards.length >= 2))
   const renderRewardButton = () => {
     if (campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && isManager) {
+      console.log()
       if (rewards[id].confirmed) {
         return (
           <div className='list-inline mt-3'>
@@ -60,7 +61,7 @@ const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE })
                 Update Reward
               </button>
             </div>
-            {(renderType === RENDER_TYPE.CREATE && rewards.length >= 2) || (renderType === RENDER_TYPE.UPDATE && hasAtLeastNbRewardsOnChain(rewards, 2)) &&
+            {((renderType === RENDER_TYPE.CREATE && hasAtLeastNbRewardsConfirmed(rewards, 2)) || (renderType === RENDER_TYPE.UPDATE && hasAtLeastNbRewardsOnChain(rewards, 2))) &&
             <div className='list-inline-item'>
               <button className='btn btn-danger me-3'
                       type='button'
