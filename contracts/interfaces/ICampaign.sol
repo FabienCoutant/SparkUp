@@ -80,6 +80,16 @@ interface ICampaign {
      * @param newManager address Address of the new manager
      */
     function updateManager(address newManager) external;
-
+    
+    /**
+     * @notice Allow the manager to publish campaign and make it visible to potential contributors.
+     * @dev Only the manager must be able to call it and only within acceptable deadlineDate timeframe.
+     */
     function publishCampaign() external;
+    
+    /**
+     * @notice Allow contributors to contribute to the campaign.
+     * @dev Can only be called if campaing is published, is not comleted, is not deleted and is not failed.
+     */
+    function contribute(uint256 _amount, uint8 rewardIndex) external;
 }

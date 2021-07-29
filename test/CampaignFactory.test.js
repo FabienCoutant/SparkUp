@@ -3,17 +3,19 @@ const {
   expectEvent,
   time,
   BN,
+  ether,
 } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 const CampaignFactoryContract = artifacts.require('CampaignFactory');
 const CampaignContract = artifacts.require('Campaign');
+const TestUSDCContract = artifacts.require('TestUSDC.sol');
 
 contract('CampaignFactory', (accounts) => {
   const [owner, alice, bob] = accounts;
   const initialCampaignInfo = {
     title: 'First Campaign',
     description: 'This is the first campaign of SparkUp',
-    fundingGoal: 100000,
+    fundingGoal: ether('100000').toString(),
     deadlineDate: 0,
   };
 
@@ -22,7 +24,7 @@ contract('CampaignFactory', (accounts) => {
     {
       title: 'First rewards',
       description: 'level1',
-      minimumContribution: 100,
+      minimumContribution: ether('100').toString(),
       stockLimit: 0,
       nbContributors: 0,
       amount: 0,
@@ -31,7 +33,7 @@ contract('CampaignFactory', (accounts) => {
     {
       title: 'Second rewards',
       description: 'level2',
-      minimumContribution: 5,
+      minimumContribution: ether('5').toString(),
       stockLimit: 1000,
       nbContributors: 0,
       amount: 0,
@@ -44,11 +46,16 @@ contract('CampaignFactory', (accounts) => {
   let firstCampaignContractInstance;
   let secondCampaignAddress;
   let secondCampaignContractInstance;
+  let TestUSDCContractInstance;
 
   beforeEach(async () => {
-    CampaignFactoryContractInstance = await CampaignFactoryContract.new({
-      from: owner,
-    });
+    TestUSDCContractInstance = await TestUSDCContract.new(bob, { from: bob });
+    CampaignFactoryContractInstance = await CampaignFactoryContract.new(
+      TestUSDCContractInstance.address,
+      {
+        from: owner,
+      }
+    );
     const factoryOwner = await CampaignFactoryContractInstance.owner();
     expect(factoryOwner).to.be.equal(owner);
     initialCampaignInfo.deadlineDate = parseInt(
@@ -133,7 +140,7 @@ contract('CampaignFactory', (accounts) => {
         initialRewards[0].isStockLimited
       );
     });
-    it('should revert if  campaign title is empty', async () => {
+    it('should revert if campaign title is empty', async () => {
       const badCampaignInfo = { ...initialCampaignInfo, title: '' };
       await expectRevert(
         CampaignFactoryContractInstance.createCampaign(
@@ -160,7 +167,10 @@ contract('CampaignFactory', (accounts) => {
       );
     });
     it('should revert if campaign fundingGoal is not greater than 10 000', async () => {
-      const badCampaignInfo = { ...initialCampaignInfo, fundingGoal: 9999 };
+      const badCampaignInfo = {
+        ...initialCampaignInfo,
+        fundingGoal: ether('9999').toString(),
+      };
       await expectRevert(
         CampaignFactoryContractInstance.createCampaign(
           badCampaignInfo,
@@ -310,10 +320,9 @@ contract('CampaignFactory', (accounts) => {
       expect(deployedCampaignsList).to.have.lengthOf(2);
     });
     it('should allow to create 2 Campaigns and delete the last one', async () => {
-      const receipt = await secondCampaignContractInstance.deleteCampaign({
+      await secondCampaignContractInstance.deleteCampaign({
         from: alice,
       });
-      expectEvent(receipt, 'CampaignDisabled');
 
       const deployedCampaignsList =
         await CampaignFactoryContractInstance.getDeployedCampaignsList();
@@ -358,10 +367,9 @@ contract('CampaignFactory', (accounts) => {
         await CampaignFactoryContractInstance.getDeployedCampaignsList();
       expect(deployedCampaignsList).to.have.lengthOf(3);
 
-      const receipt = await secondCampaignContractInstance.deleteCampaign({
+      await secondCampaignContractInstance.deleteCampaign({
         from: alice,
       });
-      expectEvent(receipt, 'CampaignDisabled');
 
       const newDeployedCampaignsList =
         await CampaignFactoryContractInstance.getDeployedCampaignsList();
@@ -404,10 +412,9 @@ contract('CampaignFactory', (accounts) => {
     });
 
     it('should revert when the manager call a function of a deleted contract', async () => {
-      const receipt = await secondCampaignContractInstance.deleteCampaign({
+      await secondCampaignContractInstance.deleteCampaign({
         from: alice,
       });
-      expectEvent(receipt, 'CampaignDisabled');
 
       const deployedCampaignsList =
         await CampaignFactoryContractInstance.getDeployedCampaignsList();
@@ -416,7 +423,7 @@ contract('CampaignFactory', (accounts) => {
       const newReward = {
         title: 'Third rewards',
         description: 'level3',
-        minimumContribution: 150,
+        minimumContribution: ether('150').toString(),
         stockLimit: 100,
         nbContributors: 0,
         amount: 0,

@@ -3,26 +3,24 @@ pragma solidity 0.8.6;
 
 import "./interfaces/ICampaign.sol";
 import "./interfaces/ICampaignFactory.sol";
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Campaign is ICampaign {
-
-    bool public isDisabled;
+    using SafeMath for uint256;
+    
     uint8 public rewardsCounter;
     uint256 public createAt;
     address public manager;
     address public factory;
     WorkflowStatus public status;
+    IERC20 public immutable usdcToken;
 
     Info private campaignInfo;
     mapping(uint => Rewards) public rewardsList;
-
-    //    Events
-    event CampaignNewRewardsAdded();
-    event CampaignInfoUpdated();
-    event CampaignRewardsUpdated();
-    event CampaignDeleted();
-    event CampaignRewardDeleted();
-    event WorkflowStatusChange();
+    mapping(uint => mapping(address => uint)) public rewardToContributor;
+    mapping(address => uint256) public contributorBalances;
 
     //Modifiers
     modifier isNotDeleted(){
@@ -42,8 +40,13 @@ contract Campaign is ICampaign {
         require(currentStatus == requiredStatus, "!Err : Wrong workflow status");
         _;
     }
+    
+    modifier checkCampaignDeadline() {
+        require(block.timestamp <  campaignInfo.deadlineDate, "!Err : Campaign contribution has ended");
+        _;
+    }
 
-    constructor(Info memory infoData, Rewards[] memory rewardsData, address _manager)
+    constructor(Info memory infoData, Rewards[] memory rewardsData, address _manager, IERC20 _usdcToken)
     {
         require(rewardsData.length > 0, "!Err: Rewards empty");
         require(rewardsData.length <= 10, "!Err: Too much Rewards");
@@ -51,6 +54,7 @@ contract Campaign is ICampaign {
         factory = msg.sender;
         createAt = block.timestamp;
         status = WorkflowStatus.CampaignDrafted;
+        usdcToken = _usdcToken;
         _setCampaignInfo(infoData);
         uint8 _rewardsCounter;
         for (_rewardsCounter; _rewardsCounter < rewardsData.length; _rewardsCounter++) {
@@ -71,7 +75,6 @@ contract Campaign is ICampaign {
      */
     function updateCampaign(Info memory newInfo) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         _setCampaignInfo(newInfo);
-        emit CampaignInfoUpdated();
     }
 
     /**
@@ -80,7 +83,6 @@ contract Campaign is ICampaign {
     function addReward(Rewards memory newRewardData) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         _setCampaignReward(rewardsCounter, newRewardData);
         rewardsCounter++;
-        emit CampaignNewRewardsAdded();
     }
 
     /**
@@ -89,7 +91,6 @@ contract Campaign is ICampaign {
     function updateReward(Rewards memory newRewardData, uint rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         _setCampaignReward(rewardIndex, newRewardData);
-        emit CampaignRewardsUpdated();
     }
 
     /**
@@ -99,7 +100,7 @@ contract Campaign is ICampaign {
     function _setCampaignInfo(Info memory data) private {
         require(bytes(data.title).length > 0, "!Err: Title empty");
         require(bytes(data.description).length > 0, "!Err: Description empty");
-        require(data.fundingGoal >= 10000, "!Err: Funding Goal not enough");
+        require(data.fundingGoal >= 10000 ether, "!Err: Funding Goal not enough");
         require(createAt + 7 days <= data.deadlineDate, "!Err: deadlineDate to short");
         campaignInfo.title = data.title;
         campaignInfo.description = data.description;
@@ -132,7 +133,6 @@ contract Campaign is ICampaign {
         require(status == WorkflowStatus.CampaignDrafted || status == WorkflowStatus.FundingFailed || status == WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
         status = WorkflowStatus.CampaignDeleted;
         ICampaignFactory(factory).deleteCampaign();
-        emit CampaignDeleted();
     }
 
     /**
@@ -145,7 +145,6 @@ contract Campaign is ICampaign {
         }
         delete rewardsList[rewardsCounter-1];
         rewardsCounter--;
-        emit CampaignRewardDeleted();
     }
 
     /**
@@ -162,6 +161,24 @@ contract Campaign is ICampaign {
         uint minDate = campaignInfo.deadlineDate - 7 days;
         require(minDate >= block.timestamp, "!Err: deadlineDate to short");
         status = WorkflowStatus.CampaignPublished;
-        emit WorkflowStatusChange(WorkflowStatus.CampaignDrafted, WorkflowStatus.CampaignPublished);
+    }
+    
+    /**
+     * @inheritdoc ICampaign
+     */
+    function contribute(uint256 _amount, uint8 rewardIndex) external override isNotDeleted() checkCampaignDeadline() {
+        require(status != WorkflowStatus.CampaignDrafted && status != WorkflowStatus.FundingFailed && status != WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
+        SafeERC20.safeTransferFrom(usdcToken, msg.sender, address(this), _amount);
+        contributorBalances[msg.sender] = contributorBalances[msg.sender].add(_amount);
+        rewardToContributor[rewardIndex][msg.sender] = rewardToContributor[rewardIndex][msg.sender].add(1);
+        rewardsList[rewardIndex].nbContributors = rewardsList[rewardIndex].nbContributors.add(1);
+        rewardsList[rewardIndex].amount = rewardsList[rewardIndex].amount.add(_amount);
+        if(getContractUSDCBalance() >= campaignInfo.fundingGoal) {
+            status = WorkflowStatus.FundingComplete;
+        }
+    }
+    
+    function getContractUSDCBalance() public view returns(uint) {
+        return usdcToken.balanceOf(address(this));
     }
 }
