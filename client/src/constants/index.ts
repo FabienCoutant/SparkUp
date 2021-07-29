@@ -43,7 +43,7 @@ export interface Rewards {
   title: string;
   description: string;
   minimumContribution: number | string;
-  amount: number;
+  amount: number|string;
   stockLimit: number;
   nbContributors: number;
   isStockLimited: boolean;
