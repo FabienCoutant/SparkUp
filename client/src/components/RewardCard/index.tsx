@@ -77,7 +77,7 @@ const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE })
           <button className='btn btn-primary me-3'
                   type='button'
                   onClick={() => handleUpdateReward()}>
-            Add new rewards
+            Add new rewards!
           </button>
         )
       }

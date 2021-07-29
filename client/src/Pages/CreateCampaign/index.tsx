@@ -14,6 +14,7 @@ import { useHistory } from 'react-router'
 import RewardForm from '../../components/RewardForm'
 import Loader from '../../components/Loader'
 import { useShowLoader } from '../../hooks/useShowLoader'
+import { serializeValueTo } from '../../utils/serializeValue'
 
 const CreateCampaign = () => {
   const { chainId, account } = useWeb3React()
@@ -47,7 +48,7 @@ const CreateCampaign = () => {
         const campaignInfo: Info = {
           title: campaign.info.title,
           description: campaign.info.description,
-          fundingGoal: campaign.info.fundingGoal,
+          fundingGoal: serializeValueTo(campaign.info.fundingGoal,true),
           deadlineDate: serializeTimestampsFor(campaign.info.deadlineDate, true)
         }
         const rewardsInfo: Rewards[] = []
@@ -55,7 +56,7 @@ const CreateCampaign = () => {
           const tempReward: Rewards = {
             title: reward.title,
             description: reward.description,
-            minimumContribution: reward.minimumContribution,
+            minimumContribution: serializeValueTo(reward.minimumContribution,true),
             amount: 0,
             stockLimit: reward.stockLimit,
             nbContributors: 0,
@@ -66,9 +67,7 @@ const CreateCampaign = () => {
         })
         contractCampaignFactory?.methods?.createCampaign(campaignInfo, rewardsInfo).send({ from: account })
           .then((response: any) => {
-            console.log(response.events.newCampaign.returnValues.campaignAddress)
             const newCampaignAddress = response.events.newCampaign.returnValues.campaignAddress
-            console.log('newCampaignAddress ', newCampaignAddress)
             history.push({ pathname: `/campaign/${newCampaignAddress}` })
           }).catch((error: any) => {
             console.log(error)

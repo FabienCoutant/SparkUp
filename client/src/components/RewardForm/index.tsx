@@ -6,6 +6,7 @@ import { useAppDispatch } from '../../store/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useParams } from 'react-router'
 import { useContractCampaign } from '../../hooks/useContract'
+import { serializeValueTo } from '../../utils/serializeValue'
 
 
 const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, renderType: RENDER_TYPE }) => {
@@ -144,7 +145,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
     const reward: Rewards = {
       title: rewardTitle,
       description: rewardDescription,
-      minimumContribution: parseInt(rewardMinimumContribution.toString()),
+      minimumContribution: serializeValueTo(rewardMinimumContribution,true),
       amount: 0,
       stockLimit: rewardStockLimit,
       nbContributors: 0,
@@ -157,7 +158,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
           onChain: true,
           confirmed: true
         }
-        dispatch(rewardActions.updateReward({ reward:rewardState,id }))
+        dispatch(rewardActions.updateReward({ reward: { ...rewardState, minimumContribution:rewardMinimumContribution },id }))
         dispatch(notificationActions.setNotification(({
           message: `Reward ${rewardTitle} has been correctly updated`,
           type:NOTIFICATION_TYPE.SUCCESS
@@ -172,7 +173,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
     const reward: Rewards = {
       title: rewardTitle,
       description: rewardDescription,
-      minimumContribution: parseInt(rewardMinimumContribution.toString()),
+      minimumContribution: serializeValueTo(rewardMinimumContribution,true),
       amount: 0,
       stockLimit: rewardStockLimit,
       nbContributors: 0,
@@ -185,7 +186,10 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
           onChain: true,
           confirmed:true
         }
-        dispatch(rewardActions.updateReward({ reward:rewardState,id }))
+
+        dispatch(rewardActions.updateReward({ reward:{
+          ...rewardState, minimumContribution:rewardMinimumContribution
+          },id }))
         dispatch(notificationActions.setNotification(({
           message: `Reward ${rewardTitle} has been correctly added`,
           type:NOTIFICATION_TYPE.SUCCESS

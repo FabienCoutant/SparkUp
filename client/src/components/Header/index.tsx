@@ -11,7 +11,7 @@ import PlusSquareFill from '../../assets/images/PlusSquareFill'
 const Header = () => {
     const dispatch = useAppDispatch();
     const {account, chainId, active, error, activate} = useWeb3React();
-    const [balanceUSDC, setBalanceUSDC] = useState('');
+    const [balanceUSDC, setBalanceUSDC] = useState('0');
     const contractUSDC = useContractUSDC();
 
     useEffect(() => {

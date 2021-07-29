@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { campaignState, Info, WORKFLOW_STATUS } from '../../constants'
 import { serializeTimestampsFor } from '../../utils/dateHelper'
+import { serializeValueTo } from '../../utils/serializeValue'
 
 
 export const initialState: campaignState = {
@@ -44,7 +45,7 @@ const campaignSlice = createSlice({
     updateCampaign(state,action:PayloadAction<{campaignInfo:Info}>){
       state.info.title = action.payload.campaignInfo.title
       state.info.description = action.payload.campaignInfo.description
-      state.info.fundingGoal = action.payload.campaignInfo.fundingGoal
+      state.info.fundingGoal = serializeValueTo(action.payload.campaignInfo.fundingGoal,false)
       state.info.deadlineDate = serializeTimestampsFor(action.payload.campaignInfo.deadlineDate,false)
       state.confirmed=true
     },

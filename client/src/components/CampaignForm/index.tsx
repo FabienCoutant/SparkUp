@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useContractCampaign } from '../../hooks/useContract'
 import { useParams } from 'react-router'
+import { serializeValueTo } from '../../utils/serializeValue'
 
 const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
   const dispatch = useAppDispatch()
@@ -64,10 +65,9 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
     const campaignInfo: Info = {
       title: campaignTitle,
       description: campaignDescription,
-      fundingGoal: campaignFundingGoal,
+      fundingGoal: serializeValueTo(campaignFundingGoal,true),
       deadlineDate: serializeTimestampsFor(campaignDeadLine, true)
     }
-    console.log("update")
     if (contractCampaign) {
         contractCampaign?.methods?.updateCampaign(campaignInfo).send({ from: account })
           .then(() => {
