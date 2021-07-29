@@ -1,6 +1,14 @@
 # dependencies
 .idea
-
+*.DS_Store
 /node_modules
 .env
+package-lock.json
 
+#Code coverage
+/coverage
+coverage.json
+/docs
+
+#eth-gas-reporter
+gasReporterOutput.json
