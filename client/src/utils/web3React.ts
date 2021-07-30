@@ -16,7 +16,15 @@ export const getContractByABI = (
   }
   let contract
   if (type === 'USDC') {
-    contract = new library.eth.Contract(contractJSON, USDC_CONTRACTS[chainId])
+    if (chainId === 1 || chainId === 3) {
+      contract = new library.eth.Contract(contractJSON, USDC_CONTRACTS[chainId])
+    } else if (chainId === 1337) {
+      const deployedNetwork = contractJSON.networks[chainId]
+      contract = new library.eth.Contract(
+        contractJSON.abi,
+        deployedNetwork && deployedNetwork.address
+      )
+    }
   }
   if (type === 'LOCAL') {
     const deployedNetwork = contractJSON.networks[chainId]

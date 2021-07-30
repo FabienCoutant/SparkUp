@@ -16,6 +16,7 @@ export const initialState: campaignState = {
   manager: '',
   createAt: new Date().getTime(),
   amountRaise: 0,
+  currentBalance:0,
   workflowStatus: WORKFLOW_STATUS.CampaignDrafted
 }
 
@@ -33,13 +34,13 @@ const campaignSlice = createSlice({
       state.manager = action.payload.manager
       state.createAt = action.payload.createAt
       state.amountRaise = action.payload.amountRaise
+      state.currentBalance = action.payload.currentBalance
       state.workflowStatus = action.payload.workflowStatus
     },
     setConfirmed(state, action: PayloadAction<{ confirmed: boolean }>) {
       state.confirmed = action.payload.confirmed
     },
     setWorkflow(state,action:PayloadAction<{workflowStatus:WORKFLOW_STATUS}>){
-      console.log(action.payload.workflowStatus)
       state.workflowStatus = action.payload.workflowStatus
     },
     updateCampaign(state,action:PayloadAction<{campaignInfo:Info}>){
