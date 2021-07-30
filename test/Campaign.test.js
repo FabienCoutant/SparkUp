@@ -2,10 +2,11 @@ const { expectRevert, time, BN, ether } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 const CampaignContract = artifacts.require('Campaign');
 const CampaignFactoryContract = artifacts.require('CampaignFactory');
-const TestUSDCContract = artifacts.require('TestUSDC.sol');
+const TestUSDCContract = artifacts.require('TestUSDC');
+const EscrowContract = artifacts.require('Escrow');
 
 contract('Campaign', (accounts) => {
-  const [alice, bob] = accounts;
+  const [alice, bob, john] = accounts;
   const initialCampaignInfo = {
     title: 'First Campaign',
     description: 'This is the first campaign of SparkUp',
@@ -42,22 +43,24 @@ contract('Campaign', (accounts) => {
     isStockLimited: true,
   };
   let CampaignContractInstance;
+  let TestUSDCContractInstance;
+  let EscrowContractInstance;
 
   beforeEach(async () => {
     TestUSDCContractInstance = await TestUSDCContract.new(bob, { from: bob });
+    EscrowContractInstance = await EscrowContract.new(TestUSDCContractInstance.address, { from: alice });
     CampaignFactoryContractInstance = await CampaignFactoryContract.new(
       TestUSDCContractInstance.address,
+      EscrowContractInstance.address,
       {
         from: alice,
       }
     );
     const deadline = parseInt((await time.latest()).add(time.duration.days(8)));
     initialCampaignInfo.deadlineDate = deadline;
-    const newCampaign = await CampaignFactoryContractInstance.createCampaign(
-      initialCampaignInfo,
-      initialRewards,
-      { from: alice }
-    );
+    const newCampaign = await CampaignFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
+      from: alice,
+    });
     newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
     CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
   });
@@ -68,10 +71,7 @@ contract('Campaign', (accounts) => {
         ...initialCampaignInfo,
         title: 'Updated',
       };
-      await expectRevert(
-        CampaignContractInstance.updateCampaign(updatedData, { from: bob }),
-        '!Not Authorized'
-      );
+      await expectRevert(CampaignContractInstance.updateCampaign(updatedData, { from: bob }), '!Not Authorized');
     });
     it('should revert if wrong workflow status', async () => {
       const updatedData = {
@@ -141,9 +141,7 @@ contract('Campaign', (accounts) => {
       });
       const CampaignResult = await CampaignContractInstance.getCampaignInfo();
       const CampaignInfo = CampaignResult['0'];
-      expect(CampaignInfo.fundingGoal).to.be.bignumber.equal(
-        new BN(updatedData.fundingGoal)
-      );
+      expect(CampaignInfo.fundingGoal).to.be.bignumber.equal(new BN(updatedData.fundingGoal));
     });
     it('should revert if fundingGoal is not greater than 10 000', async () => {
       const badUpdatedData = {
@@ -158,9 +156,7 @@ contract('Campaign', (accounts) => {
       );
     });
     it('should update the deadlineDate', async () => {
-      const newDeadLine = parseInt(
-        (await time.latest()).add(time.duration.days(10))
-      );
+      const newDeadLine = parseInt((await time.latest()).add(time.duration.days(10)));
       const updatedData = {
         ...initialCampaignInfo,
         deadlineDate: newDeadLine,
@@ -170,14 +166,10 @@ contract('Campaign', (accounts) => {
       });
       const CampaignResult = await CampaignContractInstance.getCampaignInfo();
       const CampaignInfo = CampaignResult['0'];
-      expect(CampaignInfo.deadlineDate).to.be.bignumber.equal(
-        new BN(updatedData.deadlineDate)
-      );
+      expect(CampaignInfo.deadlineDate).to.be.bignumber.equal(new BN(updatedData.deadlineDate));
     });
     it('should revert if deadlineDate is not greater than creation date plus 7 days', async () => {
-      const badDeadLine = parseInt(
-        (await time.latest()).add(time.duration.days(4))
-      );
+      const badDeadLine = parseInt((await time.latest()).add(time.duration.days(4)));
       const badUpdatedData = {
         ...initialCampaignInfo,
         deadlineDate: badDeadLine,
@@ -202,10 +194,7 @@ contract('Campaign', (accounts) => {
   describe('--- Update Rewards ---', async () => {
     describe('  --- Add a new reward --- ', () => {
       it('should revert if not manager try to add a reward', async () => {
-        await expectRevert(
-          CampaignContractInstance.addReward(newReward, { from: bob }),
-          '!Not Authorized'
-        );
+        await expectRevert(CampaignContractInstance.addReward(newReward, { from: bob }), '!Not Authorized');
       });
       it('should revert if wrong workflow status', async () => {
         await CampaignContractInstance.publishCampaign({
@@ -224,13 +213,9 @@ contract('Campaign', (accounts) => {
         });
 
         const afterRewardNb = await CampaignContractInstance.rewardsCounter();
-        expect(afterRewardNb).to.be.bignumber.equal(
-          initialRewardNb.add(new BN(1))
-        );
+        expect(afterRewardNb).to.be.bignumber.equal(initialRewardNb.add(new BN(1)));
 
-        const RewardsInfo = await CampaignContractInstance.rewardsList(
-          afterRewardNb.sub(new BN(1))
-        );
+        const RewardsInfo = await CampaignContractInstance.rewardsList(afterRewardNb.sub(new BN(1)));
         expect(RewardsInfo.title).to.be.equal(newReward.title);
       });
     });
@@ -307,10 +292,7 @@ contract('Campaign', (accounts) => {
   });
   describe('--- Delete Reward  ---', async () => {
     it('should revert if not manager try to delete a reward', async () => {
-      await expectRevert(
-        CampaignContractInstance.deleteReward(1, { from: bob }),
-        '!Not Authorized'
-      );
+      await expectRevert(CampaignContractInstance.deleteReward(1, { from: bob }), '!Not Authorized');
     });
     it('should revert if wrong workflow status', async () => {
       const initialRewardNb = await CampaignContractInstance.rewardsCounter();
@@ -325,25 +307,17 @@ contract('Campaign', (accounts) => {
       );
     });
     it('should revert if reward index does not exist', async () => {
-      await expectRevert(
-        CampaignContractInstance.deleteReward(10, { from: alice }),
-        '!Err: Index not exist'
-      );
+      await expectRevert(CampaignContractInstance.deleteReward(10, { from: alice }), '!Err: Index not exist');
     });
     it('should allow to delete the last reward', async () => {
       const initialRewardNb = await CampaignContractInstance.rewardsCounter();
 
-      await CampaignContractInstance.deleteReward(
-        initialRewardNb.sub(new BN(1)),
-        {
-          from: alice,
-        }
-      );
+      await CampaignContractInstance.deleteReward(initialRewardNb.sub(new BN(1)), {
+        from: alice,
+      });
 
       const afterRewardNb = await CampaignContractInstance.rewardsCounter();
-      expect(afterRewardNb).to.be.bignumber.equal(
-        initialRewardNb.sub(new BN(1))
-      );
+      expect(afterRewardNb).to.be.bignumber.equal(initialRewardNb.sub(new BN(1)));
     });
     it('should swap the index of the reward if the one to be delete is not the last one', async () => {
       //Got 3 rewards
@@ -351,19 +325,12 @@ contract('Campaign', (accounts) => {
       const initialRewardNb = await CampaignContractInstance.rewardsCounter();
       expect(initialRewardNb).to.be.bignumber.equal(new BN(3));
 
-      await CampaignContractInstance.deleteReward(
-        initialRewardNb.sub(new BN(2)),
-        { from: alice }
-      );
+      await CampaignContractInstance.deleteReward(initialRewardNb.sub(new BN(2)), { from: alice });
 
       const afterRewardNb = await CampaignContractInstance.rewardsCounter();
-      expect(afterRewardNb).to.be.bignumber.equal(
-        initialRewardNb.sub(new BN(1))
-      );
+      expect(afterRewardNb).to.be.bignumber.equal(initialRewardNb.sub(new BN(1)));
 
-      const secondReward = await CampaignContractInstance.rewardsList(
-        afterRewardNb.sub(new BN(1))
-      );
+      const secondReward = await CampaignContractInstance.rewardsList(afterRewardNb.sub(new BN(1)));
       expect(secondReward.title).to.be.equal(newReward.title);
     });
   });
@@ -376,26 +343,17 @@ contract('Campaign', (accounts) => {
       expect(status).to.be.bignumber.equal(new BN(1));
     });
     it('should revert if called by other than manager', async () => {
-      await expectRevert(
-        CampaignContractInstance.publishCampaign({ from: bob }),
-        '!Not Authorized'
-      );
+      await expectRevert(CampaignContractInstance.publishCampaign({ from: bob }), '!Not Authorized');
     });
     it('should revert if wrong workflow status', async () => {
       await CampaignContractInstance.publishCampaign({
         from: alice,
       });
-      await expectRevert(
-        CampaignContractInstance.publishCampaign({ from: alice }),
-        '!Err : Wrong workflow status'
-      );
+      await expectRevert(CampaignContractInstance.publishCampaign({ from: alice }), '!Err : Wrong workflow status');
     });
     it('should revert if publishCampaign called afeter deadline - 7 days', async () => {
       await time.increase(time.duration.days(15));
-      await expectRevert(
-        CampaignContractInstance.publishCampaign({ from: alice }),
-        '!Err: deadlineDate to short'
-      );
+      await expectRevert(CampaignContractInstance.publishCampaign({ from: alice }), '!Err: deadlineDate to short');
     });
   });
   describe('--- Migration ---', async () => {
@@ -405,10 +363,7 @@ contract('Campaign', (accounts) => {
       expect(newManager).to.be.equal(bob);
     });
     it('should revert if not manager try to change the manager', async () => {
-      await expectRevert(
-        CampaignContractInstance.updateManager(bob, { from: bob }),
-        '!Not Authorized'
-      );
+      await expectRevert(CampaignContractInstance.updateManager(bob, { from: bob }), '!Not Authorized');
     });
   });
   describe('--- Contribute ---', async () => {
@@ -422,26 +377,19 @@ contract('Campaign', (accounts) => {
       await CampaignContractInstance.contribute(bobContribution, 0, {
         from: bob,
       });
-      const balanceBob = await CampaignContractInstance.contributorBalances(
-        bob
-      );
-
+      const balanceBob = await CampaignContractInstance.contributorBalances(bob);
       expect(balanceBob).to.be.bignumber.equal(bobContribution);
-      const rewardBob = await CampaignContractInstance.rewardToContributor(
-        0,
-        bob
-      );
+      const rewardBob = await CampaignContractInstance.rewardToContributor(0, bob);
       expect(rewardBob).to.be.bignumber.equal(new BN(1));
       const reward = await CampaignContractInstance.rewardsList(0);
       const rewardAmount = reward.amount;
       expect(rewardAmount).to.be.bignumber.equal(bobContribution);
       const rewardContributors = reward.nbContributors;
       expect(rewardContributors).to.be.bignumber.equal(new BN(1));
-      const contractBalance =
-        await CampaignContractInstance.getContractUSDCBalance();
+      const contractBalance = await CampaignContractInstance.getContractUSDCBalance();
       expect(contractBalance).to.be.bignumber.equal(bobContribution);
     });
-    it('should update workflow to FundingComplete if funding goal reached before campaignDeadlineDate', async () => {
+    it('should update workflow to FundingComplete and set totalRaised if funding goal reached before campaignDeadlineDate', async () => {
       await CampaignContractInstance.publishCampaign({ from: alice });
       const spender = CampaignContractInstance.address;
       const bobContribution = ether('11000').toString();
@@ -453,6 +401,8 @@ contract('Campaign', (accounts) => {
       });
       const status = await CampaignContractInstance.status();
       expect(status).to.be.bignumber.equal(new BN(2));
+      const totalRaised = await CampaignContractInstance.totalRaised();
+      expect(totalRaised).to.be.bignumber.equal(new BN(bobContribution));
     });
     it('should revert if wrong workflow status', async () => {
       const spender = CampaignContractInstance.address;
@@ -480,6 +430,79 @@ contract('Campaign', (accounts) => {
         }),
         '!Err : Campaign contribution has ended'
       );
+    });
+  });
+  describe('--- Refund ---', async () => {
+    beforeEach(async () => {
+      await CampaignContractInstance.publishCampaign({ from: alice });
+      spender = CampaignContractInstance.address;
+    });
+    it('should revert if campaignDeadline not passed', async () => {
+      const bobContribution = ether('1000').toString();
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      await CampaignContractInstance.contribute(bobContribution, 0, {
+        from: bob,
+      });
+      await expectRevert(CampaignContractInstance.refund({ from: bob }), '!Err: conditions not met');
+    });
+    it('should allow contributor to get refund and update workflow status to campaignFailed if campaignPublished, fundingGoal not reached and campaignDeadline passed', async () => {
+      const bobContribution = ether('1000').toString();
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      await CampaignContractInstance.contribute(bobContribution, 0, {
+        from: bob,
+      });
+      await time.increase(time.duration.days(15));
+      CampaignContractInstance.getContractUSDCBalance();
+      await CampaignContractInstance.refund({ from: bob });
+      const bobCampaignBalance = await CampaignContractInstance.contributorBalances(bob);
+      expect(bobCampaignBalance).to.be.bignumber.equal(new BN(0));
+      const bobTUSDCBalances = await TestUSDCContractInstance.balanceOf(bob);
+      const totalSupplyTUSDC = await TestUSDCContractInstance.totalSupply();
+      expect(bobTUSDCBalances).to.be.bignumber.equal(totalSupplyTUSDC);
+      const contractBalanceAfterRefund = await CampaignContractInstance.getContractUSDCBalance();
+      expect(contractBalanceAfterRefund).to.be.bignumber.equal(new BN(0));
+      const status = await CampaignContractInstance.status();
+      expect(status).to.be.bignumber.equal(new BN(3));
+    });
+    it('should refund contributor if fundingFailed', async () => {
+      const bobContribution = ether('1000').toString();
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      await CampaignContractInstance.contribute(bobContribution, 0, {
+        from: bob,
+      });
+      await TestUSDCContractInstance.transfer(john, bobContribution, { from: bob });
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: john,
+      });
+      await CampaignContractInstance.contribute(bobContribution, 0, {
+        from: john,
+      });
+      await time.increase(time.duration.days(15));
+      CampaignContractInstance.getContractUSDCBalance();
+      await CampaignContractInstance.refund({ from: bob });
+      await CampaignContractInstance.refund({ from: john });
+      const johnTUSDCBalances = await TestUSDCContractInstance.balanceOf(john);
+      expect(johnTUSDCBalances).to.be.bignumber.equal(bobContribution);
+    });
+    it('should revert if no funds raised', async () => {
+      await expectRevert(CampaignContractInstance.refund({ from: bob }), '!Err: conditions not met');
+    });
+    it('should revert if wrong workflow status', async () => {
+      const bobContribution = ether('11000').toString();
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      await CampaignContractInstance.contribute(bobContribution, 0, {
+        from: bob,
+      });
+      await time.increase(time.duration.days(15));
+      await expectRevert(CampaignContractInstance.refund({ from: bob }), '!Err: wrong workflowstatus');
     });
   });
 });
