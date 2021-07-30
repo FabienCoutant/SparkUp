@@ -16,10 +16,10 @@ contract Proposal is IProposal {
     mapping(uint => Proposal) public proposals;
     mapping(address => bool) public hasVoted;
     
-    constructor(address _campaignAddress) {
+    constructor(address _campaignAddress, address _manager) {
         campaignAddress = _campaignAddress;
         campaignContract = Campaign(_campaignAddress);
-        campaignManager = Campaign(_campaignAddress).manager();
+        campaignManager = _manager;
     }
     
     modifier isContributor() {
@@ -49,7 +49,7 @@ contract Proposal is IProposal {
      * @inheritdoc IProposal
      */
     function createProposal(string memory _title, string memory _description, uint _amount ) external override onlyManager() checkStatus(proposalCounter, WorkflowStatus.Pending) {
-        require(proposalCounter < 6, "!Err: Maximum amount of proposal reached");
+        require(proposalCounter < 5, "!Err: Maximum amount of proposal reached");
         require(bytes(_title).length > 0, "!Err: Title empty");
         require(bytes(_description).length > 0, "!Err: Description empty");
         require(_amount > 100 ether, "!Err: Amount too low");

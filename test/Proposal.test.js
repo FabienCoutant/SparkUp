@@ -67,19 +67,14 @@ contract('Proposal', (accounts) => {
       from: alice,
     });
     const spender = CampaignContractInstance.address;
-    await TestUSDCContractInstance.transfer(john, ether('1000').toString(), { from: bob });
-    await TestUSDCContractInstance.transfer(greg, ether('1000').toString(), { from: bob });
+    await TestUSDCContractInstance.transfer(john, ether('2000').toString(), { from: bob });
     const bobContribution = ether('9000').toString();
-    const johnContribution = ether('1000').toString();
-    const gregContribution = ether('1000').toString();
+    const johnContribution = ether('2000').toString();
     TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
       from: bob,
     });
     TestUSDCContractInstance.increaseAllowance(spender, johnContribution, {
       from: john,
-    });
-    TestUSDCContractInstance.increaseAllowance(spender, gregContribution, {
-      from: greg,
     });
     await CampaignContractInstance.contribute(bobContribution, 0, {
       from: bob,
@@ -87,13 +82,12 @@ contract('Proposal', (accounts) => {
     await CampaignContractInstance.contribute(johnContribution, 0, {
       from: john,
     });
-    await CampaignContractInstance.contribute(gregContribution, 0, {
-      from: greg,
-    });
     await time.increase(time.duration.days(15));
     await CampaignContractInstance.launchProposalContract({ from: alice });
     const proposalContractAddress = await CampaignContractInstance.proposal();
     ProposalContractInstance = await ProposalContract.at(proposalContractAddress);
+    const campaignManager = await ProposalContractInstance.campaignManager();
+    expect(campaignManager).to.be.equal(alice);
   });
 
   describe('--- Create Proposal ---', async () => {
@@ -109,7 +103,7 @@ contract('Proposal', (accounts) => {
       expect(newProposal.amount).to.be.bignumber.equal(new BN(proposal.amount));
       expect(newProposal.status).to.be.bignumber.equal(new BN(1));
     });
-    it('should rever if title is empty', async () => {
+    it('should revert if title is empty', async () => {
       await expectRevert(
         ProposalContractInstance.createProposal('', proposal.description, proposal.amount, {
           from: alice,
@@ -117,7 +111,7 @@ contract('Proposal', (accounts) => {
         '!Err: Title empty'
       );
     });
-    it('should rever if description is empty', async () => {
+    it('should revert if description is empty', async () => {
       await expectRevert(
         ProposalContractInstance.createProposal(proposal.title, '', proposal.amount, {
           from: alice,
@@ -125,7 +119,7 @@ contract('Proposal', (accounts) => {
         '!Err: Description empty'
       );
     });
-    it('should rever if amount is less than 100 USDC', async () => {
+    it('should revert if amount is less than 100 USDC', async () => {
       await expectRevert(
         ProposalContractInstance.createProposal(proposal.title, proposal.description, ether('99').toString(), {
           from: alice,
@@ -133,15 +127,7 @@ contract('Proposal', (accounts) => {
         '!Err: Amount too low'
       );
     });
-    it('should rever if amount is less than 100 USDC', async () => {
-      await expectRevert(
-        ProposalContractInstance.createProposal(proposal.title, proposal.description, ether('99').toString(), {
-          from: alice,
-        }),
-        '!Err: Amount too low'
-      );
-    });
-    it('should rever if amount more than campaign balance', async () => {
+    it('should revert if amount more than campaign balance', async () => {
       await expectRevert(
         ProposalContractInstance.createProposal(proposal.title, proposal.description, ether('11001').toString(), {
           from: alice,
@@ -149,7 +135,7 @@ contract('Proposal', (accounts) => {
         '!Err: Proposal amount exceeds campaign USDC balance'
       );
     });
-    it('should revert is already 5 proposals created', async () => {
+    it('should revert if already 5 proposals created', async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
@@ -165,7 +151,7 @@ contract('Proposal', (accounts) => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
-      expectRevert(
+      await expectRevert(
         ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
           from: alice,
         }),
@@ -240,6 +226,10 @@ contract('Proposal', (accounts) => {
       await ProposalContractInstance.startVotingSession(0, { from: alice });
       await ProposalContractInstance.voteProposal(0, true, { from: bob });
       await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: bob }), '!Err: Already voted');
+    });
+    it('should rever it not contributor', async () => {
+      await ProposalContractInstance.startVotingSession(0, { from: alice });
+      await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: greg }), '!Err: not a contributor');
     });
   });
 
