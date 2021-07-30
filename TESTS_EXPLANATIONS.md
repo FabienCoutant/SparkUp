@@ -4,7 +4,7 @@
 (**T**est **D**rive **D**evelopment) approach ([reference](https://github.com/acarbone/TDD-Cheat-Sheet)).
 This file aims to explain how we wrote our tests and the logic behind them.*
 
-:information_source: The testing process describe after focusing on adding a new reward to a campaign,
+:information_source: The testing process describe after, focusing on adding a new reward to a campaign,
 however the same process has been used for every code line of our smart contracts.
 
 :one: Every test start with a user story :
@@ -27,66 +27,85 @@ contract("Campaign",(accounts)=>{
     const initialCampaignInfo = {
 		title: "First Campaign",
 		description: "This is the first campaign of SparkUp",
-		fundingGoal: 11000,
-		durationDays: 30
+		fundingGoal: ether('11000').toString(),
+		durationDays: 0
 	};
 	const initialRewards = [
-		{
-			title: "First rewards",
-			description: "level1",
-			minimumContribution: 100,
-			stockLimit: 0,
-			nbContributors: 0,
-			amount: 0,
-			isStockLimited: false
-		},
-		{
-			title: "Second rewards",
-			description: "level2",
-			minimumContribution: 5,
-			stockLimit: 1000,
-			nbContributors: 0,
-			amount: 0,
-			isStockLimited: true
-		}
-	];
-	describe("--- Update Rewards ---", async () => {
-		beforeEach(async () => {
-			CampaignContractInstance = await CampaignContract.new(
-				initialCampaignInfo,
-				initialRewards,
-				alice,
-				{from: factory}
-			);
-
-		});
-		describe("  --- Add a new reward --- ", () => {
-			it("should revert if not manager try to add a reward", async () => {
-				await expectRevert(CampaignContractInstance.addReward(newReward, {from: bob}), "!Not Authorized");
-			});
-			it("should add a new reward and emit event", async () => {
-			    //we count the intial number of rewards in the campaign
-				const initialRewardNb = await CampaignContractInstance.rewardsCounter();
-                
-                //we add the new reward
-				const receipt = await CampaignContractInstance.addReward(newReward, {from: alice});
-				//we check that we receive the expected event
-				expectEvent(receipt, "CampaignNewRewardsAdded");
-                
-                // we check that the number of rewards in the campaign has been inscreased by 1 
-				const afterRewardNb = await CampaignContractInstance.rewardsCounter();
-				expect(afterRewardNb).to.be.bignumber.equal(initialRewardNb.add(new BN(1)));
-
-                // we check that the information of the last reward in the campaign are what we added
-				const RewardsInfo = await CampaignContractInstance.rewardsList(afterRewardNb);
-				expect(RewardsInfo.title).to.be.equal(newReward.title);
-            });
+     {
+        title: 'First rewards',
+        description: 'level1',
+        minimumContribution: ether('100').toString(),
+        stockLimit: 0,
+        nbContributors: 0,
+        amount: 0,
+        isStockLimited: false,
+      },
+      {
+        title: 'Second rewards',
+        description: 'level2',
+        minimumContribution: ether('5').toString(),
+        stockLimit: 1000,
+        nbContributors: 0,
+        amount: 0,
+        isStockLimited: true,
+      },
+    ];
+	beforeEach(async () => {
+        TestUSDCContractInstance = await TestUSDCContract.new(bob, { from: bob });
+        CampaignFactoryContractInstance = await CampaignFactoryContract.new(
+          TestUSDCContractInstance.address,
+          {
+            from: alice,
+          }
+        );
+        const deadline = parseInt((await time.latest()).add(time.duration.days(8)));
+        initialCampaignInfo.deadlineDate = deadline;
+        const newCampaign = await CampaignFactoryContractInstance.createCampaign(
+          initialCampaignInfo,
+          initialRewards,
+          { from: alice }
+        );
+        newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
+        CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
+    });
+    describe('  --- Add a new reward --- ', () => {
+      it('should revert if not manager try to add a reward', async () => {
+        await expectRevert(
+          CampaignContractInstance.addReward(newReward, { from: bob }),
+          '!Not Authorized'
+        );
+      });
+      it('should revert if wrong workflow status', async () => {
+        await CampaignContractInstance.publishCampaign({
+          from: alice,
         });
+        await expectRevert(
+          CampaignContractInstance.addReward(newReward, { from: alice }),
+          '!Err : Wrong workflow status'
+        );
+      });
+      it('should add a new reward', async () => {
+        const initialRewardNb = await CampaignContractInstance.rewardsCounter();
+
+        await CampaignContractInstance.addReward(newReward, {
+          from: alice,
+        });
+
+        const afterRewardNb = await CampaignContractInstance.rewardsCounter();
+        expect(afterRewardNb).to.be.bignumber.equal(
+          initialRewardNb.add(new BN(1))
+        );
+
+        const RewardsInfo = await CampaignContractInstance.rewardsList(
+          afterRewardNb.sub(new BN(1))
+        );
+        expect(RewardsInfo.title).to.be.equal(newReward.title);
+      });
     });
 });
 ```
 
-:three: We are running the test that should fail.
+:three: We are running the test that must fail.
 
 :four: If we need new functions, we add them into the contract's interface : (ICampaign.sol)
 ```
@@ -98,17 +117,15 @@ contract("Campaign",(accounts)=>{
     function addReward(Rewards memory newRewardData) external;
 ```
 
-:five: We right the minimum of code to make it work
+:five: We write the minimum of code to make it work
 
 ```
     /**
      * @inheritdoc ICampaign
      */
     function addReward(Rewards memory newRewardData) external override {
-        require(msg.sender == manager, "!Not Authorized");
-        rewardsCounter++;
         _setCampaignReward(rewardsCounter, newRewardData);
-        emit CampaignNewRewardsAdded(rewardsCounter);
+        rewardsCounter++;
     }
 ```
 
@@ -119,39 +136,37 @@ contract("Campaign",(accounts)=>{
 * The check that only the manager is able to call some functions will be used in several part of the contract.
 We then created a modifier that can be easily reused :
 ```
-  modifier onlyManager(){
-        require(msg.sender == manager, "!Not Authorized");
-        _;
-    }
+  modifier isNotDeleted(){
+    require(status != WorkflowStatus.CampaignDeleted, "!Err: Campaign Deleted");
+    _;
+  }
   
   ...
  /**
-  * @inheritdoc ICampaign 
-  */
-  function addReward(Rewards memory newRewardData) external override onlyManager() {
-    ...
-  }
+ * @inheritdoc ICampaign
+ */
+ function addReward(Rewards memory newRewardData) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+    _setCampaignReward(rewardsCounter, newRewardData);
+    rewardsCounter++;
+ }
 ```
 
 * adding a reward use the same logic as updating a specific reward, all rewards or adding several rewards.
 That why we are using a single internal function that refactor the logic of add a reward:
 ```
-/**
-     * @notice Internal function that set a new campaign's reward level and making data validation first.
-     * @param index uint Index of the reward to add
-     * @param data Rewards Object that contains the Reward data following the Rewards struct
-     */
-    function _setCampaignReward(uint index, Rewards memory data) private {
+   /**
+    * @notice Internal function that set a new campaign's info and making data validation first.
+    * @param data Info Object that contains the Info data following the Info struct
+    */
+    function _setCampaignInfo(Info memory data) private {
         require(bytes(data.title).length > 0, "!Err: Title empty");
         require(bytes(data.description).length > 0, "!Err: Description empty");
-        Rewards memory r;
-        r.title = data.title;
-        r.description = data.description;
-        r.minimumContribution = data.minimumContribution;
-        r.stockLimit = data.stockLimit;
-        r.nbContributors = data.nbContributors;
-        r.isStockLimited = data.isStockLimited;
-        rewardsList[index] = r;
+        require(data.fundingGoal >= 10000 ether, "!Err: Funding Goal not enough");
+        require(createAt + 7 days <= data.deadlineDate, "!Err: deadlineDate to short");
+        campaignInfo.title = data.title;
+        campaignInfo.description = data.description;
+        campaignInfo.fundingGoal = data.fundingGoal;
+        campaignInfo.deadlineDate = data.deadlineDate;
     }  
 ```
 
