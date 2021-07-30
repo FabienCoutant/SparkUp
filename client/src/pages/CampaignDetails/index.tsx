@@ -136,7 +136,9 @@ const CampaignDetails = () => {
       </div>
       <div className='row'>
         {renderManagerAction()}
+        <div className='mb-5'>
         {renderCampaign()}
+        </div>
       </div>
       <div className='row row-cols-2'>
         <div className='col-5'>

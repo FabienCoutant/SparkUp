@@ -123,6 +123,7 @@ below:
 
 ```
 REACT_APP_INFURA_KEY = "YOUR_INFURA_ID"
+REACT_APP_DEFAULT_NETWORK_CHAINID= "DEPLOYED_NETWORK_ID"
 ```
 
 :white_check_mark: Take not that your value must be surrounded with double quotes.
@@ -142,8 +143,10 @@ You will first need to deploy the back-end (solidity files) and then the front.
 [here](DEPLOYED_ADDRESSES.md)
 
 * #### Front End
-  * Local Deployment : move into the client folder and run `npm run start` and then open your browser at the following url : https://localhost:3000/
-  * Ropsten : in order to interact with our DApp and smart-contract use the following url :
+  * Local Deployment (two choices): 
+    * at the project's root folder : `npm run local-dapp` and then open your browser at the following url : https://localhost:3000/
+    * move into the client folder and run `npm run start` and then open your browser at the following url : https://localhost:3000/
+  * Ropsten : in order to interact with our DApp and smart-contract use [Heroku](https://sparkup-alyra.herokuapp.com/)
   
 
 ## Tests
@@ -158,7 +161,7 @@ To run the tests you have several options but both need to be launch in the proj
 `npm run test`
 * Running test with code coverage :
 `npm run coverage`
-* Running test with a report of gas consumed by the smart-contracts and each function :
+* Running test with report of gas consumed by the smart-contracts and each function :
 `npm run gas`
 
 :white_check_mark: Take not that by using CI/CD, we perform tests with **code coverage** and **gas report** on each Pull Request
