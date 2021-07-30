@@ -14,7 +14,7 @@ contract Proposal is IProposal {
     uint proposalCounter;
     Campaign campaignContract;
     
-    Proposal[] public proposalList;
+    mapping(uint => Proposal) proposals;
     mapping(address => bool) hasVoted;
     
     constructor(address _campaignAddress) {
@@ -32,7 +32,7 @@ contract Proposal is IProposal {
         uint proposaId,
         WorkflowStatus requiredStatus
     ) {
-        require(proposalList[proposaId].status == requiredStatus, "!Err : Wrong workflow status");
+        require(proposals[proposaId].status == requiredStatus, "!Err : Wrong workflow status");
         _;
     }
     
@@ -42,23 +42,25 @@ contract Proposal is IProposal {
     }
     
     modifier checkProposalDeadline(uint256 proposalId) {
-        require(block.timestamp < proposalList[proposalId].deadline, "!Err: propsal voting has ended");
+        require(block.timestamp < proposals[proposalId].deadline, "!Err: propsal voting has ended");
         _;
     }
     
     /**
      * @inheritdoc IProposal
      */
-    function createProposal(string memory _title, string memory _description, uint _amount ) external override onlyManager() checkStatus(proposalCounter, WorkflowStatus.Pending){
-        require(proposalList.length < 6, "!Err: Maximum amount of proposal reached");
+    function createProposal(string memory _title, string memory _description, uint _amount ) external override onlyManager() checkStatus(proposalCounter, WorkflowStatus.Pending) {
+        require(proposalCounter < 6, "!Err: Maximum amount of proposal reached");
         require(bytes(_title).length > 0, "!Err: Title empty");
         require(bytes(_description).length > 0, "!Err: Description empty");
         require(_amount <= _getCampaignUSDCBalance(), "!Err: Proposal amount exceeds campaign USDC balance");
-        proposalList[proposalCounter].id = proposalCounter;
-        proposalList[proposalCounter].title = _title;
-        proposalList[proposalCounter].description = _description;
-        proposalList[proposalCounter].amount = _amount;
-        proposalList[proposalCounter].status = WorkflowStatus.Registered;
+        Proposal memory p;
+        p.id = proposalCounter;
+        p.title = _title;
+        p.description = _description;
+        p.amount = _amount;
+        p.status = WorkflowStatus.Registered;
+        proposals[proposalCounter] = p;
         proposalCounter++;
     }
     
@@ -67,10 +69,10 @@ contract Proposal is IProposal {
      */
     function deleteProposal(uint256 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered) {
         if (proposalId == proposalCounter - 1) {
-            delete  proposalList[proposalId];
+            delete  proposals[proposalId];
         } else {
-            proposalList[proposalId] = proposalList[proposalCounter - 1];
-            delete proposalList[proposalCounter -1];
+            proposals[proposalId] = proposals[proposalCounter - 1];
+            delete proposals[proposalCounter -1];
         }
     }
     
@@ -78,17 +80,17 @@ contract Proposal is IProposal {
      * @inheritdoc IProposal
      */
     function startVotingSession(uint256 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered){
-        proposalList[proposalId].status = WorkflowStatus.VotingSessionStarted;
-        proposalList[proposalId].deadline = block.timestamp + 5 days;
+        proposals[proposalId].status = WorkflowStatus.VotingSessionStarted;
+        proposals[proposalId].deadline = block.timestamp + 7 days;
     }
     
-    function voteProposal(uint256 proposalId, uint8 _vote) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) checkProposalDeadline(proposalId) {
+    function voteProposal(uint256 proposalId, bool vote) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) checkProposalDeadline(proposalId) isContributor() {
         require(!hasVoted[msg.sender], "!Err: Already voted");
         uint contributorVotes = campaignContract.contributorBalances(msg.sender);
-        if (_vote == 1) {
-            proposalList[proposalId].okvotes = proposalList[proposalId].okvotes.add(contributorVotes);
-        } else if (_vote == 0) {
-            proposalList[proposalId].nokvotes = proposalList[proposalId].okvotes.add(contributorVotes);  
+        if (vote) {
+            proposals[proposalId].okvotes = proposals[proposalId].okvotes.add(contributorVotes);
+        } else if (!vote) {
+            proposals[proposalId].nokvotes = proposals[proposalId].okvotes.add(contributorVotes);  
         }
         hasVoted[msg.sender] = true;
     }
@@ -97,9 +99,9 @@ contract Proposal is IProposal {
      * @inheritdoc IProposal
      */
     function getResults(uint256 proposalId) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) returns(uint8){
-        require(block.timestamp > proposalList[proposalId].deadline, "!Err: voting still ongoing");
-        proposalList[proposalId].status = WorkflowStatus.VotesTallied;
-        if (proposalList[proposalId].okvotes > proposalList[proposalId].nokvotes) {
+        require(block.timestamp > proposals[proposalId].deadline, "!Err: voting still ongoing");
+        proposals[proposalId].status = WorkflowStatus.VotesTallied;
+        if (proposals[proposalId].okvotes > proposals[proposalId].nokvotes) {
             return 1;
         } else {
             return 0;

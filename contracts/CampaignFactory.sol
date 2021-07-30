@@ -17,20 +17,22 @@ contract CampaignFactory is ICampaignFactory {
     mapping(address => uint) public contractIndex;
     mapping(address => bool) public contractExist;
     IERC20 public immutable usdcToken;
+    address public immutable escrowContract;
 
     //Events
     event newCampaign(address campaignAddress);
 
-    constructor(address _usdcToken){
+    constructor(address _usdcToken, address _escrowContract){
         owner = msg.sender;
         usdcToken = IERC20(_usdcToken);
+        escrowContract = _escrowContract;
     }
 
     /**
      * @inheritdoc ICampaignFactory
      */
     function createCampaign(ICampaign.Info memory infoData, ICampaign.Rewards[] memory rewardsData) external override {
-        ICampaign _newCampaign = new Campaign(infoData, rewardsData, msg.sender, usdcToken);
+        ICampaign _newCampaign = new Campaign(infoData, rewardsData, msg.sender, usdcToken, escrowContract);
         deployedCampaigns.push(_newCampaign);
         contractIndex[address(_newCampaign)] = getLastDeployedCampaignsIndex();
         contractExist[address(_newCampaign)] = true;

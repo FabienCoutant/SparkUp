@@ -37,7 +37,7 @@ interface ICampaign {
     /**
      * @notice Returns the campaign information in the struct Info plus de createAt and the managerAddress.
      */
-    function getCampaignInfo() external returns(Info memory, uint, address, WorkflowStatus);
+    function getCampaignInfo() external returns(Info memory, uint, address, WorkflowStatus, uint256);
 
     /**
      * @notice Update the campaign information in the struct Info.
@@ -94,8 +94,14 @@ interface ICampaign {
     function contribute(uint256 _amount, uint8 rewardIndex) external;
 
     /**
-     * @notice Allow anyone to update WorkflowStatus to FundingFailed.
+     * @notice Allow contributor to get refunded.
      * @dev Can only be called if campiagn deadline is passed and fundingGoal not reached.
      */
-    function failFunding() external;
+    function refund() external;
+
+    /**
+     * @notice Allows manager to deploy proposal contract to start submitting proposals.
+     * @dev Can only be called by manager and if WorkflowStatus is FundingComplete.
+     */
+    function launchProposalContract() external;
 }

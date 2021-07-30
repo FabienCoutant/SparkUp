@@ -53,7 +53,7 @@ interface IProposal {
      * @param proposalId as proposal index in proposalList array and _vote as 1 for ok and 0 for nok
      * @dev can only be called by contributors and if WorkflowStatus is VotingSessionStarted
      */
-    function voteProposal(uint256 proposalId, uint8 _vote) external;
+    function voteProposal(uint256 proposalId, bool vote) external;
     
     /**
      * @notice check if proposal is ok or nok
