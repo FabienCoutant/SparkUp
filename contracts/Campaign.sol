@@ -3,21 +3,27 @@ pragma solidity 0.8.6;
 
 import "./interfaces/ICampaign.sol";
 import "./interfaces/ICampaignFactory.sol";
+import "./interfaces/IProposal.sol";
+import "./Proposal.sol";
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Campaign is ICampaign {
     using SafeMath for uint256;
+    using SafeERC20 for IERC20;
     
     uint8 public rewardsCounter;
+    uint256 public totalRaised;
     uint256 public createAt;
     address public manager;
     address public factory;
+    address public proposal;
 
     WorkflowStatus public status;
 
     IERC20 public immutable usdcToken;
+    address public immutable escrowContract;
     Info private campaignInfo;
 
     mapping(uint => Rewards) public rewardsList;
@@ -48,7 +54,7 @@ contract Campaign is ICampaign {
         _;
     }
 
-    constructor(Info memory infoData, Rewards[] memory rewardsData, address _manager, IERC20 _usdcToken)
+    constructor(Info memory infoData, Rewards[] memory rewardsData, address _manager, IERC20 _usdcToken, address _escrowContract)
     {
         require(rewardsData.length > 0, "!Err: Rewards empty");
         require(rewardsData.length <= 10, "!Err: Too much Rewards");
@@ -57,6 +63,7 @@ contract Campaign is ICampaign {
         createAt = block.timestamp;
         status = WorkflowStatus.CampaignDrafted;
         usdcToken = _usdcToken;
+        escrowContract = _escrowContract;
         _setCampaignInfo(infoData);
         uint8 _rewardsCounter;
         for (_rewardsCounter; _rewardsCounter < rewardsData.length; _rewardsCounter++) {
@@ -68,8 +75,8 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function getCampaignInfo() external view override isNotDeleted() returns(Info memory, uint, address, WorkflowStatus) {
-        return (campaignInfo, createAt, manager, status);
+    function getCampaignInfo() external view override isNotDeleted() returns(Info memory, uint, address, WorkflowStatus, uint256) {
+        return (campaignInfo, createAt, manager, status, totalRaised);
     }
 
     /**
@@ -170,14 +177,40 @@ contract Campaign is ICampaign {
      */
     function contribute(uint256 _amount, uint8 rewardIndex) external override isNotDeleted() checkCampaignDeadline() {
         require(status != WorkflowStatus.CampaignDrafted && status != WorkflowStatus.FundingFailed && status != WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
-        SafeERC20.safeTransferFrom(usdcToken, msg.sender, address(this), _amount);
+        usdcToken.safeTransferFrom(msg.sender, address(this), _amount);
         contributorBalances[msg.sender] = contributorBalances[msg.sender].add(_amount);
         rewardToContributor[rewardIndex][msg.sender] = rewardToContributor[rewardIndex][msg.sender].add(1);
         rewardsList[rewardIndex].nbContributors = rewardsList[rewardIndex].nbContributors.add(1);
         rewardsList[rewardIndex].amount = rewardsList[rewardIndex].amount.add(_amount);
         if(getContractUSDCBalance() >= campaignInfo.fundingGoal) {
             status = WorkflowStatus.FundingComplete;
+            totalRaised = getContractUSDCBalance();
         }
+    }
+
+    /**
+     * @inheritdoc ICampaign
+     */
+    function refund() external override {
+        require(block.timestamp > campaignInfo.deadlineDate && getContractUSDCBalance() > 0, "!Err: conditions not met");
+        require(status == WorkflowStatus.CampaignPublished || status == WorkflowStatus.FundingFailed, "!Err: wrong workflowstatus");
+        if (status == WorkflowStatus.CampaignPublished) {
+            status = WorkflowStatus.FundingFailed;
+        }
+        uint256 _balance = contributorBalances[msg.sender];
+        delete contributorBalances[msg.sender];
+        usdcToken.safeTransfer(msg.sender, _balance);
+    }
+
+    /**
+     * @inheritdoc ICampaign
+     */
+    function launchProposalContract() external override onlyManager() isNotDeleted() checkStatus(status, WorkflowStatus.FundingComplete) {
+        require(proposal != address(0), "!Err: proposal already deployed");
+        require(block.timestamp > campaignInfo.deadlineDate, "!Err: campgaign deadaline not passed");
+        IProposal _proposalContract = new Proposal(address(this));
+        proposal = address(_proposalContract);
+        usdcToken.safeTransfer(escrowContract, totalRaised.mul(5).div(100));
     }
 
     /**

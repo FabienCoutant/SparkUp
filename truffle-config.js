@@ -34,8 +34,8 @@ module.exports = {
   mocha: {
     reporter: 'eth-gas-reporter',
     reporterOptions: {
-      excludeContracts: ['Migrations']
-    }
+      excludeContracts: ['Migrations'],
+    },
   },
   compilers: {
     solc: {
@@ -51,5 +51,5 @@ module.exports = {
       },
     },
   },
-  plugins: ["solidity-coverage"]
+  plugins: ['solidity-coverage'],
 };
