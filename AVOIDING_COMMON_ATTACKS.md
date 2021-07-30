@@ -20,20 +20,33 @@
 
 ## Reentrancy
 
-* The only external contract used is the official USDC ERC-20 contract. Reentrancy is not possible on this one.
+* The only external contract used is the official USDC ERC-20 contract which is used through the SafeERC20 library.
 
-* We are not using `address.call()` function but ERC-20 transfer() and transferFrom() instead.
+* We are not using `address.call()` function but SafeERC20 safeTransfer() and safeTransferFrom() instead.
 
 * We limit the access to certain functionalities thanks to **modifiers** and **workflow**
 
 ```
-    modifier isNotDisabled(){
-        require(!isDisabled, "!Err: Disabled");
+    modifier isNotDeleted(){
+        require(status != WorkflowStatus.CampaignDeleted, "!Err: Campaign Deleted");
         _;
     }
 
     modifier onlyManager(){
         require(msg.sender == manager, "!Not Authorized");
+        _;
+    }
+
+    modifier checkStatus(
+        WorkflowStatus currentStatus,
+        WorkflowStatus requiredStatus
+    ) {
+        require(currentStatus == requiredStatus, "!Err : Wrong workflow status");
+        _;
+    }
+    
+    modifier checkCampaignDeadline() {
+        require(block.timestamp <  campaignInfo.deadlineDate, "!Err : Campaign contribution has ended");
         _;
     }
     
@@ -50,11 +63,11 @@ We are using timestamp on several parts of the workflow. To avoid this attack we
   
 * Using timestamp comparison (>, <, >=, <=) instead of strict equal
 
-* Our application isn't impacted by the 15 seconds rule
+* Our application isn't impacted by the 15 seconds rule because the minimum time between action and deadline is 7 days.
 
 ## Overflow and Underflow
 
-We are avoiding this attack directly by using solidity v0.8.x ([reference](https://docs.soliditylang.org/en/v0.8.0/080-breaking-changes.html#silent-changes-of-the-semantics))
+We are avoiding this attack directly by using solidity version greater than 0.8.0 ([reference](https://docs.soliditylang.org/en/v0.8.0/080-breaking-changes.html#silent-changes-of-the-semantics))
 
 ## Accessing Private Data
 
