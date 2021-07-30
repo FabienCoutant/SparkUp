@@ -54,8 +54,6 @@ contract('CampaignFactory', (accounts) => {
         from: owner,
       }
     );
-    const factoryOwner = await CampaignFactoryContractInstance.owner();
-    expect(factoryOwner).to.be.equal(owner);
     initialCampaignInfo.deadlineDate = parseInt((await time.latest()).add(time.duration.days(30)));
     secondInitialCampaignInfo = {
       ...initialCampaignInfo,

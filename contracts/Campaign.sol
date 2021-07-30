@@ -177,6 +177,7 @@ contract Campaign is ICampaign {
      */
     function contribute(uint256 _amount, uint8 rewardIndex) external override isNotDeleted() checkCampaignDeadline() {
         require(status != WorkflowStatus.CampaignDrafted && status != WorkflowStatus.FundingFailed && status != WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
+        require(checkRewardInventory(rewardIndex), "!Err: no more reward");
         usdcToken.safeTransferFrom(msg.sender, address(this), _amount);
         contributorBalances[msg.sender] = contributorBalances[msg.sender].add(_amount);
         rewardToContributor[rewardIndex][msg.sender] = rewardToContributor[rewardIndex][msg.sender].add(1);
@@ -206,7 +207,7 @@ contract Campaign is ICampaign {
      * @inheritdoc ICampaign
      */
     function launchProposalContract() external override onlyManager() isNotDeleted() checkStatus(status, WorkflowStatus.FundingComplete) {
-        require(proposal != address(0), "!Err: proposal already deployed");
+        require(proposal == address(0), "!Err: proposal already deployed");
         require(block.timestamp > campaignInfo.deadlineDate, "!Err: campgaign deadaline not passed");
         IProposal _proposalContract = new Proposal(address(this));
         proposal = address(_proposalContract);
@@ -219,5 +220,15 @@ contract Campaign is ICampaign {
      */
     function getContractUSDCBalance() public view returns(uint) {
         return usdcToken.balanceOf(address(this));
+    }
+
+    function checkRewardInventory(uint8 rewardIndex) internal view returns (bool) {
+        if (!rewardsList[rewardIndex].isStockLimited) {
+            return true;
+        } else if(rewardsList[rewardIndex].stockLimit > rewardsList[rewardIndex].nbContributors) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

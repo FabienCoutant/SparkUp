@@ -4,6 +4,7 @@ const CampaignContract = artifacts.require('Campaign');
 const CampaignFactoryContract = artifacts.require('CampaignFactory');
 const TestUSDCContract = artifacts.require('TestUSDC');
 const EscrowContract = artifacts.require('Escrow');
+const ProposalContract = artifacts.require('Proposal');
 
 contract('Campaign', (accounts) => {
   const [alice, bob, john] = accounts;
@@ -42,9 +43,21 @@ contract('Campaign', (accounts) => {
     amount: 0,
     isStockLimited: true,
   };
+
+  const newReward2 = {
+    title: 'Third rewards',
+    description: 'level3',
+    minimumContribution: ether('150').toString(),
+    stockLimit: 1,
+    nbContributors: 0,
+    amount: 0,
+    isStockLimited: true,
+  };
+
   let CampaignContractInstance;
   let TestUSDCContractInstance;
   let EscrowContractInstance;
+  let ProposalContractInstance;
 
   beforeEach(async () => {
     TestUSDCContractInstance = await TestUSDCContract.new(bob, { from: bob });
@@ -417,7 +430,30 @@ contract('Campaign', (accounts) => {
         '!Err : Wrong workflow status'
       );
     });
+    it('should revert if no more reward inventory', async () => {
+      await CampaignContractInstance.addReward(newReward2);
+      await CampaignContractInstance.publishCampaign({ from: alice });
+      const spender = CampaignContractInstance.address;
+      const bobContribution = ether('150').toString();
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      CampaignContractInstance.contribute(bobContribution, 2, {
+        from: bob,
+      });
+      await TestUSDCContractInstance.transfer(john, bobContribution, { from: bob });
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: john,
+      });
+      await expectRevert(
+        CampaignContractInstance.contribute(bobContribution, 2, {
+          from: john,
+        }),
+        '!Err: no more reward'
+      );
+    });
     it('should revert if campaignDeadlineDate has passed', async () => {
+      await CampaignContractInstance.publishCampaign({ from: alice });
       await time.increase(time.duration.days(15));
       const spender = CampaignContractInstance.address;
       const bobContribution = ether('11000').toString();
@@ -503,6 +539,44 @@ contract('Campaign', (accounts) => {
       });
       await time.increase(time.duration.days(15));
       await expectRevert(CampaignContractInstance.refund({ from: bob }), '!Err: wrong workflowstatus');
+    });
+  });
+  describe('--- Launch Proposal ---', async () => {
+    beforeEach(async () => {
+      await CampaignContractInstance.publishCampaign({ from: alice });
+      const spender = CampaignContractInstance.address;
+      const bobContribution = ether('11000').toString();
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      await CampaignContractInstance.contribute(bobContribution, 0, {
+        from: bob,
+      });
+    });
+    it('should allow manager create proposal contract if funding complete and campaign deadline passed', async () => {
+      await time.increase(time.duration.days(15));
+      await CampaignContractInstance.launchProposalContract({ from: alice });
+      const proposal = await CampaignContractInstance.proposal();
+      ProposalContractInstance = await ProposalContract.at(proposal);
+      expect(proposal).to.be.equal(ProposalContractInstance.address);
+      const campaignManager = await ProposalContractInstance.campaignManager();
+      expect(campaignManager).to.be.equal(alice);
+      const campaignAddress = await ProposalContractInstance.campaignAddress();
+      expect(campaignAddress).to.be.equal(CampaignContractInstance.address);
+      const escrowContractTUSDCBalance = await EscrowContractInstance.getContractUSDCBalance();
+      const fee = ether((11000 * 0.05).toString());
+      expect(escrowContractTUSDCBalance).to.be.bignumber.equal(fee);
+    });
+    it('should revert if campaignDeadline not passed', async () => {
+      await expectRevert(
+        CampaignContractInstance.launchProposalContract({ from: alice }),
+        '!Err: campgaign deadaline not passed'
+      );
+    });
+    it('should revert if proposal contract already deployed', async () => {
+      await time.increase(time.duration.days(15));
+      await CampaignContractInstance.launchProposalContract({ from: alice });
+      expectRevert(CampaignContractInstance.launchProposalContract({ from: alice }), '!Err: proposal already deployed');
     });
   });
 });
