@@ -20,7 +20,9 @@ const CampaignCard = ({ address }: { address: string }) => {
   }
 
   const renderCampaignProgressGoal = () => {
-    return (campaign.amountRaise / campaign.info.fundingGoal) * 1000
+    const amountRaise = typeof campaign.amountRaise ==="string"?parseInt(campaign.amountRaise):campaign.amountRaise;
+    const fundingGoal = typeof campaign.info.fundingGoal ==="string"?parseInt(campaign.info.fundingGoal):campaign.info.fundingGoal;
+    return (amountRaise / fundingGoal) * 1000
   }
 
   const renderManagerAction = () => {

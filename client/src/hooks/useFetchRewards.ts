@@ -4,7 +4,7 @@ import { useContractCampaign } from './useContract'
 import { useEffect } from 'react'
 import { useAppDispatch } from '../store/hooks'
 import { reward, rewardActions } from '../store/Reward/slice'
-import { serializeValueTo } from '../utils/serializeValue'
+import { serializeUSDCFor } from '../utils/serializeValue'
 
 export const useFetchRewardsList = (address: string) => {
   const { library, chainId } = useActiveWeb3React()
@@ -20,8 +20,8 @@ export const useFetchRewardsList = (address: string) => {
           const reward = {
             title:res.title,
             description:res.description,
-            minimumContribution:serializeValueTo(res.minimumContribution,false),
-            amount: serializeValueTo(res.amount,false),
+            minimumContribution:serializeUSDCFor(res.minimumContribution,false),
+            amount: serializeUSDCFor(res.amount,false),
             stockLimit: res.stockLimit,
             nbContributors: res.nbContributors,
             isStockLimited: res.isStockLimited,

@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useContractCampaign } from '../../hooks/useContract'
 import { useParams } from 'react-router'
-import { serializeValueTo } from '../../utils/serializeValue'
+import { serializeUSDCFor } from '../../utils/serializeValue'
 
 const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
   const dispatch = useAppDispatch()
@@ -65,7 +65,7 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
     const campaignInfo: Info = {
       title: campaignTitle,
       description: campaignDescription,
-      fundingGoal: serializeValueTo(campaignFundingGoal,true),
+      fundingGoal: serializeUSDCFor(campaignFundingGoal,true),
       deadlineDate: serializeTimestampsFor(campaignDeadLine, true)
     }
     if (contractCampaign) {

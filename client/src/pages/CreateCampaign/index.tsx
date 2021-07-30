@@ -14,7 +14,7 @@ import { useHistory } from 'react-router'
 import RewardForm from '../../components/RewardForm'
 import Loader from '../../components/Loader'
 import { useShowLoader } from '../../hooks/useShowLoader'
-import { serializeValueTo } from '../../utils/serializeValue'
+import { serializeUSDCFor } from '../../utils/serializeValue'
 
 const CreateCampaign = () => {
   const { chainId, account } = useWeb3React()
@@ -48,7 +48,7 @@ const CreateCampaign = () => {
         const campaignInfo: Info = {
           title: campaign.info.title,
           description: campaign.info.description,
-          fundingGoal: serializeValueTo(campaign.info.fundingGoal,true),
+          fundingGoal: serializeUSDCFor(campaign.info.fundingGoal,true),
           deadlineDate: serializeTimestampsFor(campaign.info.deadlineDate, true)
         }
         const rewardsInfo: Rewards[] = []
@@ -56,7 +56,7 @@ const CreateCampaign = () => {
           const tempReward: Rewards = {
             title: reward.title,
             description: reward.description,
-            minimumContribution: serializeValueTo(reward.minimumContribution,true),
+            minimumContribution: serializeUSDCFor(reward.minimumContribution,true),
             amount: 0,
             stockLimit: reward.stockLimit,
             nbContributors: 0,

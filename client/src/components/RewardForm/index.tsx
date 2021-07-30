@@ -6,7 +6,7 @@ import { useAppDispatch } from '../../store/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useParams } from 'react-router'
 import { useContractCampaign } from '../../hooks/useContract'
-import { serializeValueTo } from '../../utils/serializeValue'
+import { serializeUSDCFor } from '../../utils/serializeValue'
 
 
 const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, renderType: RENDER_TYPE }) => {
@@ -145,7 +145,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
     const reward: Rewards = {
       title: rewardTitle,
       description: rewardDescription,
-      minimumContribution: serializeValueTo(rewardMinimumContribution,true),
+      minimumContribution: serializeUSDCFor(rewardMinimumContribution,true),
       amount: 0,
       stockLimit: rewardStockLimit,
       nbContributors: 0,
@@ -173,7 +173,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
     const reward: Rewards = {
       title: rewardTitle,
       description: rewardDescription,
-      minimumContribution: serializeValueTo(rewardMinimumContribution,true),
+      minimumContribution: serializeUSDCFor(rewardMinimumContribution,true),
       amount: 0,
       stockLimit: rewardStockLimit,
       nbContributors: 0,

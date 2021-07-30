@@ -7,7 +7,7 @@ import { serializeCampaignInfo } from '../utils/serializeCampaignInfo'
 import { campaignActions, initialState } from '../store/Campaign/slice'
 import { serializeTimestampsFor } from '../utils/dateHelper'
 import { campaignState } from '../constants'
-import { serializeValueTo } from '../utils/serializeValue'
+import { serializeUSDCFor } from '../utils/serializeValue'
 
 
 export const useFetchCampaignAddress = (): string[] => {
@@ -50,7 +50,7 @@ export const useFetchCampaignInfo = (address: string) => {
               createAt: serializeTimestampsFor(res[1], false),
               manager: res[2],
               workflowStatus: parseInt(res[3]),
-              amountRaise: serializeValueTo(_amountRaise,false),
+              amountRaise: serializeUSDCFor(_amountRaise,false),
               onChain: true,
               confirmed: true
             })
@@ -77,7 +77,7 @@ export const useFetchCampaignInfoAndDispatch=(address:string)=>{
             createAt: serializeTimestampsFor(res[1], false),
             manager: res[2],
             workflowStatus: parseInt(res[3]),
-            amountRaise: serializeValueTo(_amountRaise,false),
+            amountRaise: serializeUSDCFor(_amountRaise,false),
             onChain: true,
             confirmed: true
           }))
