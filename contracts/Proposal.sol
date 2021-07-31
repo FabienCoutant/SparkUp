@@ -74,6 +74,7 @@ contract Proposal is IProposal {
             proposals[proposalId] = proposals[proposalCounter - 1];
             delete proposals[proposalCounter -1];
         }
+        proposalCounter--;
     }
     
     /**
@@ -106,6 +107,7 @@ contract Proposal is IProposal {
         proposals[proposalId].status = WorkflowStatus.VotesTallied;
         if (proposals[proposalId].okVotes > proposals[proposalId].nokVotes) {
             proposals[proposalId].accepted = true;
+            campaignContract.realeaseProposalFunds(proposals[proposalId].amount);
         } else {
             proposals[proposalId].accepted = false;
         }
@@ -113,9 +115,5 @@ contract Proposal is IProposal {
     
     function _getCampaignUSDCBalance() internal view returns (uint256) {
         return campaignContract.getContractUSDCBalance();
-    }
-    
-    function _getAllowance() internal view returns (uint256) {
-        return Campaign(campaignAddress).usdcToken().allowance(msg.sender, campaignAddress);
     }
 }

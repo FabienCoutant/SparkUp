@@ -167,15 +167,29 @@ contract('Proposal', (accounts) => {
       );
     });
   });
-
-  describe('--- Delete Propsosal ---', async () => {
-    it('should allow campaignManager to delete proposal if workflow status is Registered', async () => {
+  describe('--- Delete Proposal ---', async () => {
+    it('should allow campaignManager to delete last proposal if workflow status is Registered', async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
       await ProposalContractInstance.deleteProposal(0, { from: alice });
       const deletedProposal = await ProposalContractInstance.proposals(0);
       expect(deletedProposal.title).to.be.equal('');
+      const proposalCounter = await ProposalContractInstance.proposalCounter();
+      expect(proposalCounter).to.be.bignumber.equal(new BN(0));
+    });
+    it('should allow campaignManager to delete first proposal if workflow status is Registered', async () => {
+      await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
+        from: alice,
+      });
+      await ProposalContractInstance.createProposal('Second Proposal', 'This is the second proposal', proposal.amount, {
+        from: alice,
+      });
+      await ProposalContractInstance.deleteProposal(0, { from: alice });
+      const proposalCounter = await ProposalContractInstance.proposalCounter();
+      expect(proposalCounter).to.be.bignumber.equal(new BN(1));
+      const deletedProposal = await ProposalContractInstance.proposals(0);
+      expect(deletedProposal.title).to.be.equal('Second Proposal');
     });
     it('should revert if wrong workflow status', async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
@@ -188,7 +202,6 @@ contract('Proposal', (accounts) => {
       await expectRevert(ProposalContractInstance.deleteProposal(0, { from: alice }), '!Err : Wrong workflow status');
     });
   });
-
   describe('--- Vote ---', async () => {
     beforeEach(async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
@@ -232,24 +245,29 @@ contract('Proposal', (accounts) => {
       await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: greg }), '!Err: not a contributor');
     });
   });
-
   describe('--- Get Results ---', async () => {
     beforeEach(async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
     });
-    it('should allow manager or contributor to get correct proposal voting results if proposal accepted', async () => {
+    it('should allow manager or contributor to get correct proposal voting results if proposal accepted and realase funds in campaign contract', async () => {
       await ProposalContractInstance.startVotingSession(0, { from: alice });
       await ProposalContractInstance.voteProposal(0, true, { from: bob });
       await ProposalContractInstance.voteProposal(0, false, { from: john });
       await time.increase(time.duration.days(10));
+      const campaignBalanceBeforeTransfer = await CampaignContractInstance.getContractUSDCBalance();
       await ProposalContractInstance.getResults(0, { from: alice });
       const votedProposal = await ProposalContractInstance.proposals(0);
       const proposalResult = votedProposal.accepted;
       expect(proposalResult).to.be.true;
       const proposalStatus = votedProposal.status;
       expect(proposalStatus).to.be.bignumber.equal(new BN(4));
+      const campaignBalanceAfterTransfer = await CampaignContractInstance.getContractUSDCBalance();
+      const balanceDiff = campaignBalanceBeforeTransfer.sub(campaignBalanceAfterTransfer);
+      expect(balanceDiff).to.be.bignumber.equal(new BN(proposal.amount));
+      const managerTUSDCBalance = await TestUSDCContractInstance.balanceOf(alice);
+      expect(managerTUSDCBalance).to.be.bignumber.equal(new BN(proposal.amount));
     });
     it('should allow manager or contributor to get correct proposal voting results if proposal rejected', async () => {
       await ProposalContractInstance.startVotingSession(0, { from: alice });

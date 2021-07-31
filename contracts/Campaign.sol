@@ -222,6 +222,11 @@ contract Campaign is ICampaign {
         return usdcToken.balanceOf(address(this));
     }
 
+    function realeaseProposalFunds(uint256 _amount) external override {
+        require(msg.sender == proposal, "!Err: Access denied");
+        usdcToken.safeTransfer(manager, _amount);
+    }
+
     function checkRewardInventory(uint8 rewardIndex) internal view returns (bool) {
         if (!rewardsList[rewardIndex].isStockLimited) {
             return true;

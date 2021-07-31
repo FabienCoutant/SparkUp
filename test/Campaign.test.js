@@ -54,6 +54,12 @@ contract('Campaign', (accounts) => {
     isStockLimited: true,
   };
 
+  const proposal = {
+    title: 'First Proposal',
+    description: 'This is the first proposal',
+    amount: ether('1500').toString(),
+  };
+
   let CampaignContractInstance;
   let TestUSDCContractInstance;
   let EscrowContractInstance;
@@ -576,7 +582,59 @@ contract('Campaign', (accounts) => {
     it('should revert if proposal contract already deployed', async () => {
       await time.increase(time.duration.days(15));
       await CampaignContractInstance.launchProposalContract({ from: alice });
-      expectRevert(CampaignContractInstance.launchProposalContract({ from: alice }), '!Err: proposal already deployed');
+      await expectRevert(
+        CampaignContractInstance.launchProposalContract({ from: alice }),
+        '!Err: proposal already deployed'
+      );
+    });
+  });
+  describe('--- Release Funds ---', async () => {
+    beforeEach(async () => {
+      await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      const spender = CampaignContractInstance.address;
+      await TestUSDCContractInstance.transfer(john, ether('2000').toString(), { from: bob });
+      const bobContribution = ether('9000').toString();
+      const johnContribution = ether('2000').toString();
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      TestUSDCContractInstance.increaseAllowance(spender, johnContribution, {
+        from: john,
+      });
+      await CampaignContractInstance.contribute(bobContribution, 0, {
+        from: bob,
+      });
+      await CampaignContractInstance.contribute(johnContribution, 0, {
+        from: john,
+      });
+      await time.increase(time.duration.days(15));
+      await CampaignContractInstance.launchProposalContract({ from: alice });
+      const proposalContractAddress = await CampaignContractInstance.proposal();
+      ProposalContractInstance = await ProposalContract.at(proposalContractAddress);
+      await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
+        from: alice,
+      });
+      await ProposalContractInstance.startVotingSession(0, { from: alice });
+      await ProposalContractInstance.voteProposal(0, true, { from: bob });
+      await ProposalContractInstance.voteProposal(0, false, { from: john });
+      await time.increase(time.duration.days(10));
+    });
+    it('should transfer voted proposal amount to manager address', async () => {
+      const campaignBalanceBeforeTransfer = await CampaignContractInstance.getContractUSDCBalance();
+      await ProposalContractInstance.getResults(0, { from: alice });
+      const campaignBalanceAfterTransfer = await CampaignContractInstance.getContractUSDCBalance();
+      const balanceDiff = campaignBalanceBeforeTransfer.sub(campaignBalanceAfterTransfer);
+      expect(balanceDiff).to.be.bignumber.equal(new BN(proposal.amount));
+      const managerTUSDCBalance = await TestUSDCContractInstance.balanceOf(alice);
+      expect(managerTUSDCBalance).to.be.bignumber.equal(new BN(proposal.amount));
+    });
+    it('should revert if called by other than proposal contract', async () => {
+      await expectRevert(
+        CampaignContractInstance.realeaseProposalFunds(proposal.amount, { from: alice }),
+        '!Err: Access denied'
+      );
     });
   });
 });
