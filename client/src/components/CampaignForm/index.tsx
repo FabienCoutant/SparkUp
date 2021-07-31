@@ -46,6 +46,7 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
         confirmed: true,
         onChain: false,
         amountRaise:0,
+        currentBalance:0,
         manager: account as string,
         createAt: new Date().getTime(),
         workflowStatus:WORKFLOW_STATUS.CampaignDrafted
@@ -103,10 +104,10 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
             type: NOTIFICATION_TYPE.ALERT
           })
         )
-      } else if (fundingGoal === undefined || fundingGoal < 10000) {
+      } else if (fundingGoal === undefined || fundingGoal < 1000) {
         dispatch(
           notificationActions.setNotification({
-            message: 'Your funding goal must be at least 10 000 USDC!',
+            message: 'Your funding goal must be at least 1000 USDC!',
             type: NOTIFICATION_TYPE.ALERT
           })
         )

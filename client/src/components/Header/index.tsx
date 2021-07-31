@@ -1,29 +1,27 @@
 import {useWeb3React} from '@web3-react/core';
 import {injected} from '../../connectors';
-import {useAppDispatch} from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import {notificationActions} from '../../store/Notification/slice';
 import {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
-import {useContractUSDC} from '../../hooks/useContract';
 import {NOTIFICATION_TYPE} from "../../constants";
 import PlusSquareFill from '../../assets/images/PlusSquareFill'
+import { useFetchUserBalance } from '../../hooks/useFetchUSDC'
 
 const Header = () => {
     const dispatch = useAppDispatch();
     const {account, chainId, active, error, activate} = useWeb3React();
     const [balanceUSDC, setBalanceUSDC] = useState('0');
-    const contractUSDC = useContractUSDC();
-
+    useFetchUserBalance()
+    const user = useAppSelector(state => state.user)
     useEffect(() => {
         const getBalance = async () => {
-            const balance = await contractUSDC!.methods.balanceOf(account).call();
-            const truncatedBalance = (parseInt(balance) / 1e6).toFixed(2);
-            setBalanceUSDC(truncatedBalance);
+            setBalanceUSDC(user.balance.toString());
         };
-        if (chainId && chainId !== 1337) {
+        if (chainId) {
             getBalance();
         }
-    }, [account, chainId, contractUSDC]);
+    }, [user]);
 
     const truncateWalletAddress = (
         address: string,

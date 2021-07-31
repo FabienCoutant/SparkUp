@@ -8,7 +8,7 @@ export const initialState: campaignState = {
   info: {
     title: '',
     description: '',
-    fundingGoal: 10000,
+    fundingGoal: 1000,
     deadlineDate: new Date().setDate(new Date().getDate() + 7)
   },
   confirmed: false,
@@ -16,6 +16,7 @@ export const initialState: campaignState = {
   manager: '',
   createAt: new Date().getTime(),
   amountRaise: 0,
+  currentBalance:0,
   workflowStatus: WORKFLOW_STATUS.CampaignDrafted
 }
 
@@ -33,13 +34,13 @@ const campaignSlice = createSlice({
       state.manager = action.payload.manager
       state.createAt = action.payload.createAt
       state.amountRaise = action.payload.amountRaise
+      state.currentBalance = action.payload.currentBalance
       state.workflowStatus = action.payload.workflowStatus
     },
     setConfirmed(state, action: PayloadAction<{ confirmed: boolean }>) {
       state.confirmed = action.payload.confirmed
     },
     setWorkflow(state,action:PayloadAction<{workflowStatus:WORKFLOW_STATUS}>){
-      console.log(action.payload.workflowStatus)
       state.workflowStatus = action.payload.workflowStatus
     },
     updateCampaign(state,action:PayloadAction<{campaignInfo:Info}>){
@@ -48,6 +49,13 @@ const campaignSlice = createSlice({
       state.info.fundingGoal = serializeUSDCFor(action.payload.campaignInfo.fundingGoal,false)
       state.info.deadlineDate = serializeTimestampsFor(action.payload.campaignInfo.deadlineDate,false)
       state.confirmed=true
+    },
+    addFunding(state,action:PayloadAction<{amount:number}>){
+      console.log(state.amountRaise)
+      state.amountRaise = state.amountRaise as number+action.payload.amount
+    },
+    subFunding(state,action:PayloadAction<{amount:number}>){
+      state.amountRaise = state.amountRaise as number-action.payload.amount
     },
     resetState : () => initialState,
   }

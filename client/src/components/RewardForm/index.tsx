@@ -24,7 +24,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
     setRewardIsStockLimited(stockIsLimited)
   }
 
-  const rewardSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
+  const rewardSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const isValid = rewardValidationHandler()
     if (isValid) {
