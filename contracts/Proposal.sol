@@ -93,7 +93,7 @@ contract Proposal is IProposal {
         uint contributorVotes = campaignContract.contributorBalances(msg.sender);
         if (vote) {
             proposals[proposalId].okVotes = proposals[proposalId].okVotes.add(contributorVotes);
-        } else if (!vote) {
+        } else {
             proposals[proposalId].nokVotes = proposals[proposalId].nokVotes.add(contributorVotes);  
         }
         hasVoted[msg.sender] = true;

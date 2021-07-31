@@ -162,10 +162,10 @@ contract('Campaign', (accounts) => {
       const CampaignInfo = CampaignResult['0'];
       expect(CampaignInfo.fundingGoal).to.be.bignumber.equal(new BN(updatedData.fundingGoal));
     });
-    it('should revert if fundingGoal is not greater than 10 000', async () => {
+    it('should revert if fundingGoal is not greater than 1 000', async () => {
       const badUpdatedData = {
         ...initialCampaignInfo,
-        fundingGoal: ether('9999').toString(),
+        fundingGoal: ether('999').toString(),
       };
       await expectRevert(
         CampaignContractInstance.updateCampaign(badUpdatedData, {
