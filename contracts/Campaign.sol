@@ -109,7 +109,7 @@ contract Campaign is ICampaign {
     function _setCampaignInfo(Info memory data) private {
         require(bytes(data.title).length > 0, "!Err: Title empty");
         require(bytes(data.description).length > 0, "!Err: Description empty");
-        require(data.fundingGoal >= 10000 ether, "!Err: Funding Goal not enough");
+        require(data.fundingGoal >= 1000 ether, "!Err: Funding Goal not enough");
         require(createAt + 7 days <= data.deadlineDate, "!Err: deadlineDate to short");
         campaignInfo.title = data.title;
         campaignInfo.description = data.description;

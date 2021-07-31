@@ -8,11 +8,11 @@
   },
   "scripts": {
     "test": "bash ./scripts/run_tests.sh",
-    "coverage": "npx truffle run coverage",
+    "coverage": "truffle run coverage --network coverage",
     "gas": "CI=true npm run test",
-    "deploy-ropsten" :"truffle deploy --network ropsten --reset -f 2",
+    "deploy-ropsten": "truffle deploy --network ropsten --reset -f 2",
     "build-doc": "npx solidity-docgen --solc-module solc-0.8 -i ./contracts -o ./docs -t docs/templates && doctoc ./docs/ --maxlevel 3",
-    "heroku" : "git subtree push --prefix client/ heroku master"
+    "heroku": "git subtree push --prefix client/ heroku master"
   },
   "homepage": "https://github.com/FabienCoutant/SparkUp#readme",
   "repository": {
