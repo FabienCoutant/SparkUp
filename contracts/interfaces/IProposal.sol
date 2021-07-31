@@ -13,10 +13,11 @@ interface IProposal {
         string title;
         string description;
         uint256 amount;
-        uint256 okvotes;
-        uint256 nokvotes;
+        uint256 okVotes;
+        uint256 nokVotes;
         WorkflowStatus status;
         uint256 deadline;
+        bool accepted;
     }
     
     enum WorkflowStatus {
@@ -60,6 +61,6 @@ interface IProposal {
      * @param proposalId as proposal index in proposalList array
      * @dev can only be called only if proposal deadline is passed
      */
-    function getResults(uint256 proposalId) external returns(uint8);
+    function getResults(uint256 proposalId) external;
     
 }

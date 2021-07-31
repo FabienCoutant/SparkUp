@@ -104,4 +104,10 @@ interface ICampaign {
      * @dev Can only be called by manager and if WorkflowStatus is FundingComplete.
      */
     function launchProposalContract() external;
+
+    /**
+     * @notice Transfer unlocked funds to manager address.
+     * @dev Can only be called by proposal contract when proposal is accepted.
+     */
+    function realeaseProposalFunds(uint256 _amount) external;
 }

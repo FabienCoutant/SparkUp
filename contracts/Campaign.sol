@@ -109,7 +109,7 @@ contract Campaign is ICampaign {
     function _setCampaignInfo(Info memory data) private {
         require(bytes(data.title).length > 0, "!Err: Title empty");
         require(bytes(data.description).length > 0, "!Err: Description empty");
-        require(data.fundingGoal >= 10000 ether, "!Err: Funding Goal not enough");
+        require(data.fundingGoal >= 1000 ether, "!Err: Funding Goal not enough");
         require(createAt + 7 days <= data.deadlineDate, "!Err: deadlineDate to short");
         campaignInfo.title = data.title;
         campaignInfo.description = data.description;
@@ -177,6 +177,7 @@ contract Campaign is ICampaign {
      */
     function contribute(uint256 _amount, uint8 rewardIndex) external override isNotDeleted() checkCampaignDeadline() {
         require(status != WorkflowStatus.CampaignDrafted && status != WorkflowStatus.FundingFailed && status != WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
+        require(checkRewardInventory(rewardIndex), "!Err: no more reward");
         usdcToken.safeTransferFrom(msg.sender, address(this), _amount);
         contributorBalances[msg.sender] = contributorBalances[msg.sender].add(_amount);
         rewardToContributor[rewardIndex][msg.sender] = rewardToContributor[rewardIndex][msg.sender].add(1);
@@ -206,9 +207,9 @@ contract Campaign is ICampaign {
      * @inheritdoc ICampaign
      */
     function launchProposalContract() external override onlyManager() isNotDeleted() checkStatus(status, WorkflowStatus.FundingComplete) {
-        require(proposal != address(0), "!Err: proposal already deployed");
+        require(proposal == address(0), "!Err: proposal already deployed");
         require(block.timestamp > campaignInfo.deadlineDate, "!Err: campgaign deadaline not passed");
-        IProposal _proposalContract = new Proposal(address(this));
+        IProposal _proposalContract = new Proposal(address(this), manager);
         proposal = address(_proposalContract);
         usdcToken.safeTransfer(escrowContract, totalRaised.mul(5).div(100));
     }
@@ -219,5 +220,20 @@ contract Campaign is ICampaign {
      */
     function getContractUSDCBalance() public view returns(uint) {
         return usdcToken.balanceOf(address(this));
+    }
+
+    function realeaseProposalFunds(uint256 _amount) external override {
+        require(msg.sender == proposal, "!Err: Access denied");
+        usdcToken.safeTransfer(manager, _amount);
+    }
+
+    function checkRewardInventory(uint8 rewardIndex) internal view returns (bool) {
+        if (!rewardsList[rewardIndex].isStockLimited) {
+            return true;
+        } else if(rewardsList[rewardIndex].stockLimit > rewardsList[rewardIndex].nbContributors) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

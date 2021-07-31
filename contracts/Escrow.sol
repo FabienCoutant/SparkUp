@@ -27,15 +27,11 @@ contract Escrow is Ownable {
         usdcToken.safeIncreaseAllowance(spender, amount);
     }
     
-    function transferFrom(address sender, address recipient, uint256 amount) external onlyOwner() {
-        usdcToken.safeTransferFrom(sender, recipient, amount);
-    }
-    
     function allowance(address owner, address spender) external view returns (uint256) {
         return usdcToken.allowance(owner, spender);
     }
 
-    function getContractUSDCBalance() public view returns(uint) {
+    function getContractUSDCBalance() external view returns(uint) {
         return usdcToken.balanceOf(address(this));
     }
 }
