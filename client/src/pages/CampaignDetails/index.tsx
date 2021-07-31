@@ -8,7 +8,7 @@ import { NOTIFICATION_TYPE, RENDER_TYPE, WORKFLOW_STATUS } from '../../constants
 import CampaignForm from '../../components/CampaignForm'
 import { reward, rewardActions } from '../../store/Reward/slice'
 import RewardForm from '../../components/RewardForm'
-import { useFetchCampaignInfoAndDispatch, useIsManager } from '../../hooks/useFetchCampaign'
+import { useFetchCampaignInfoAndDispatch, useIsContributor, useIsManager } from '../../hooks/useFetchCampaign'
 import { useContractCampaign } from '../../hooks/useContract'
 import { useActiveWeb3React } from '../../hooks/useWeb3'
 import { useShowLoader } from '../../hooks/useShowLoader'
@@ -27,6 +27,7 @@ const CampaignDetails = () => {
   const rewards = useAppSelector(state => state.reward.rewards)
   const campaign = useAppSelector(state => state.campaign)
   const isManager = useIsManager(campaign.manager)
+  const isContributor = useIsContributor(campaignAddress)
   const showLoader = useShowLoader()
 
   const addNewReward = () => {
@@ -72,6 +73,20 @@ const CampaignDetails = () => {
     }
   }
 
+  const handleContributorRefund=()=>{
+    if(contractCampaign){
+      contractCampaign.methods.refund().send({from:account}).then(()=>{
+        // dispatch(campaignActions.setRefund())
+        dispatch(notificationActions.setNotification({
+          message: 'Your has been successfully refund',
+          type: NOTIFICATION_TYPE.SUCCESS
+        }))
+      }).catch((error:any)=>{
+        console.log(error)
+      });
+    }
+  }
+
   const renderManagerAction = () => {
     if (isManager && campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted) {
       return (
@@ -86,6 +101,19 @@ const CampaignDetails = () => {
               Delete Campaign
             </button>
           </div>
+        </div>
+      )
+    }
+    if (isContributor
+      && campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
+      && campaign.amountRaise <= campaign.info.fundingGoal
+      //&& campaign.info.deadlineDate<= new Date().getTime()
+    ) {
+      return (
+        <div>
+          <button type='button' className='btn btn-info' onClick={handleContributorRefund}>
+            Get Refund
+          </button>
         </div>
       )
     }
@@ -137,12 +165,12 @@ const CampaignDetails = () => {
       <div className='row'>
         {renderManagerAction()}
         <div className='mb-5'>
-        {renderCampaign()}
+          {renderCampaign()}
         </div>
       </div>
       <div className='row row-cols-2'>
         <div className='col-5'>
-          <div className="text-center">
+          <div className='text-center'>
             <h2>Rewards Level</h2>
           </div>
 
@@ -156,10 +184,10 @@ const CampaignDetails = () => {
               }
             )
           }
-      {renderAddRewardButton()}
+          {renderAddRewardButton()}
         </div>
         <div className='col-7'>
-          <div className="text-center">
+          <div className='text-center'>
             <h2>Proposals</h2>
           </div>
         </div>
