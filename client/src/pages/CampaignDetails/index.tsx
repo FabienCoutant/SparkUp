@@ -15,6 +15,7 @@ import { useShowLoader } from '../../hooks/useShowLoader'
 import { Redirect } from 'react-router'
 import { campaignActions } from '../../store/Campaign/slice'
 import { notificationActions } from '../../store/Notification/slice'
+import { userActions } from '../../store/User/slice'
 
 const CampaignDetails = () => {
   const { account } = useActiveWeb3React()
@@ -27,7 +28,7 @@ const CampaignDetails = () => {
   const rewards = useAppSelector(state => state.reward.rewards)
   const campaign = useAppSelector(state => state.campaign)
   const isManager = useIsManager(campaign.manager)
-  const isContributor = useIsContributor(campaignAddress)
+  const { isContributor, contributorBalance } = useIsContributor(campaignAddress)
   const showLoader = useShowLoader()
 
   const addNewReward = () => {
@@ -73,17 +74,17 @@ const CampaignDetails = () => {
     }
   }
 
-  const handleContributorRefund=()=>{
-    if(contractCampaign){
-      contractCampaign.methods.refund().send({from:account}).then(()=>{
-        // dispatch(campaignActions.setRefund())
+  const handleContributorRefund = () => {
+    if (contractCampaign) {
+      contractCampaign.methods.refund().send({ from: account }).then(() => {
+        dispatch(userActions.addBalance({ balance: contributorBalance }))
         dispatch(notificationActions.setNotification({
           message: 'Your has been successfully refund',
           type: NOTIFICATION_TYPE.SUCCESS
         }))
-      }).catch((error:any)=>{
+      }).catch((error: any) => {
         console.log(error)
-      });
+      })
     }
   }
 
@@ -105,9 +106,13 @@ const CampaignDetails = () => {
       )
     }
     if (isContributor
-      && campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
-      && campaign.amountRaise <= campaign.info.fundingGoal
-      //&& campaign.info.deadlineDate<= new Date().getTime()
+      && (
+        (campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
+        && campaign.amountRaise <= campaign.info.fundingGoal
+        //&& campaign.info.deadlineDate<= new Date().getTime()
+        )
+        || campaign.workflowStatus === WORKFLOW_STATUS.FundingFailed
+      )
     ) {
       return (
         <div>

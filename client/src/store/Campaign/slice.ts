@@ -50,6 +50,13 @@ const campaignSlice = createSlice({
       state.info.deadlineDate = serializeTimestampsFor(action.payload.campaignInfo.deadlineDate,false)
       state.confirmed=true
     },
+    addFunding(state,action:PayloadAction<{amount:number}>){
+      console.log(state.amountRaise)
+      state.amountRaise = state.amountRaise as number+action.payload.amount
+    },
+    subFunding(state,action:PayloadAction<{amount:number}>){
+      state.amountRaise = state.amountRaise as number-action.payload.amount
+    },
     resetState : () => initialState,
   }
 })

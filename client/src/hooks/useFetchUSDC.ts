@@ -2,6 +2,8 @@ import {  useContractUSDC } from './useContract'
 import { useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { serializeUSDCFor } from '../utils/serializeValue'
+import { useDispatch } from 'react-redux'
+import { userActions } from '../store/User/slice'
 
 
 export const useFetchUserAllowance = (address: string) => {
@@ -19,4 +21,22 @@ export const useFetchUserAllowance = (address: string) => {
     }, [contractUSDC, chainId, library, account,address]
   )
   return allowanceAmount
+}
+
+export const useFetchUserBalance = () => {
+  const dispatch = useDispatch();
+  const { library, chainId, account } = useWeb3React()
+  const contractUSDC = useContractUSDC();
+  useEffect(() => {
+      const fetchUSDCBalance = async () => {
+        if (contractUSDC && chainId && library) {
+          const amount:number = await contractUSDC?.methods?.balanceOf(account).call()
+          console.log(amount)
+          const balance = serializeUSDCFor(amount,false) as number;
+          dispatch(userActions.setBalance({balance}))
+        }
+      }
+    fetchUSDCBalance()
+    }, [contractUSDC, chainId, library, account]
+  )
 }
