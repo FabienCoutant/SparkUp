@@ -9,9 +9,15 @@ const USDC_CONTRACTS = {
 
 module.exports = async (deployer, network, accounts) => {
   let addressUSDC;
+<<<<<<< HEAD
   if (network === 'development' || network === 'soliditycoverage' || network === 'coverage') {
     await deployer.deploy(TestUSDC, accounts[1]);
+=======
+  if (network === 'development' || network === 'soliditycoverage') {
+    await deployer.deploy(TestUSDC, accounts[0]);
+>>>>>>> feat: allow user to approve and contribute
     const TUSDC = await TestUSDC.deployed();
+    console.log("TUSDC address : ", TUSDC.address)
     addressUSDC = TUSDC.address;
   } else {
     console.log('network :', network);

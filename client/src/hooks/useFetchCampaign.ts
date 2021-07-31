@@ -44,13 +44,17 @@ export const useFetchCampaignInfo = (address: string) => {
         const fetchCampaign = async () => {
           if (contractCampaign && chainId && library) {
             const res = await contractCampaign?.methods?.getCampaignInfo().call()
-            const _amountRaise = await contractCampaign?.methods?.getContractUSDCBalance().call()
+            const balance= await contractCampaign?.methods?.getContractUSDCBalance().call()
+            if(res[3].workflowStatus===1){
+              res[4] = balance
+            }
             setCampaignInfo({
               info: serializeCampaignInfo(res[0]),
               createAt: serializeTimestampsFor(res[1], false),
               manager: res[2],
               workflowStatus: parseInt(res[3]),
-              amountRaise: serializeUSDCFor(_amountRaise,false),
+              amountRaise: serializeUSDCFor(res[4],false),
+              currentBalance: serializeUSDCFor(balance,false),
               onChain: true,
               confirmed: true
             })
@@ -71,13 +75,17 @@ export const useFetchCampaignInfoAndDispatch=(address:string)=>{
       const fetchCampaign = async () => {
         if (contractCampaign && chainId && library) {
           const res = await contractCampaign?.methods?.getCampaignInfo().call()
-          const _amountRaise = await contractCampaign?.methods?.getContractUSDCBalance().call()
+          const balance= await contractCampaign?.methods?.getContractUSDCBalance().call()
+          if(res[3]==="1"){
+            res[4] = balance
+          }
           dispatch(campaignActions.setCampaign({
             info: serializeCampaignInfo(res[0]),
             createAt: serializeTimestampsFor(res[1], false),
             manager: res[2],
             workflowStatus: parseInt(res[3]),
-            amountRaise: serializeUSDCFor(_amountRaise,false),
+            amountRaise: serializeUSDCFor(res[4],false),
+            currentBalance: serializeUSDCFor(balance,false),
             onChain: true,
             confirmed: true
           }))

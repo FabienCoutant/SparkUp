@@ -28,6 +28,7 @@ export interface campaignState {
   onChain: boolean,
   confirmed: boolean,
   amountRaise: number | string,
+  currentBalance: number | string,
   workflowStatus: WORKFLOW_STATUS,
 
 }

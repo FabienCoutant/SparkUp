@@ -88,7 +88,7 @@ const CampaignCard = ({ address }: { address: string }) => {
           {campaign.info.fundingGoal} USDC
         </p>
         <p className='card-text mb-3' id='campaignAmountRaised'>
-          Amount raised : {' '}
+          Amount raised : {renderCampaignProgressGoal()} USDC{' '}
 
           <span className='progress'>
             <span
@@ -97,8 +97,8 @@ const CampaignCard = ({ address }: { address: string }) => {
               aria-valuenow={renderCampaignProgressGoal()}
               aria-valuemin={0}
               aria-valuemax={100}
-              style={{ width: renderCampaignProgressGoal().toString() }}
-            >`${renderCampaignProgressGoal()} %`
+              style={{ width: `${renderCampaignProgressGoal().toString()}%` }}
+            >{renderCampaignProgressGoal()} %
             </span>
           </span>
         </p>

@@ -48,6 +48,10 @@ const rewardSlice = createSlice({
         state.rewards.push(reward)
       }
     },
+    addContribution(state,action:PayloadAction<{amount:number,id:number}>){
+      state.rewards[action.payload.id].nbContributors ++
+      state.rewards[action.payload.id].amount=state.rewards[action.payload.id].amount as number +action.payload.amount
+    },
     resetState:()=>initialState,
   }
 })

@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
 import {useContractUSDC} from '../../hooks/useContract';
 import {NOTIFICATION_TYPE} from "../../constants";
 import PlusSquareFill from '../../assets/images/PlusSquareFill'
+import { serializeUSDCFor } from '../../utils/serializeValue'
 
 const Header = () => {
     const dispatch = useAppDispatch();
@@ -16,11 +17,11 @@ const Header = () => {
 
     useEffect(() => {
         const getBalance = async () => {
-            const balance = await contractUSDC!.methods.balanceOf(account).call();
-            const truncatedBalance = (parseInt(balance) / 1e6).toFixed(2);
-            setBalanceUSDC(truncatedBalance);
+            const balance:number = await contractUSDC!.methods.balanceOf(account).call();
+            const convert = serializeUSDCFor(balance,false).toString()
+            setBalanceUSDC(convert);
         };
-        if (chainId && chainId !== 1337) {
+        if (chainId) {
             getBalance();
         }
     }, [account, chainId, contractUSDC]);
