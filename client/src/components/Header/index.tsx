@@ -18,7 +18,7 @@ const Header = () => {
     useEffect(() => {
         const getBalance = async () => {
             const balance:number = await contractUSDC!.methods.balanceOf(account).call();
-            const convert = serializeUSDCFor(balance,false).toString()
+            const convert = (serializeUSDCFor(balance,false)as number).toFixed(2)
             setBalanceUSDC(convert);
         };
         if (chainId) {
