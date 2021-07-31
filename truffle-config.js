@@ -36,6 +36,7 @@ module.exports = {
     reporterOptions: {
       excludeContracts: ['Migrations'],
     },
+    enableTimeouts: false,
   },
   compilers: {
     solc: {

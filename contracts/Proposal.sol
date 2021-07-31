@@ -8,19 +8,18 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 contract Proposal is IProposal {
     using SafeMath for uint256;
     
-    
     address public immutable campaignAddress;
     address public campaignManager;
-    uint proposalCounter;
+    uint16 public proposalCounter;
     Campaign campaignContract;
     
-    mapping(uint => Proposal) proposals;
-    mapping(address => bool) hasVoted;
+    mapping(uint => Proposal) public proposals;
+    mapping(address => bool) public hasVoted;
     
-    constructor(address _campaignAddress) {
+    constructor(address _campaignAddress, address _manager) {
         campaignAddress = _campaignAddress;
         campaignContract = Campaign(_campaignAddress);
-        campaignManager = Campaign(_campaignAddress).manager();
+        campaignManager = _manager;
     }
     
     modifier isContributor() {
@@ -42,7 +41,7 @@ contract Proposal is IProposal {
     }
     
     modifier checkProposalDeadline(uint256 proposalId) {
-        require(block.timestamp < proposals[proposalId].deadline, "!Err: propsal voting has ended");
+        require(block.timestamp < proposals[proposalId].deadline, "!Err: proposal voting has ended");
         _;
     }
     
@@ -50,9 +49,10 @@ contract Proposal is IProposal {
      * @inheritdoc IProposal
      */
     function createProposal(string memory _title, string memory _description, uint _amount ) external override onlyManager() checkStatus(proposalCounter, WorkflowStatus.Pending) {
-        require(proposalCounter < 6, "!Err: Maximum amount of proposal reached");
+        require(proposalCounter < 5, "!Err: Maximum amount of proposal reached");
         require(bytes(_title).length > 0, "!Err: Title empty");
         require(bytes(_description).length > 0, "!Err: Description empty");
+        require(_amount > 100 ether, "!Err: Amount too low");
         require(_amount <= _getCampaignUSDCBalance(), "!Err: Proposal amount exceeds campaign USDC balance");
         Proposal memory p;
         p.id = proposalCounter;
@@ -74,6 +74,7 @@ contract Proposal is IProposal {
             proposals[proposalId] = proposals[proposalCounter - 1];
             delete proposals[proposalCounter -1];
         }
+        proposalCounter--;
     }
     
     /**
@@ -84,13 +85,16 @@ contract Proposal is IProposal {
         proposals[proposalId].deadline = block.timestamp + 7 days;
     }
     
+    /**
+     * @inheritdoc IProposal
+     */
     function voteProposal(uint256 proposalId, bool vote) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) checkProposalDeadline(proposalId) isContributor() {
         require(!hasVoted[msg.sender], "!Err: Already voted");
         uint contributorVotes = campaignContract.contributorBalances(msg.sender);
         if (vote) {
-            proposals[proposalId].okvotes = proposals[proposalId].okvotes.add(contributorVotes);
+            proposals[proposalId].okVotes = proposals[proposalId].okVotes.add(contributorVotes);
         } else if (!vote) {
-            proposals[proposalId].nokvotes = proposals[proposalId].okvotes.add(contributorVotes);  
+            proposals[proposalId].nokVotes = proposals[proposalId].nokVotes.add(contributorVotes);  
         }
         hasVoted[msg.sender] = true;
     }
@@ -98,21 +102,18 @@ contract Proposal is IProposal {
     /**
      * @inheritdoc IProposal
      */
-    function getResults(uint256 proposalId) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) returns(uint8){
-        require(block.timestamp > proposals[proposalId].deadline, "!Err: voting still ongoing");
+    function getResults(uint256 proposalId) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted){
+        require(block.timestamp > proposals[proposalId].deadline, "!Err: Voting still ongoing");
         proposals[proposalId].status = WorkflowStatus.VotesTallied;
-        if (proposals[proposalId].okvotes > proposals[proposalId].nokvotes) {
-            return 1;
+        if (proposals[proposalId].okVotes > proposals[proposalId].nokVotes) {
+            proposals[proposalId].accepted = true;
+            campaignContract.realeaseProposalFunds(proposals[proposalId].amount);
         } else {
-            return 0;
+            proposals[proposalId].accepted = false;
         }
     }
     
     function _getCampaignUSDCBalance() internal view returns (uint256) {
         return campaignContract.getContractUSDCBalance();
-    }
-    
-    function _getAllowance() internal view returns (uint256) {
-        return Campaign(campaignAddress).usdcToken().allowance(msg.sender, campaignAddress);
     }
 }
