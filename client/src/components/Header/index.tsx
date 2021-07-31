@@ -16,7 +16,7 @@ const Header = () => {
     const user = useAppSelector(state => state.user)
     useEffect(() => {
         const getBalance = async () => {
-            setBalanceUSDC(user.balance.toFixed(2));
+            setBalanceUSDC(user.balance.toString());
         };
         if (chainId) {
             getBalance();

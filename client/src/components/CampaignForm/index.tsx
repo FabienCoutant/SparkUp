@@ -104,10 +104,10 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
             type: NOTIFICATION_TYPE.ALERT
           })
         )
-      } else if (fundingGoal === undefined || fundingGoal < 10000) {
+      } else if (fundingGoal === undefined || fundingGoal < 1000) {
         dispatch(
           notificationActions.setNotification({
-            message: 'Your funding goal must be at least 10 000 USDC!',
+            message: 'Your funding goal must be at least 1000 USDC!',
             type: NOTIFICATION_TYPE.ALERT
           })
         )

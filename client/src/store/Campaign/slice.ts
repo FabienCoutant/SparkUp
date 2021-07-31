@@ -8,7 +8,7 @@ export const initialState: campaignState = {
   info: {
     title: '',
     description: '',
-    fundingGoal: 10000,
+    fundingGoal: 1000,
     deadlineDate: new Date().setDate(new Date().getDate() + 7)
   },
   confirmed: false,
