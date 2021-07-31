@@ -9,7 +9,8 @@ import { serializeUSDCFor } from '../../utils/serializeValue'
 import { rewardActions } from '../../store/Reward/slice'
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
-
+import { userActions } from '../../store/User/slice'
+import { campaignActions } from '../../store/Campaign/slice'
 
 const ContributeForm = ({ id }: { id: number }) => {
   const dispatch = useAppDispatch()
@@ -26,6 +27,7 @@ const ContributeForm = ({ id }: { id: number }) => {
   useEffect(()=>{
     setAmountApproved(allowanceAmount)
   },[allowanceAmount])
+
   const handleContribution = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     if(contributionAmount<rewards[id].minimumContribution){
@@ -40,11 +42,15 @@ const ContributeForm = ({ id }: { id: number }) => {
     if(amountApproved>= contributionAmount){
       contractCampaign?.methods?.contribute(serializeUSDCFor(contributionAmount,true),id).send({from:account})
         .then(()=>{
-          dispatch(rewardActions.addContribution({amount:contributionAmount as number,id}))
+          const amount = contributionAmount as number
+          dispatch(rewardActions.addContribution({amount,id}))
+          dispatch(userActions.subBalance({balance:amount}))
+          dispatch(campaignActions.addFunding({amount:amount}))
           dispatch(notificationActions.setNotification(({
             message: `Contribution succeed`,
             type:NOTIFICATION_TYPE.SUCCESS
           })))
+          setAmountApproved(amountApproved-amount);
         }).catch((error:any)=>console.log(error))
     }else{
       const amount = serializeUSDCFor(contributionAmount,true)
@@ -61,7 +67,7 @@ const ContributeForm = ({ id }: { id: number }) => {
 
 
   const renderContributeButton = () => {
-    if (allowanceAmount>=contributionAmount) {
+    if (amountApproved>=contributionAmount) {
       return (
         <button type='submit' className='btn btn-success'>Contribute</button>
       )

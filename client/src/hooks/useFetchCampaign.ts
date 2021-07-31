@@ -34,22 +34,25 @@ export const useIsManager = (campaignManager: string): boolean => {
   const { account } = useWeb3React()
   return campaignManager === account
 }
-export const useIsContributor = (address: string): boolean => {
+
+export const useIsContributor = (address: string): { isContributor:boolean,contributorBalance:number } => {
   const { account, library, chainId } = useWeb3React()
   const contractCampaign = useContractCampaign(address)
   const [isContributor, setIsContributor] = useState(false)
+  const [contributorBalance, setContributorBalance] = useState(0)
   useEffect(() => {
     const fetchContributorBalance = async () => {
       if (contractCampaign && chainId && library) {
-        const contributorBalance: number = await contractCampaign.methods.contributorBalances(account).call()
-        if (contributorBalance > 0) {
+        const balance: number = await contractCampaign.methods.contributorBalances(account).call()
+        if (balance > 0) {
+          setContributorBalance(balance)
           setIsContributor(true)
         }
       }
     }
     fetchContributorBalance()
   }, [account, library, chainId, contractCampaign])
-  return isContributor
+  return { isContributor,contributorBalance }
 }
 
 export const useFetchCampaignInfo = (address: string) => {

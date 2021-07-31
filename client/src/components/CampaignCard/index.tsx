@@ -22,7 +22,7 @@ const CampaignCard = ({ address }: { address: string }) => {
   const renderCampaignProgressGoal = () => {
     const amountRaise = typeof campaign.amountRaise ==="string"?parseInt(campaign.amountRaise):campaign.amountRaise;
     const fundingGoal = typeof campaign.info.fundingGoal ==="string"?parseInt(campaign.info.fundingGoal):campaign.info.fundingGoal;
-    return (amountRaise / fundingGoal) * 1000
+    return (amountRaise / fundingGoal) * 100
   }
 
   const renderManagerAction = () => {
@@ -59,10 +59,19 @@ const CampaignCard = ({ address }: { address: string }) => {
     <div className='card mb-3 mt-3 '>
       <div className='card-header text-center bg-secondary fw-bold'>
         Title : {campaign.info.title}<br/>
-        {campaign.workflowStatus !== WORKFLOW_STATUS.CampaignDrafted && `Creator : ${campaign.manager}`}
-        {campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && `Draft`}
+        {campaign.workflowStatus !== WORKFLOW_STATUS.CampaignDrafted && `Publish : You can contribute`}
+        {campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && `Draft : Only you can see it`}
+        {campaign.workflowStatus === WORKFLOW_STATUS.CampaignCompleted && `Funding succeeded : You can participate to the proposal vote`}
+        {campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && `Funding failed : You can ask for refund if you are a contributor`}
       </div>
       <div className='card-body'>
+        <h6
+          className='card-subtitle mb-2'
+          id='manager'
+        >
+          Campaign create by :{' '}
+          {campaign.manager}
+        </h6>
         <h6
           className='card-subtitle mb-2'
           id='campaignDeadline'
@@ -88,7 +97,7 @@ const CampaignCard = ({ address }: { address: string }) => {
           {campaign.info.fundingGoal} USDC
         </p>
         <p className='card-text mb-3' id='campaignAmountRaised'>
-          Amount raised : {renderCampaignProgressGoal()} USDC{' '}
+          Amount raised : {campaign.amountRaise} USDC{' '}
 
           <span className='progress'>
             <span
@@ -97,8 +106,8 @@ const CampaignCard = ({ address }: { address: string }) => {
               aria-valuenow={renderCampaignProgressGoal()}
               aria-valuemin={0}
               aria-valuemax={100}
-              style={{ width: `${renderCampaignProgressGoal().toString()}%` }}
-            >{renderCampaignProgressGoal()} %
+              style={{ width: `${renderCampaignProgressGoal().toFixed(2)}%` }}
+            >{renderCampaignProgressGoal().toFixed(2)} %
             </span>
           </span>
         </p>
