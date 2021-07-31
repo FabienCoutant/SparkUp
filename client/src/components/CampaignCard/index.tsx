@@ -89,7 +89,6 @@ const CampaignCard = ({ address }: { address: string }) => {
         </p>
         <p className='card-text mb-3' id='campaignAmountRaised'>
           Amount raised : {renderCampaignProgressGoal()} USDC{' '}
-
           <span className='progress'>
             <span
               className='progress-bar progress-bar-striped progress-bar-animated'
