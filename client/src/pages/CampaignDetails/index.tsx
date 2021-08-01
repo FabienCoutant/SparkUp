@@ -4,7 +4,7 @@ import RewardCard from '../../components/RewardCard'
 import CampaignCard from '../../components/CampaignCard'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import Loader from '../../components/Loader'
-import { NOTIFICATION_TYPE, RENDER_TYPE, WORKFLOW_STATUS } from '../../constants'
+import { NOTIFICATION_TYPE, RENDER_TYPE, WORKFLOW_STATUS, ZERO_ADDRESS } from '../../constants'
 import CampaignForm from '../../components/CampaignForm'
 import { reward, rewardActions } from '../../store/Reward/slice'
 import RewardForm from '../../components/RewardForm'
@@ -17,6 +17,8 @@ import { campaignActions } from '../../store/Campaign/slice'
 import { notificationActions } from '../../store/Notification/slice'
 import { userActions } from '../../store/User/slice'
 import { useFetchProposalsList } from '../../hooks/useFetchProposals'
+import { proposal } from '../../store/Proposal/slice'
+import ProposalCard from '../../components/ProposalCard'
 
 const CampaignDetails = () => {
   const { account } = useActiveWeb3React()
@@ -29,6 +31,7 @@ const CampaignDetails = () => {
   const campaign = useAppSelector(state => state.campaign)
   const rewards = useAppSelector(state => state.reward.rewards)
   const proposals = useAppSelector(state => state.proposal.proposals)
+  useFetchProposalsList(campaign.proposalAddress)
   const isManager = useIsManager(campaign.manager)
   const { isContributor, contributorBalance } = useIsContributor(campaignAddress)
   const showLoader = useShowLoader()
@@ -90,6 +93,22 @@ const CampaignDetails = () => {
     }
   }
 
+  const handleLaunchProposal =()=>{
+    if (contractCampaign && isManager) {
+      contractCampaign.methods.launchProposalContract().send({ from: account }).then(() => {
+        contractCampaign.methods.proposal().call().then((res:any)=>{
+          console.log(res)
+        })
+        dispatch(notificationActions.setNotification({
+          message: 'Your has been successfully launch the proposal part',
+          type: NOTIFICATION_TYPE.SUCCESS
+        }))
+      }).catch((error: any) => {
+        console.log(error)
+      })
+    }
+  }
+
   const renderManagerAction = () => {
     if (isManager && campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted) {
       return (
@@ -124,6 +143,18 @@ const CampaignDetails = () => {
         </div>
       )
     }
+    if(isManager
+    && campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
+      //&& campaign.info.deadlineDate <= new Date().getTime()
+    ){
+      return (
+        <div>
+          <button type='button' className='btn btn-info' onClick={handleLaunchProposal}>
+            Start Proposals
+          </button>
+        </div>
+      )
+    }
   }
 
   const renderCampaign = () => {
@@ -146,6 +177,12 @@ const CampaignDetails = () => {
     }
   }
 
+  const renderProposal = (proposal:proposal,index:number) => {
+    if(proposal.confirmed){
+      return <ProposalCard id={index} renderType={RENDER_TYPE.DETAIL}/>
+    }
+  }
+  console.log(campaign.proposalAddress)
   const renderAddRewardButton = () => {
     if (isManager && campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted) {
       return (
@@ -196,6 +233,16 @@ const CampaignDetails = () => {
         <div className='col-7'>
           <div className='text-center'>
             <h2>Proposals</h2>
+            {campaign.proposalAddress!==ZERO_ADDRESS &&
+              proposals.map((proposal, index) => {
+                  return (
+                    <div className='card mb-3 mt-3' key={index}>
+                      {renderProposal(proposal, index)}
+                    </div>
+                  )
+                }
+              )
+            }
           </div>
         </div>
       </div>
