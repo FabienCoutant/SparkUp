@@ -62,5 +62,4 @@ interface IProposal {
      * @dev can only be called only if proposal deadline is passed
      */
     function getResults(uint8 proposalId) external;
-    
 }

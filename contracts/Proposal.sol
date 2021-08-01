@@ -12,7 +12,7 @@ contract Proposal is IProposal {
     address public campaignManager;
 
     Campaign campaignContract;
-    
+
     mapping(uint8 => Proposal) public proposals;
     mapping(address => bool) public hasVoted;
     
@@ -115,8 +115,8 @@ contract Proposal is IProposal {
             proposals[proposalId].accepted = false;
         }
     }
-    
+
     function _getCampaignUSDCBalance() internal view returns (uint256) {
         return campaignContract.getContractUSDCBalance();
     }
-} 
+}
