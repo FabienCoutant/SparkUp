@@ -75,8 +75,8 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function getCampaignInfo() external view override isNotDeleted() returns(Info memory, uint, address, WorkflowStatus, uint256) {
-        return (campaignInfo, createAt, manager, status, totalRaised);
+    function getCampaignInfo() external view override isNotDeleted() returns(Info memory, uint, address, WorkflowStatus, uint256, address) {
+        return (campaignInfo, createAt, manager, status, totalRaised, proposal);
     }
 
     /**
@@ -209,9 +209,9 @@ contract Campaign is ICampaign {
     function launchProposalContract() external override onlyManager() isNotDeleted() checkStatus(status, WorkflowStatus.FundingComplete) {
         require(proposal == address(0), "!Err: proposal already deployed");
         require(block.timestamp > campaignInfo.deadlineDate, "!Err: campgaign deadaline not passed");
+        usdcToken.safeTransfer(escrowContract, totalRaised.mul(5).div(100));
         IProposal _proposalContract = new Proposal(address(this), manager);
         proposal = address(_proposalContract);
-        usdcToken.safeTransfer(escrowContract, totalRaised.mul(5).div(100));
     }
 
     /**

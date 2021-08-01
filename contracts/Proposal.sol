@@ -11,6 +11,7 @@ contract Proposal is IProposal {
     address public immutable campaignAddress;
     address public campaignManager;
     uint16 public proposalCounter;
+    uint256 public availableFunds;
     Campaign campaignContract;
     
     mapping(uint => Proposal) public proposals;
@@ -20,6 +21,7 @@ contract Proposal is IProposal {
         campaignAddress = _campaignAddress;
         campaignContract = Campaign(_campaignAddress);
         campaignManager = _manager;
+        availableFunds = _getCampaignUSDCBalance();
     }
     
     modifier isContributor() {
@@ -53,7 +55,7 @@ contract Proposal is IProposal {
         require(bytes(_title).length > 0, "!Err: Title empty");
         require(bytes(_description).length > 0, "!Err: Description empty");
         require(_amount > 100 ether, "!Err: Amount too low");
-        require(_amount <= _getCampaignUSDCBalance(), "!Err: Proposal amount exceeds campaign USDC balance");
+        require(_amount <= availableFunds, "!Err: Proposal amount exceeds campaign USDC balance");
         Proposal memory p;
         p.id = proposalCounter;
         p.title = _title;
@@ -62,12 +64,14 @@ contract Proposal is IProposal {
         p.status = WorkflowStatus.Registered;
         proposals[proposalCounter] = p;
         proposalCounter++;
+        availableFunds = availableFunds.sub(_amount);
     }
     
     /**
      * @inheritdoc IProposal
      */
     function deleteProposal(uint256 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered) {
+        availableFunds = availableFunds.add(proposals[proposalId].amount);
         if (proposalId == proposalCounter - 1) {
             delete  proposals[proposalId];
         } else {
@@ -116,4 +120,4 @@ contract Proposal is IProposal {
     function _getCampaignUSDCBalance() internal view returns (uint256) {
         return campaignContract.getContractUSDCBalance();
     }
-}
+} 

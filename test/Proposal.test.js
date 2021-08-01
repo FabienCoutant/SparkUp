@@ -92,6 +92,7 @@ contract('Proposal', (accounts) => {
 
   describe('--- Create Proposal ---', async () => {
     it('should allow manager to create proposal on correct workflow', async () => {
+      const availableFundsBeforeProposal = await ProposalContractInstance.availableFunds();
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
@@ -102,6 +103,9 @@ contract('Proposal', (accounts) => {
       expect(newProposal.description).to.be.equal(proposal.description);
       expect(newProposal.amount).to.be.bignumber.equal(new BN(proposal.amount));
       expect(newProposal.status).to.be.bignumber.equal(new BN(1));
+      const availableFundsAfterProposal = await ProposalContractInstance.availableFunds();
+      const availableFundsDiff = availableFundsBeforeProposal.sub(availableFundsAfterProposal);
+      expect(availableFundsDiff).to.be.bignumber.equal(new BN(proposal.amount));
     });
     it('should revert if title is empty', async () => {
       await expectRevert(
@@ -177,6 +181,9 @@ contract('Proposal', (accounts) => {
       expect(deletedProposal.title).to.be.equal('');
       const proposalCounter = await ProposalContractInstance.proposalCounter();
       expect(proposalCounter).to.be.bignumber.equal(new BN(0));
+      const availableFunds = await ProposalContractInstance.availableFunds();
+      const contractBalance = await CampaignContractInstance.getContractUSDCBalance();
+      expect(availableFunds).to.be.bignumber.equal(contractBalance);
     });
     it('should allow campaignManager to delete first proposal if workflow status is Registered', async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {

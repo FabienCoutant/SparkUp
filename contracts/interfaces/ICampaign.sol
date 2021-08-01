@@ -37,7 +37,7 @@ interface ICampaign {
     /**
      * @notice Returns the campaign information in the struct Info plus de createAt and the managerAddress.
      */
-    function getCampaignInfo() external returns(Info memory, uint, address, WorkflowStatus, uint256);
+    function getCampaignInfo() external returns(Info memory, uint, address, WorkflowStatus, uint256, address);
 
     /**
      * @notice Update the campaign information in the struct Info.
