@@ -16,6 +16,7 @@ import { Redirect } from 'react-router'
 import { campaignActions } from '../../store/Campaign/slice'
 import { notificationActions } from '../../store/Notification/slice'
 import { userActions } from '../../store/User/slice'
+import { useFetchProposalsList } from '../../hooks/useFetchProposals'
 
 const CampaignDetails = () => {
   const { account } = useActiveWeb3React()
@@ -25,8 +26,9 @@ const CampaignDetails = () => {
   useFetchCampaignInfoAndDispatch(campaignAddress)
   useFetchRewardsList(campaignAddress)
   const contractCampaign = useContractCampaign(campaignAddress)
-  const rewards = useAppSelector(state => state.reward.rewards)
   const campaign = useAppSelector(state => state.campaign)
+  const rewards = useAppSelector(state => state.reward.rewards)
+  const proposals = useAppSelector(state => state.proposal.proposals)
   const isManager = useIsManager(campaign.manager)
   const { isContributor, contributorBalance } = useIsContributor(campaignAddress)
   const showLoader = useShowLoader()

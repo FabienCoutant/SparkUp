@@ -18,7 +18,7 @@ const initialState: proposalState = {
       amount: 0,
       okVotes:0,
       nokVotes:0,
-      WorkflowsStatus:PROPOSAL_WORKFLOW_STATUS.Pending,
+      status:PROPOSAL_WORKFLOW_STATUS.Pending,
       deadLine: new Date().setDate(new Date().getDate() + 7),
       accepted: false,
       onChain:false,

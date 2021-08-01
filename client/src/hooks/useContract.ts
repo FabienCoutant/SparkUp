@@ -6,6 +6,9 @@ import USDC from '../contracts/external/USDC.json';
 import TUSDC from "../contracts/internal/TestUSDC.json"
 import CampaignFactory from '../contracts/internal/CampaignFactory.json';
 import Campaign from '../contracts/internal/Campaign.json';
+import Proposal from "../contracts/internal/Proposal.json"
+import { useParams } from 'react-router-dom'
+import { ZERO_ADDRESS } from '../constants'
 
 export const useContractUSDC = () => {
   const { library, chainId } = useWeb3React();
@@ -46,6 +49,23 @@ export const useContractCampaign = (address: string | null) => {
     if (!library || !chainId) return null;
     try {
       return getContractByAddress(Campaign, library, address);
+    } catch (error) {
+      console.error('Failed to get contract', error);
+      return null;
+    }
+  }, [chainId, library, address]);
+};
+
+
+export const useContractProposal = (address: string | null) => {
+  const { library, chainId } = useActiveWeb3React();
+  return useMemo(() => {
+    if (!address || address===ZERO_ADDRESS) {
+      return null;
+    }
+    if (!library || !chainId) return null;
+    try {
+      return getContractByAddress(Proposal, library, address);
     } catch (error) {
       console.error('Failed to get contract', error);
       return null;

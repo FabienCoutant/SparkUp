@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { campaignState, Info, WORKFLOW_STATUS } from '../../constants'
+import { campaignState, Info, WORKFLOW_STATUS, ZERO_ADDRESS } from '../../constants'
 import { serializeTimestampsFor } from '../../utils/dateHelper'
 import { serializeUSDCFor } from '../../utils/serializeValue'
 
@@ -17,7 +17,8 @@ export const initialState: campaignState = {
   createAt: new Date().getTime(),
   amountRaise: 0,
   currentBalance:0,
-  workflowStatus: WORKFLOW_STATUS.CampaignDrafted
+  workflowStatus: WORKFLOW_STATUS.CampaignDrafted,
+  proposalAddress: ZERO_ADDRESS
 }
 
 const campaignSlice = createSlice({
@@ -36,6 +37,7 @@ const campaignSlice = createSlice({
       state.amountRaise = action.payload.amountRaise
       state.currentBalance = action.payload.currentBalance
       state.workflowStatus = action.payload.workflowStatus
+      state.proposalAddress=action.payload.proposalAddress
     },
     setConfirmed(state, action: PayloadAction<{ confirmed: boolean }>) {
       state.confirmed = action.payload.confirmed
