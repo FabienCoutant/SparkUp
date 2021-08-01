@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Campaign is ICampaign {
     using SafeERC20 for IERC20;
-    
+
     IERC20 public immutable usdcToken;
 
     uint8 public rewardsCounter;
@@ -48,7 +48,7 @@ contract Campaign is ICampaign {
         require(currentStatus == requiredStatus, "!Err : Wrong workflow status");
         _;
     }
-    
+
     modifier checkCampaignDeadline() {
         require(block.timestamp <  campaignInfo.deadlineDate, "!Err : Campaign contribution has ended");
         _;
@@ -171,7 +171,7 @@ contract Campaign is ICampaign {
         require(minDate >= block.timestamp, "!Err: deadlineDate to short");
         status = WorkflowStatus.CampaignPublished;
     }
-    
+
     /**
      * @inheritdoc ICampaign
      */
@@ -198,7 +198,7 @@ contract Campaign is ICampaign {
         if (status == WorkflowStatus.CampaignPublished) {
             status = WorkflowStatus.FundingFailed;
         }
-        uint256 _balance = contributorBalances[msg.sender];
+        uint128 _balance = contributorBalances[msg.sender];
         delete contributorBalances[msg.sender];
         usdcToken.safeTransfer(msg.sender, _balance);
     }
@@ -208,10 +208,18 @@ contract Campaign is ICampaign {
      */
     function launchProposalContract() external override onlyManager() isNotDeleted() checkStatus(status, WorkflowStatus.FundingComplete) {
         require(proposal == address(0), "!Err: proposal already deployed");
-        require(block.timestamp > campaignInfo.deadlineDate, "!Err: campgaign deadaline not passed");
+        require(block.timestamp > campaignInfo.deadlineDate, "!Err: campaign deadline not passed");
         usdcToken.safeTransfer(escrowContract, totalRaised*5/100);
         IProposal _proposalContract = new Proposal(address(this), manager);
         proposal = address(_proposalContract);
+    }
+
+    /**
+     * @inheritdoc ICampaign
+     */
+    function releaseProposalFunds(uint128 _amount) external override {
+        require(msg.sender == proposal, "!Err: Access denied");
+        usdcToken.safeTransfer(manager, _amount);
     }
 
     /**
@@ -222,10 +230,6 @@ contract Campaign is ICampaign {
         return uint128(usdcToken.balanceOf(address(this)));
     }
 
-    function realeaseProposalFunds(uint128 _amount) external override {
-        require(msg.sender == proposal, "!Err: Access denied");
-        usdcToken.safeTransfer(manager, _amount);
-    }
 
     function checkRewardInventory(uint8 rewardIndex) internal view returns (bool) {
         if (!rewardsList[rewardIndex].isStockLimited) {

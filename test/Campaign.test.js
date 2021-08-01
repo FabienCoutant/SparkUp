@@ -576,7 +576,7 @@ contract('Campaign', (accounts) => {
     it('should revert if campaignDeadline not passed', async () => {
       await expectRevert(
         CampaignContractInstance.launchProposalContract({ from: alice }),
-        '!Err: campgaign deadaline not passed'
+        '!Err: campaign deadline not passed'
       );
     });
     it('should revert if proposal contract already deployed', async () => {
@@ -632,7 +632,7 @@ contract('Campaign', (accounts) => {
     });
     it('should revert if called by other than proposal contract', async () => {
       await expectRevert(
-        CampaignContractInstance.realeaseProposalFunds(proposal.amount, { from: alice }),
+        CampaignContractInstance.releaseProposalFunds(proposal.amount, { from: alice }),
         '!Err: Access denied'
       );
     });

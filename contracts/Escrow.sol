@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Escrow is Ownable {
 
     using SafeERC20 for IERC20;
-    
+
     IERC20 public immutable usdcToken;
 
     constructor(address _usdcToken){
@@ -26,7 +26,7 @@ contract Escrow is Ownable {
     function approve(address spender, uint256 amount) external onlyOwner() {
         usdcToken.safeIncreaseAllowance(spender, amount);
     }
-    
+
     function allowance(address owner, address spender) external view returns (uint256) {
         return usdcToken.allowance(owner, spender);
     }
