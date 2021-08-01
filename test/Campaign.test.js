@@ -632,7 +632,7 @@ contract('Campaign', (accounts) => {
     });
     it('should revert if called by other than proposal contract', async () => {
       await expectRevert(
-        CampaignContractInstance.realeaseProposalFunds(proposal.amount, { from: alice }),
+        CampaignContractInstance.releaseProposalFunds(proposal.amount, { from: alice }),
         '!Err: Access denied'
       );
     });
