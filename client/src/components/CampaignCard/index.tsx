@@ -59,10 +59,10 @@ const CampaignCard = ({ address }: { address: string }) => {
     <div className='card mb-3 mt-3 '>
       <div className='card-header text-center bg-secondary fw-bold'>
         Title : {campaign.info.title}<br/>
-        {campaign.workflowStatus !== WORKFLOW_STATUS.CampaignDrafted && `Publish : You can contribute`}
+        {campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished && `Publish : You can contribute`}
         {campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && `Draft : Only you can see it`}
-        {campaign.workflowStatus === WORKFLOW_STATUS.CampaignCompleted && `Funding succeeded : You can participate to the proposal vote`}
-        {campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && `Funding failed : You can ask for refund if you are a contributor`}
+        {campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete && `Funding succeeded : You can participate to the proposal vote`}
+        {campaign.workflowStatus === WORKFLOW_STATUS.FundingFailed && `Funding failed : You can ask for refund if you are a contributor`}
       </div>
       <div className='card-body'>
         <h6

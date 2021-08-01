@@ -38,6 +38,7 @@ const ContributeForm = ({ id }: { id: number }) => {
           type: NOTIFICATION_TYPE.ALERT
         })
       )
+      return
     }
     if(amountApproved>= contributionAmount){
       contractCampaign?.methods?.contribute(serializeUSDCFor(contributionAmount,true),id).send({from:account})
@@ -50,7 +51,9 @@ const ContributeForm = ({ id }: { id: number }) => {
             message: `Contribution succeed`,
             type:NOTIFICATION_TYPE.SUCCESS
           })))
-          setAmountApproved(amountApproved-amount);
+          console.log(serializeUSDCFor(amountApproved,false))
+          console.log(amount)
+          setAmountApproved((serializeUSDCFor(amountApproved,false) as number)-amount);
         }).catch((error:any)=>console.log(error))
     }else{
       const amount = serializeUSDCFor(contributionAmount,true)
@@ -67,7 +70,7 @@ const ContributeForm = ({ id }: { id: number }) => {
 
 
   const renderContributeButton = () => {
-    if (amountApproved>=contributionAmount) {
+    if (amountApproved>=contributionAmount && amountApproved!==0) {
       return (
         <button type='submit' className='btn btn-success'>Contribute</button>
       )

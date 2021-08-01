@@ -12,7 +12,7 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
   const dispatch = useAppDispatch()
   const { account } = useWeb3React()
   const proposalContract = useContractProposal(address)
-  const campaign = useAppSelector(state => state.campaign)
+  const proposal = useAppSelector(state => state.proposal)
   const [proposalTitle, setProposalTitle] = useState('')
   const [proposalDescription, setProposalDescription] = useState('')
   const [proposalAmount, setProposalAmount] = useState(0)
@@ -81,10 +81,10 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
             type: NOTIFICATION_TYPE.ALERT
           })
         )
-      } else if (proposalAmount > campaign.currentBalance) {
+      } else if (proposalAmount >= proposal.availableFunds) {
         dispatch(
           notificationActions.setNotification({
-            message: 'Not enough found in your campaign',
+            message: 'Not enough found available in your campaign',
             type: NOTIFICATION_TYPE.ALERT
           })
         )

@@ -226,9 +226,9 @@ contract('Proposal', (accounts) => {
       expect(okVotes).to.be.bignumber.equal(bobCampaignBalance);
       const nokVotes = registeredProposal.nokVotes;
       expect(nokVotes).to.be.bignumber.equal(johnCampaignBalance);
-      const bobHasVoted = await ProposalContractInstance.hasVoted(bob);
+      const bobHasVoted = await ProposalContractInstance.hasVoted(0, bob);
       expect(bobHasVoted).to.be.true;
-      const johnHasVoted = await ProposalContractInstance.hasVoted(john);
+      const johnHasVoted = await ProposalContractInstance.hasVoted(0, john);
       expect(johnHasVoted).to.be.true;
     });
     it('should revert if wrong workflow status', async () => {
@@ -242,7 +242,7 @@ contract('Proposal', (accounts) => {
         '!Err: proposal voting has ended'
       );
     });
-    it('should revert if contributor has already votes', async () => {
+    it('should revert if contributor has already voted', async () => {
       await ProposalContractInstance.startVotingSession(0, { from: alice });
       await ProposalContractInstance.voteProposal(0, true, { from: bob });
       await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: bob }), '!Err: Already voted');

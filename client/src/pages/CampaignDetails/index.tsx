@@ -281,7 +281,7 @@ const CampaignDetails = () => {
           <div className='text-center'>
             <h2>Proposals</h2>
             {renderProposalList()}
-            {proposals.active.length < 5 && (
+            {proposals.active.length < 5 && campaign.proposalAddress!==ZERO_ADDRESS && (
               <div className='mb-3 mt-3 text-center'>
                 <button className='btn btn-primary' onClick={addNewProposal}>
                   Add Proposal

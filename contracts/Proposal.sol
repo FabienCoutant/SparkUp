@@ -16,7 +16,7 @@ contract Proposal is IProposal {
 
     mapping(uint8 => Proposal) public activeProposals;
     mapping(uint8 => Proposal) public archivedProposals;
-    mapping(address => bool) public hasVoted;
+    mapping(uint8 => mapping(address => bool)) public hasVoted;
 
     constructor(address _campaignAddress, address _manager) {
         campaignAddress = _campaignAddress;
@@ -93,14 +93,14 @@ contract Proposal is IProposal {
      * @inheritdoc IProposal
      */
     function voteProposal(uint8 proposalId, bool vote) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) checkProposalDeadline(proposalId) isContributor() {
-        require(!hasVoted[msg.sender], "!Err: Already voted");
+        require(!hasVoted[proposalId][msg.sender], "!Err: Already voted");
         uint128 contributorVotes = campaignContract.contributorBalances(msg.sender);
         if (vote) {
             activeProposals[proposalId].okVotes = activeProposals[proposalId].okVotes + contributorVotes;
         } else {
             activeProposals[proposalId].nokVotes = activeProposals[proposalId].nokVotes + contributorVotes;
         }
-        hasVoted[msg.sender] = true;
+        hasVoted[proposalId][msg.sender] = true;
     }
 
     /**
