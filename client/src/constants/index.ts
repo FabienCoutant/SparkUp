@@ -20,6 +20,18 @@ export enum WORKFLOW_STATUS {
   CampaignDeleted
 }
 
+export enum PROPOSAL_WORKFLOW_STATUS {
+  Pending,
+  Registered,
+  VotingSessionStarted,
+  VotingSessionEnded,
+  VotesTallied,
+}
+
+export enum VOTING_TYPE{
+  OK,
+  NOK
+}
 
 export interface campaignState {
   info: Info,
@@ -48,6 +60,17 @@ export interface Rewards {
   stockLimit: number;
   nbContributors: number;
   isStockLimited: boolean;
+}
+
+export interface Proposals {
+  title: string;
+  description: string;
+  amount: number |string ;
+  okVotes:number;
+  nokVotes:number;
+  WorkflowsStatus:PROPOSAL_WORKFLOW_STATUS;
+  deadLine: number;
+  accepted: boolean;
 }
 
 export enum RENDER_TYPE {
