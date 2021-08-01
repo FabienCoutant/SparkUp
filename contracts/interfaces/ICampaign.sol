@@ -11,18 +11,18 @@ interface ICampaign {
     struct Rewards {
         string title;
         string description;
-        uint256 minimumContribution;
-        uint256 amount;
-        uint256 stockLimit;
-        uint256 nbContributors;
+        uint16 stockLimit;
+        uint64 nbContributors;
+        uint128 minimumContribution;
+        uint128 amount;
         bool isStockLimited;
     }
 
     struct Info {
         string title;
         string description;
-        uint256 fundingGoal;
-        uint256 deadlineDate;
+        uint64 deadlineDate;
+        uint128 fundingGoal;
     }
 
     enum WorkflowStatus {
@@ -37,7 +37,7 @@ interface ICampaign {
     /**
      * @notice Returns the campaign information in the struct Info plus de createAt and the managerAddress.
      */
-    function getCampaignInfo() external returns(Info memory, uint, address, WorkflowStatus, uint256, address);
+    function getCampaignInfo() external returns(Info memory, uint64, address, WorkflowStatus, uint128, address);
 
     /**
      * @notice Update the campaign information in the struct Info.
@@ -59,14 +59,14 @@ interface ICampaign {
      * @param newRewardData Rewards Object that contains the new data to set following the Rewards struct for the campaign
      * @param rewardIndex uint256 Index of the reward to update
      */
-    function updateReward( Rewards memory newRewardData,uint256 rewardIndex) external;
+    function updateReward( Rewards memory newRewardData,uint8 rewardIndex) external;
 
     /**
      * @notice Delete a reward by its Id.
      * @dev Only the manager must be able to call it.
      * @param rewardIndex uint256 Index of the reward to delete
      */
-    function deleteReward(uint256 rewardIndex) external;
+    function deleteReward(uint8 rewardIndex) external;
 
     /**
      * @notice Delete the campaign.
@@ -91,7 +91,7 @@ interface ICampaign {
      * @notice Allow contributors to contribute to the campaign.
      * @dev Can only be called if campaign is published, is not completed, is not deleted and is not failed.
      */
-    function contribute(uint256 _amount, uint8 rewardIndex) external;
+    function contribute(uint128 _amount, uint8 rewardIndex) external;
 
     /**
      * @notice Allow contributor to get refunded.
@@ -109,5 +109,5 @@ interface ICampaign {
      * @notice Transfer unlocked funds to manager address.
      * @dev Can only be called by proposal contract when proposal is accepted.
      */
-    function realeaseProposalFunds(uint256 _amount) external;
+    function realeaseProposalFunds(uint128 _amount) external;
 }

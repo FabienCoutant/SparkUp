@@ -7,28 +7,28 @@ import "./interfaces/IProposal.sol";
 import "./Proposal.sol";
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Campaign is ICampaign {
-    using SafeMath for uint256;
     using SafeERC20 for IERC20;
     
+    IERC20 public immutable usdcToken;
+
     uint8 public rewardsCounter;
-    uint256 public totalRaised;
-    uint256 public createAt;
+    uint64 public createAt;
+    uint128 public totalRaised;
+
     address public manager;
     address public factory;
     address public proposal;
+    address public immutable escrowContract;
 
     WorkflowStatus public status;
 
-    IERC20 public immutable usdcToken;
-    address public immutable escrowContract;
     Info private campaignInfo;
 
-    mapping(uint => Rewards) public rewardsList;
-    mapping(uint => mapping(address => uint)) public rewardToContributor;
-    mapping(address => uint256) public contributorBalances;
+    mapping(uint8 => Rewards) public rewardsList;
+    mapping(uint8 => mapping(address => uint8)) public rewardToContributor;
+    mapping(address => uint128) public contributorBalances;
 
     //Modifiers
     modifier isNotDeleted(){
@@ -60,7 +60,7 @@ contract Campaign is ICampaign {
         require(rewardsData.length <= 10, "!Err: Too much Rewards");
         manager = _manager;
         factory = msg.sender;
-        createAt = block.timestamp;
+        createAt = uint64(block.timestamp);
         status = WorkflowStatus.CampaignDrafted;
         usdcToken = _usdcToken;
         escrowContract = _escrowContract;
@@ -75,7 +75,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function getCampaignInfo() external view override isNotDeleted() returns(Info memory, uint, address, WorkflowStatus, uint256, address) {
+    function getCampaignInfo() external view override isNotDeleted() returns(Info memory, uint64, address, WorkflowStatus, uint128, address) {
         return (campaignInfo, createAt, manager, status, totalRaised, proposal);
     }
 
@@ -97,7 +97,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateReward(Rewards memory newRewardData, uint rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+    function updateReward(Rewards memory newRewardData, uint8 rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
         _setCampaignReward(rewardIndex, newRewardData);
     }
@@ -122,7 +122,7 @@ contract Campaign is ICampaign {
      * @param index uint Index of the reward to add
      * @param data Rewards Object that contains the Reward data following the Rewards struct
      */
-    function _setCampaignReward(uint index, Rewards memory data) private {
+    function _setCampaignReward(uint8 index, Rewards memory data) private {
         require(bytes(data.title).length > 0, "!Err: Title empty");
         require(bytes(data.description).length > 0, "!Err: Description empty");
         Rewards memory r;
@@ -147,7 +147,7 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function deleteReward(uint256 rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+    function deleteReward(uint8 rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
         require(rewardIndex < rewardsCounter, "!Err: Index not exist");
         if((rewardsCounter-1)!=rewardIndex){
             rewardsList[rewardIndex] = rewardsList[rewardsCounter-1];
@@ -175,14 +175,14 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function contribute(uint256 _amount, uint8 rewardIndex) external override isNotDeleted() checkCampaignDeadline() {
+    function contribute(uint128 _amount, uint8 rewardIndex) external override isNotDeleted() checkCampaignDeadline() {
         require(status != WorkflowStatus.CampaignDrafted && status != WorkflowStatus.FundingFailed && status != WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
         require(checkRewardInventory(rewardIndex), "!Err: no more reward");
         usdcToken.safeTransferFrom(msg.sender, address(this), _amount);
-        contributorBalances[msg.sender] = contributorBalances[msg.sender].add(_amount);
-        rewardToContributor[rewardIndex][msg.sender] = rewardToContributor[rewardIndex][msg.sender].add(1);
-        rewardsList[rewardIndex].nbContributors = rewardsList[rewardIndex].nbContributors.add(1);
-        rewardsList[rewardIndex].amount = rewardsList[rewardIndex].amount.add(_amount);
+        contributorBalances[msg.sender] = contributorBalances[msg.sender] + _amount;
+        rewardToContributor[rewardIndex][msg.sender] = rewardToContributor[rewardIndex][msg.sender] + 1;
+        rewardsList[rewardIndex].nbContributors = rewardsList[rewardIndex].nbContributors + 1;
+        rewardsList[rewardIndex].amount = rewardsList[rewardIndex].amount + _amount;
         if(getContractUSDCBalance() >= campaignInfo.fundingGoal) {
             status = WorkflowStatus.FundingComplete;
             totalRaised = getContractUSDCBalance();
@@ -209,7 +209,7 @@ contract Campaign is ICampaign {
     function launchProposalContract() external override onlyManager() isNotDeleted() checkStatus(status, WorkflowStatus.FundingComplete) {
         require(proposal == address(0), "!Err: proposal already deployed");
         require(block.timestamp > campaignInfo.deadlineDate, "!Err: campgaign deadaline not passed");
-        usdcToken.safeTransfer(escrowContract, totalRaised.mul(5).div(100));
+        usdcToken.safeTransfer(escrowContract, totalRaised*5/100);
         IProposal _proposalContract = new Proposal(address(this), manager);
         proposal = address(_proposalContract);
     }
@@ -218,11 +218,11 @@ contract Campaign is ICampaign {
      * @notice Return the amount in USDC raised by the campaign
      * @dev amount uint USDC raised by the campaign in WEI
      */
-    function getContractUSDCBalance() public view returns(uint) {
-        return usdcToken.balanceOf(address(this));
+    function getContractUSDCBalance() public view returns(uint128) {
+        return uint128(usdcToken.balanceOf(address(this)));
     }
 
-    function realeaseProposalFunds(uint256 _amount) external override {
+    function realeaseProposalFunds(uint128 _amount) external override {
         require(msg.sender == proposal, "!Err: Access denied");
         usdcToken.safeTransfer(manager, _amount);
     }
