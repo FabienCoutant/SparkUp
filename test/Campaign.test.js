@@ -576,7 +576,7 @@ contract('Campaign', (accounts) => {
     it('should revert if campaignDeadline not passed', async () => {
       await expectRevert(
         CampaignContractInstance.launchProposalContract({ from: alice }),
-        '!Err: campgaign deadaline not passed'
+        '!Err: campaign deadline not passed'
       );
     });
     it('should revert if proposal contract already deployed', async () => {

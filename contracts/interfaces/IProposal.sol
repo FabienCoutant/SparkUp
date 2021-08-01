@@ -11,11 +11,11 @@ interface IProposal {
     struct Proposal {
         string title;
         string description;
+        bool accepted;
+        uint64 deadline;
         uint128 amount;
         uint128 okVotes;
         uint128 nokVotes;
-        uint64 deadline;
-        bool accepted;
         WorkflowStatus status;
     }
     

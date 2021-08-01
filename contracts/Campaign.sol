@@ -208,7 +208,7 @@ contract Campaign is ICampaign {
      */
     function launchProposalContract() external override onlyManager() isNotDeleted() checkStatus(status, WorkflowStatus.FundingComplete) {
         require(proposal == address(0), "!Err: proposal already deployed");
-        require(block.timestamp > campaignInfo.deadlineDate, "!Err: campgaign deadaline not passed");
+        require(block.timestamp > campaignInfo.deadlineDate, "!Err: campaign deadline not passed");
         usdcToken.safeTransfer(escrowContract, totalRaised*5/100);
         IProposal _proposalContract = new Proposal(address(this), manager);
         proposal = address(_proposalContract);
