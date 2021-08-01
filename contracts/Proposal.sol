@@ -108,13 +108,14 @@ contract Proposal is IProposal {
      */
     function getResults(uint8 proposalId) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted){
         require(block.timestamp > activeProposals[proposalId].deadline, "!Err: Voting still ongoing");
-        activeProposals[proposalId].status = WorkflowStatus.VotesTallied;
+        Proposal memory p = activeProposals[proposalId];
+        p.status = WorkflowStatus.VotesTallied;
         if (activeProposals[proposalId].okVotes > activeProposals[proposalId].nokVotes) {
             campaignContract.releaseProposalFunds(activeProposals[proposalId].amount);
-            activeProposals[proposalId].accepted = true;
+            p.accepted = true;
         }
         
-        archivedProposals[proposalId] = activeProposals[proposalId];
+        archivedProposals[proposalId] = p;
         archivedProposalCounter++;
         delete activeProposals[proposalId];
     }
