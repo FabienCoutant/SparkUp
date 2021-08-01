@@ -22,9 +22,10 @@ export const useFetchProposalsList = (address: string) => {
           const activeProposal = {
             title: res.title,
             description: res.description,
+            accepted:res.accepted,
             amount: serializeUSDCFor(res.amount, false),
-            okVotes: res.okVotes,
-            nokVotes: res.nokVotes,
+            okVotes: serializeUSDCFor(res.okVotes,false) as number,
+            nokVotes: serializeUSDCFor(res.nokVotes,false) as number,
             deadLine: serializeTimestampsFor(res.deadLine, false),
             status: parseInt(res.status),
             onChain: true
@@ -38,9 +39,10 @@ export const useFetchProposalsList = (address: string) => {
           const archivedProposal = {
             title: res.title,
             description: res.description,
+            accepted:res.accepted,
             amount: serializeUSDCFor(res.amount, false),
-            okVotes: res.okVotes,
-            nokVotes: res.nokVotes,
+            okVotes: serializeUSDCFor(res.okVotes,false) as number,
+            nokVotes: serializeUSDCFor(res.nokVotes,false) as number,
             deadLine: serializeTimestampsFor(res.deadLine, false),
             status: parseInt(res.status),
             onChain: true

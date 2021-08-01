@@ -15,9 +15,9 @@ module.exports = async (deployer, network, accounts) => {
     console.log('TUSDC address : ', TUSDC.address)
     addressUSDC = TUSDC.address
   } else {
-    console.log('network :', network)
     addressUSDC = USDC_CONTRACTS[network]
   }
-  const escrowContract = await deployer.deploy(Escrow, addressUSDC)
+  await deployer.deploy(Escrow, addressUSDC)
+  const escrowContract = await Escrow.deployed()
   await deployer.deploy(CampaignFactory, addressUSDC, escrowContract.address)
 }

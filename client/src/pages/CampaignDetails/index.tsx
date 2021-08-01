@@ -75,6 +75,7 @@ const CampaignDetails = () => {
             nokVotes: 0,
             status: PROPOSAL_WORKFLOW_STATUS.Pending,
             deadLine: new Date().setDate(new Date().getDate() + 7),
+            accepted:false,
             onChain: false
           }
         })
@@ -206,18 +207,25 @@ const CampaignDetails = () => {
 
   const renderActiveProposal = (proposal: proposal, index: number) => {
     if (proposal.onChain) {
-      return <ProposalCard id={index} proposalType={PROPOSAL_TYPE.active}/>
+      return <ProposalCard id={index} proposalType={PROPOSAL_TYPE.active} key={index}/>
     } else {
-      return <ProposalForm id={index} address={campaign.proposalAddress} />
+      return <ProposalForm id={index} address={campaign.proposalAddress} key={index} />
     }
   }
 
-  const renderProposalList = () => {
+  const renderActiveProposalList = () => {
     if (campaign.proposalAddress !== ZERO_ADDRESS) {
-      if (proposals.active.length > 0) {
+      if(!proposals.active.some((proposal) => proposal.status!==PROPOSAL_WORKFLOW_STATUS.Registered)
+        && !isManager
+      ){
+        return (<div>
+          <div>Their is no active proposals</div>
+        </div>)
+      }
+      else if (proposals.active.length > 0) {
         return (proposals.active.map((proposal, index) => {
             return (
-              <div className='card mb-3 mt-3' key={index}>
+              <div key={index}>
                 {renderActiveProposal(proposal, index)}
               </div>
             )
@@ -229,6 +237,18 @@ const CampaignDetails = () => {
     return <div>The campaign must be succeed to launch proposals</div>
   }
 
+  const renderArchivedProposalList=()=>{
+    if (campaign.proposalAddress !== ZERO_ADDRESS && proposals.archived.length >0) {
+      return (proposals.archived.map((proposal, index) => {
+          return (
+            <ProposalCard id={index} proposalType={PROPOSAL_TYPE.archived} key={index}/>
+          )
+        }
+      ))
+    }else{
+      return <div>No archived proposals</div>
+    }
+  }
 
   const renderAddRewardButton = () => {
     if (isManager && campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted) {
@@ -241,7 +261,6 @@ const CampaignDetails = () => {
       )
     }
   }
-
   if (showLoader) {
     return <Loader />
   }
@@ -261,8 +280,8 @@ const CampaignDetails = () => {
       </div>
       <div className='row row-cols-2'>
         <div className='col-5'>
-          <div className='text-center'>
-            <h2>Rewards Level</h2>
+          <div className='text-center' style={{marginBottom: "56px"}}>
+            <h2 >Rewards Level</h2>
           </div>
 
           {
@@ -280,14 +299,22 @@ const CampaignDetails = () => {
         <div className='col-7'>
           <div className='text-center'>
             <h2>Proposals</h2>
-            {renderProposalList()}
-            {proposals.active.length < 5 && campaign.proposalAddress!==ZERO_ADDRESS && (
+            <h3>Active list </h3>
+            {renderActiveProposalList()}
+            {proposals.active.length < 5
+            && campaign.proposalAddress!==ZERO_ADDRESS
+            && isManager
+            && (proposals.active.length <=1 || proposals.active[proposals.active.length-1].onChain)
+            && (
               <div className='mb-3 mt-3 text-center'>
                 <button className='btn btn-primary' onClick={addNewProposal}>
                   Add Proposal
                 </button>
               </div>
             )}
+            <br/>
+            <h3>Archive list </h3>
+            {renderArchivedProposalList()}
           </div>
         </div>
       </div>

@@ -44,10 +44,11 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
           nokVotes: 0,
           status: PROPOSAL_WORKFLOW_STATUS.Registered,
           deadLine: new Date().setDate(new Date().getDate() + 7),
+          accepted:false,
           onChain: true
         }
 
-        dispatch(proposalActions.updateProposal({ active:proposal, id }))
+        dispatch(proposalActions.updateProposal({ active: proposal, id }))
         dispatch(notificationActions.setNotification(({
           message: `Proposal ${proposalTitle} has been correctly added`,
           type: NOTIFICATION_TYPE.SUCCESS
@@ -74,10 +75,10 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
             type: NOTIFICATION_TYPE.ALERT
           })
         )
-      } else if (proposalAmount <= 100) {
+      } else if (proposalAmount < 100) {
         dispatch(
           notificationActions.setNotification({
-            message: 'Please enter a minimumContribution higher than 5!',
+            message: 'Please enter an amount equal or higher than 100!',
             type: NOTIFICATION_TYPE.ALERT
           })
         )
@@ -96,57 +97,59 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
   }
 
   return (
-    <form onSubmit={proposalSubmitHandle}>
-      <div className='card-body'>
-        <div className='mb-3 mt-3'>
-          <label htmlFor='proposalTitle' className='form-label'>
-            Proposal Title
-          </label>
-          <input
-            type='text'
-            className='form-control'
-            id='proposalTitle'
-            value={proposalTitle}
-            onChange={(e) => setProposalTitle(e.target.value)}
-          />
-        </div>
-        <div className='mb-3 mt-3'>
-          <label className='form-label' htmlFor='proposalDescription'>
-            Describe your proposal
-          </label>
-          <textarea
-            className='form-control'
-            placeholder='Describe your proposal here'
-            id='proposalDescription'
-            style={{ height: '100px' }}
-            value={proposalDescription}
-            onChange={(e) => setProposalDescription(e.target.value)}
-          />
-        </div>
-        <div className='mb-3 mt-3'>
-          <label htmlFor='proposalAmount' className='form-label'>
-            How much do you want to withdraw(USDC)
-          </label>
-          <input
-            type='number'
-            className='form-control'
-            id='proposalAmount'
-            value={proposalAmount}
-            onChange={(e) => setProposalAmount(parseInt(e.target.value))}
-          />
-        </div>
-        <div className='list-inline'>
-          <div className='list-inline-item'>
-            <button type='submit' className='btn btn-primary'>
-              Validate and create
-            </button>
+    <div className='card mb-3 mt-3'>
+      <form onSubmit={proposalSubmitHandle}>
+        <div className='card-body'>
+          <div className='mb-3 mt-3'>
+            <label htmlFor='proposalTitle' className='form-label'>
+              Proposal Title
+            </label>
+            <input
+              type='text'
+              className='form-control'
+              id='proposalTitle'
+              value={proposalTitle}
+              onChange={(e) => setProposalTitle(e.target.value)}
+            />
           </div>
-          <div className='list-inline-item'>
-            <button type='button' className='btn btn-secondary' onClick={() => handleCancel()}>Cancel</button>
+          <div className='mb-3 mt-3'>
+            <label className='form-label' htmlFor='proposalDescription'>
+              Describe your proposal
+            </label>
+            <textarea
+              className='form-control'
+              placeholder='Describe your proposal here'
+              id='proposalDescription'
+              style={{ height: '100px' }}
+              value={proposalDescription}
+              onChange={(e) => setProposalDescription(e.target.value)}
+            />
+          </div>
+          <div className='mb-3 mt-3'>
+            <label htmlFor='proposalAmount' className='form-label'>
+              How much do you want to withdraw(USDC)
+            </label>
+            <input
+              type='number'
+              className='form-control'
+              id='proposalAmount'
+              value={proposalAmount}
+              onChange={(e) => setProposalAmount(parseInt(e.target.value))}
+            />
+          </div>
+          <div className='list-inline'>
+            <div className='list-inline-item'>
+              <button type='submit' className='btn btn-primary'>
+                Validate and create
+              </button>
+            </div>
+            <div className='list-inline-item'>
+              <button type='button' className='btn btn-secondary' onClick={() => handleCancel()}>Cancel</button>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   )
 }
 

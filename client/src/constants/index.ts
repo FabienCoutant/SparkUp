@@ -71,6 +71,7 @@ export interface Proposals {
   nokVotes: number;
   status: PROPOSAL_WORKFLOW_STATUS;
   deadLine: number;
+  accepted:boolean;
 }
 
 export enum RENDER_TYPE {
