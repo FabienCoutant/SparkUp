@@ -198,7 +198,7 @@ contract Campaign is ICampaign {
         if (status == WorkflowStatus.CampaignPublished) {
             status = WorkflowStatus.FundingFailed;
         }
-        uint256 _balance = contributorBalances[msg.sender];
+        uint128 _balance = contributorBalances[msg.sender];
         delete contributorBalances[msg.sender];
         usdcToken.safeTransfer(msg.sender, _balance);
     }
@@ -215,6 +215,14 @@ contract Campaign is ICampaign {
     }
 
     /**
+     * @inheritdoc ICampaign
+     */
+    function releaseProposalFunds(uint128 _amount) external override {
+        require(msg.sender == proposal, "!Err: Access denied");
+        usdcToken.safeTransfer(manager, _amount);
+    }
+
+    /**
      * @notice Return the amount in USDC raised by the campaign
      * @dev amount uint USDC raised by the campaign in WEI
      */
@@ -222,10 +230,6 @@ contract Campaign is ICampaign {
         return uint128(usdcToken.balanceOf(address(this)));
     }
 
-    function realeaseProposalFunds(uint128 _amount) external override {
-        require(msg.sender == proposal, "!Err: Access denied");
-        usdcToken.safeTransfer(manager, _amount);
-    }
 
     function checkRewardInventory(uint8 rewardIndex) internal view returns (bool) {
         if (!rewardsList[rewardIndex].isStockLimited) {

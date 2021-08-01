@@ -56,7 +56,6 @@ contract Proposal is IProposal {
         require(_amount > 100 ether, "!Err: Amount too low");
         require(_amount <= availableFunds, "!Err: Proposal amount exceeds campaign USDC balance");
         Proposal memory p;
-        p.id = proposalCounter;
         p.title = _title;
         p.description = _description;
         p.amount = _amount;
@@ -110,7 +109,7 @@ contract Proposal is IProposal {
         proposals[proposalId].status = WorkflowStatus.VotesTallied;
         if (proposals[proposalId].okVotes > proposals[proposalId].nokVotes) {
             proposals[proposalId].accepted = true;
-            campaignContract.realeaseProposalFunds(proposals[proposalId].amount);
+            campaignContract.releaseProposalFunds(proposals[proposalId].amount);
         } else {
             proposals[proposalId].accepted = false;
         }

@@ -11,11 +11,11 @@ interface ICampaign {
     struct Rewards {
         string title;
         string description;
+        bool isStockLimited;
         uint16 stockLimit;
         uint64 nbContributors;
         uint128 minimumContribution;
         uint128 amount;
-        bool isStockLimited;
     }
 
     struct Info {
@@ -109,5 +109,5 @@ interface ICampaign {
      * @notice Transfer unlocked funds to manager address.
      * @dev Can only be called by proposal contract when proposal is accepted.
      */
-    function realeaseProposalFunds(uint128 _amount) external;
+    function releaseProposalFunds(uint128 _amount) external;
 }
