@@ -20,7 +20,7 @@ This document explains which solidity design pattern
 - Economic Patterns
   - [ ] String Equality Comparison: Check for the equality of two provided strings in a way that minimizes average gas consumption for a large number of different inputs.
   - [x] **Tight Variable Packing**: Optimize gas consumption when storing or loading statically-sized variables.
-  - [ ] Memory Array Building: Aggregate and retrieve data from contract storage in a gas efficient way.
+  - [x] **Memory Array Building**: Aggregate and retrieve data from contract storage in a gas efficient way.
 
 ## Behavioral Patterns
 
@@ -123,4 +123,25 @@ struct Rewards {
         uint128 minimumContribution;
         uint128 amount;
     }
+```
+
+### **_Memory Array Building_**
+
+In order to limit gas usage we avoided using arrays and only used mapping and counters. For example:
+
+```
+uint8 public activeProposalCounter;
+mapping(uint8 => Proposal) public activeProposals;
+
+function deleteProposal(uint8 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered) {
+        availableFunds = availableFunds + activeProposals[proposalId].amount;
+        if (proposalId == activeProposalCounter - 1) {
+            delete  activeProposals[proposalId];
+        } else {
+            activeProposals[proposalId] = activeProposals[activeProposalCounter - 1];
+            delete activeProposals[activeProposalCounter -1];
+        }
+        activeProposalCounter--;
+    }
+
 ```

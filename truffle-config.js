@@ -26,6 +26,7 @@ module.exports = {
         );
       },
       network_id: 3,
+      timeoutBlocks: 200,
     },
     mainnet: {
       provider: function () {

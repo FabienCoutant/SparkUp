@@ -301,22 +301,22 @@
     "absolutePath": "/A/Programing/Projet_Final/SparkUp/contracts/interfaces/ICampaign.sol",
     "exportedSymbols": {
       "ICampaign": [
-        1900
+        1548
       ]
     },
-    "id": 1901,
+    "id": 1549,
     "license": "GPL-3.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1784,
+        "id": 1432,
         "literals": [
           "solidity",
           "0.8",
           ".6"
         ],
         "nodeType": "PragmaDirective",
-        "src": "37:22:5"
+        "src": "37:22:2"
       },
       {
         "abstract": false,
@@ -324,33 +324,33 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 1785,
+          "id": 1433,
           "nodeType": "StructuredDocumentation",
-          "src": "63:179:5",
+          "src": "63:179:2",
           "text": " @title ICampaign\n @notice The Campaign contract handle the all life of one Campaign. It's generate by the CampaignFactory.\n @dev Interface for the Campaign contract"
         },
         "fullyImplemented": false,
-        "id": 1900,
+        "id": 1548,
         "linearizedBaseContracts": [
-          1900
+          1548
         ],
         "name": "ICampaign",
-        "nameLocation": "254:9:5",
+        "nameLocation": "254:9:2",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "ICampaign.Rewards",
-            "id": 1800,
+            "id": 1448,
             "members": [
               {
                 "constant": false,
-                "id": 1787,
+                "id": 1435,
                 "mutability": "mutable",
                 "name": "title",
-                "nameLocation": "306:5:5",
+                "nameLocation": "306:5:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "299:12:5",
+                "scope": 1448,
+                "src": "299:12:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -358,10 +358,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1786,
+                  "id": 1434,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "299:6:5",
+                  "src": "299:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -371,13 +371,13 @@
               },
               {
                 "constant": false,
-                "id": 1789,
+                "id": 1437,
                 "mutability": "mutable",
                 "name": "description",
-                "nameLocation": "329:11:5",
+                "nameLocation": "329:11:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "322:18:5",
+                "scope": 1448,
+                "src": "322:18:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -385,10 +385,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1788,
+                  "id": 1436,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "322:6:5",
+                  "src": "322:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -398,13 +398,13 @@
               },
               {
                 "constant": false,
-                "id": 1791,
+                "id": 1439,
                 "mutability": "mutable",
                 "name": "isStockLimited",
-                "nameLocation": "356:14:5",
+                "nameLocation": "356:14:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "351:19:5",
+                "scope": 1448,
+                "src": "351:19:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -412,10 +412,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 1790,
+                  "id": 1438,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "351:4:5",
+                  "src": "351:4:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -425,13 +425,13 @@
               },
               {
                 "constant": false,
-                "id": 1793,
+                "id": 1441,
                 "mutability": "mutable",
                 "name": "stockLimit",
-                "nameLocation": "388:10:5",
+                "nameLocation": "388:10:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "381:17:5",
+                "scope": 1448,
+                "src": "381:17:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -439,10 +439,10 @@
                   "typeString": "uint16"
                 },
                 "typeName": {
-                  "id": 1792,
+                  "id": 1440,
                   "name": "uint16",
                   "nodeType": "ElementaryTypeName",
-                  "src": "381:6:5",
+                  "src": "381:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint16",
                     "typeString": "uint16"
@@ -452,13 +452,13 @@
               },
               {
                 "constant": false,
-                "id": 1795,
+                "id": 1443,
                 "mutability": "mutable",
                 "name": "nbContributors",
-                "nameLocation": "416:14:5",
+                "nameLocation": "416:14:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "409:21:5",
+                "scope": 1448,
+                "src": "409:21:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -466,10 +466,10 @@
                   "typeString": "uint64"
                 },
                 "typeName": {
-                  "id": 1794,
+                  "id": 1442,
                   "name": "uint64",
                   "nodeType": "ElementaryTypeName",
-                  "src": "409:6:5",
+                  "src": "409:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint64",
                     "typeString": "uint64"
@@ -479,13 +479,13 @@
               },
               {
                 "constant": false,
-                "id": 1797,
+                "id": 1445,
                 "mutability": "mutable",
                 "name": "minimumContribution",
-                "nameLocation": "449:19:5",
+                "nameLocation": "449:19:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "441:27:5",
+                "scope": 1448,
+                "src": "441:27:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -493,10 +493,10 @@
                   "typeString": "uint128"
                 },
                 "typeName": {
-                  "id": 1796,
+                  "id": 1444,
                   "name": "uint128",
                   "nodeType": "ElementaryTypeName",
-                  "src": "441:7:5",
+                  "src": "441:7:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint128",
                     "typeString": "uint128"
@@ -506,13 +506,13 @@
               },
               {
                 "constant": false,
-                "id": 1799,
+                "id": 1447,
                 "mutability": "mutable",
                 "name": "amount",
-                "nameLocation": "487:6:5",
+                "nameLocation": "487:6:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "479:14:5",
+                "scope": 1448,
+                "src": "479:14:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -520,10 +520,10 @@
                   "typeString": "uint128"
                 },
                 "typeName": {
-                  "id": 1798,
+                  "id": 1446,
                   "name": "uint128",
                   "nodeType": "ElementaryTypeName",
-                  "src": "479:7:5",
+                  "src": "479:7:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint128",
                     "typeString": "uint128"
@@ -533,25 +533,25 @@
               }
             ],
             "name": "Rewards",
-            "nameLocation": "280:7:5",
+            "nameLocation": "280:7:2",
             "nodeType": "StructDefinition",
-            "scope": 1900,
-            "src": "273:228:5",
+            "scope": 1548,
+            "src": "273:228:2",
             "visibility": "public"
           },
           {
             "canonicalName": "ICampaign.Info",
-            "id": 1809,
+            "id": 1457,
             "members": [
               {
                 "constant": false,
-                "id": 1802,
+                "id": 1450,
                 "mutability": "mutable",
                 "name": "title",
-                "nameLocation": "539:5:5",
+                "nameLocation": "539:5:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1809,
-                "src": "532:12:5",
+                "scope": 1457,
+                "src": "532:12:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -559,10 +559,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1801,
+                  "id": 1449,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "532:6:5",
+                  "src": "532:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -572,13 +572,13 @@
               },
               {
                 "constant": false,
-                "id": 1804,
+                "id": 1452,
                 "mutability": "mutable",
                 "name": "description",
-                "nameLocation": "562:11:5",
+                "nameLocation": "562:11:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1809,
-                "src": "555:18:5",
+                "scope": 1457,
+                "src": "555:18:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -586,10 +586,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1803,
+                  "id": 1451,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "555:6:5",
+                  "src": "555:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -599,13 +599,13 @@
               },
               {
                 "constant": false,
-                "id": 1806,
+                "id": 1454,
                 "mutability": "mutable",
                 "name": "deadlineDate",
-                "nameLocation": "591:12:5",
+                "nameLocation": "591:12:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1809,
-                "src": "584:19:5",
+                "scope": 1457,
+                "src": "584:19:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -613,10 +613,10 @@
                   "typeString": "uint64"
                 },
                 "typeName": {
-                  "id": 1805,
+                  "id": 1453,
                   "name": "uint64",
                   "nodeType": "ElementaryTypeName",
-                  "src": "584:6:5",
+                  "src": "584:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint64",
                     "typeString": "uint64"
@@ -626,13 +626,13 @@
               },
               {
                 "constant": false,
-                "id": 1808,
+                "id": 1456,
                 "mutability": "mutable",
                 "name": "fundingGoal",
-                "nameLocation": "622:11:5",
+                "nameLocation": "622:11:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1809,
-                "src": "614:19:5",
+                "scope": 1457,
+                "src": "614:19:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -640,10 +640,10 @@
                   "typeString": "uint128"
                 },
                 "typeName": {
-                  "id": 1807,
+                  "id": 1455,
                   "name": "uint128",
                   "nodeType": "ElementaryTypeName",
-                  "src": "614:7:5",
+                  "src": "614:7:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint128",
                     "typeString": "uint128"
@@ -653,118 +653,118 @@
               }
             ],
             "name": "Info",
-            "nameLocation": "516:4:5",
+            "nameLocation": "516:4:2",
             "nodeType": "StructDefinition",
-            "scope": 1900,
-            "src": "509:132:5",
+            "scope": 1548,
+            "src": "509:132:2",
             "visibility": "public"
           },
           {
             "canonicalName": "ICampaign.WorkflowStatus",
-            "id": 1816,
+            "id": 1464,
             "members": [
               {
-                "id": 1810,
+                "id": 1458,
                 "name": "CampaignDrafted",
-                "nameLocation": "680:15:5",
+                "nameLocation": "680:15:2",
                 "nodeType": "EnumValue",
-                "src": "680:15:5"
+                "src": "680:15:2"
               },
               {
-                "id": 1811,
+                "id": 1459,
                 "name": "CampaignPublished",
-                "nameLocation": "706:17:5",
+                "nameLocation": "706:17:2",
                 "nodeType": "EnumValue",
-                "src": "706:17:5"
+                "src": "706:17:2"
               },
               {
-                "id": 1812,
+                "id": 1460,
                 "name": "FundingComplete",
-                "nameLocation": "734:15:5",
+                "nameLocation": "734:15:2",
                 "nodeType": "EnumValue",
-                "src": "734:15:5"
+                "src": "734:15:2"
               },
               {
-                "id": 1813,
+                "id": 1461,
                 "name": "FundingFailed",
-                "nameLocation": "760:13:5",
+                "nameLocation": "760:13:2",
                 "nodeType": "EnumValue",
-                "src": "760:13:5"
+                "src": "760:13:2"
               },
               {
-                "id": 1814,
+                "id": 1462,
                 "name": "CampaignCompleted",
-                "nameLocation": "784:17:5",
+                "nameLocation": "784:17:2",
                 "nodeType": "EnumValue",
-                "src": "784:17:5"
+                "src": "784:17:2"
               },
               {
-                "id": 1815,
+                "id": 1463,
                 "name": "CampaignDeleted",
-                "nameLocation": "812:15:5",
+                "nameLocation": "812:15:2",
                 "nodeType": "EnumValue",
-                "src": "812:15:5"
+                "src": "812:15:2"
               }
             ],
             "name": "WorkflowStatus",
-            "nameLocation": "654:14:5",
+            "nameLocation": "654:14:2",
             "nodeType": "EnumDefinition",
-            "src": "649:185:5"
+            "src": "649:185:2"
           },
           {
             "documentation": {
-              "id": 1817,
+              "id": 1465,
               "nodeType": "StructuredDocumentation",
-              "src": "842:121:5",
+              "src": "842:121:2",
               "text": " @notice Returns the campaign information in the struct Info plus de createAt and the managerAddress."
             },
             "functionSelector": "d6290cd7",
-            "id": 1834,
+            "id": 1482,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getCampaignInfo",
-            "nameLocation": "978:15:5",
+            "nameLocation": "978:15:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1818,
+              "id": 1466,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "993:2:5"
+              "src": "993:2:2"
             },
             "returnParameters": {
-              "id": 1833,
+              "id": 1481,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1821,
+                  "id": 1469,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1013:11:5",
+                  "scope": 1482,
+                  "src": "1013:11:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Info_$1809_memory_ptr",
+                    "typeIdentifier": "t_struct$_Info_$1457_memory_ptr",
                     "typeString": "struct ICampaign.Info"
                   },
                   "typeName": {
-                    "id": 1820,
+                    "id": 1468,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1819,
+                      "id": 1467,
                       "name": "Info",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1809,
-                      "src": "1013:4:5"
+                      "referencedDeclaration": 1457,
+                      "src": "1013:4:2"
                     },
-                    "referencedDeclaration": 1809,
-                    "src": "1013:4:5",
+                    "referencedDeclaration": 1457,
+                    "src": "1013:4:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Info_$1809_storage_ptr",
+                      "typeIdentifier": "t_struct$_Info_$1457_storage_ptr",
                       "typeString": "struct ICampaign.Info"
                     }
                   },
@@ -772,13 +772,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1823,
+                  "id": 1471,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1026:6:5",
+                  "scope": 1482,
+                  "src": "1026:6:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -786,10 +786,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 1822,
+                    "id": 1470,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1026:6:5",
+                    "src": "1026:6:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -799,13 +799,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1825,
+                  "id": 1473,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1034:7:5",
+                  "scope": 1482,
+                  "src": "1034:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -813,10 +813,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1824,
+                    "id": 1472,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1034:7:5",
+                    "src": "1034:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -827,33 +827,33 @@
                 },
                 {
                   "constant": false,
-                  "id": 1828,
+                  "id": 1476,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1043:14:5",
+                  "scope": 1482,
+                  "src": "1043:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_WorkflowStatus_$1816",
+                    "typeIdentifier": "t_enum$_WorkflowStatus_$1464",
                     "typeString": "enum ICampaign.WorkflowStatus"
                   },
                   "typeName": {
-                    "id": 1827,
+                    "id": 1475,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1826,
+                      "id": 1474,
                       "name": "WorkflowStatus",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1816,
-                      "src": "1043:14:5"
+                      "referencedDeclaration": 1464,
+                      "src": "1043:14:2"
                     },
-                    "referencedDeclaration": 1816,
-                    "src": "1043:14:5",
+                    "referencedDeclaration": 1464,
+                    "src": "1043:14:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_WorkflowStatus_$1816",
+                      "typeIdentifier": "t_enum$_WorkflowStatus_$1464",
                       "typeString": "enum ICampaign.WorkflowStatus"
                     }
                   },
@@ -861,13 +861,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1830,
+                  "id": 1478,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1059:7:5",
+                  "scope": 1482,
+                  "src": "1059:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -875,10 +875,10 @@
                     "typeString": "uint128"
                   },
                   "typeName": {
-                    "id": 1829,
+                    "id": 1477,
                     "name": "uint128",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1059:7:5",
+                    "src": "1059:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint128",
                       "typeString": "uint128"
@@ -888,13 +888,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1832,
+                  "id": 1480,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1068:7:5",
+                  "scope": 1482,
+                  "src": "1068:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -902,10 +902,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1831,
+                    "id": 1479,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1068:7:5",
+                    "src": "1068:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -915,198 +915,198 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1012:64:5"
+              "src": "1012:64:2"
             },
-            "scope": 1900,
-            "src": "969:108:5",
+            "scope": 1548,
+            "src": "969:108:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1835,
+              "id": 1483,
               "nodeType": "StructuredDocumentation",
-              "src": "1085:259:5",
+              "src": "1085:259:2",
               "text": " @notice Update the campaign information in the struct Info.\n @dev Only the manager must be able to call it.\n @param updatedInfoData Info Object that contains all the new information following the Info struct for the campaign"
             },
             "functionSelector": "cd3fea14",
-            "id": 1841,
+            "id": 1489,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateCampaign",
-            "nameLocation": "1359:14:5",
+            "nameLocation": "1359:14:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1839,
+              "id": 1487,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1838,
+                  "id": 1486,
                   "mutability": "mutable",
                   "name": "updatedInfoData",
-                  "nameLocation": "1386:15:5",
+                  "nameLocation": "1386:15:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1841,
-                  "src": "1374:27:5",
+                  "scope": 1489,
+                  "src": "1374:27:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Info_$1809_memory_ptr",
+                    "typeIdentifier": "t_struct$_Info_$1457_memory_ptr",
                     "typeString": "struct ICampaign.Info"
                   },
                   "typeName": {
-                    "id": 1837,
+                    "id": 1485,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1836,
+                      "id": 1484,
                       "name": "Info",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1809,
-                      "src": "1374:4:5"
+                      "referencedDeclaration": 1457,
+                      "src": "1374:4:2"
                     },
-                    "referencedDeclaration": 1809,
-                    "src": "1374:4:5",
+                    "referencedDeclaration": 1457,
+                    "src": "1374:4:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Info_$1809_storage_ptr",
+                      "typeIdentifier": "t_struct$_Info_$1457_storage_ptr",
                       "typeString": "struct ICampaign.Info"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "1373:29:5"
+              "src": "1373:29:2"
             },
             "returnParameters": {
-              "id": 1840,
+              "id": 1488,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1411:0:5"
+              "src": "1411:0:2"
             },
-            "scope": 1900,
-            "src": "1350:62:5",
+            "scope": 1548,
+            "src": "1350:62:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1842,
+              "id": 1490,
               "nodeType": "StructuredDocumentation",
-              "src": "1420:254:5",
+              "src": "1420:254:2",
               "text": " @notice Add a new reward level to the campaign.\n @dev Only the manager must be able to call it.\n @param newRewardData Rewards Object that contains all the needed information following the Rewards struct for the campaign"
             },
             "functionSelector": "c97c5794",
-            "id": 1848,
+            "id": 1496,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "addReward",
-            "nameLocation": "1689:9:5",
+            "nameLocation": "1689:9:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1846,
+              "id": 1494,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1845,
+                  "id": 1493,
                   "mutability": "mutable",
                   "name": "newRewardData",
-                  "nameLocation": "1714:13:5",
+                  "nameLocation": "1714:13:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1848,
-                  "src": "1699:28:5",
+                  "scope": 1496,
+                  "src": "1699:28:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Rewards_$1800_memory_ptr",
+                    "typeIdentifier": "t_struct$_Rewards_$1448_memory_ptr",
                     "typeString": "struct ICampaign.Rewards"
                   },
                   "typeName": {
-                    "id": 1844,
+                    "id": 1492,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1843,
+                      "id": 1491,
                       "name": "Rewards",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1800,
-                      "src": "1699:7:5"
+                      "referencedDeclaration": 1448,
+                      "src": "1699:7:2"
                     },
-                    "referencedDeclaration": 1800,
-                    "src": "1699:7:5",
+                    "referencedDeclaration": 1448,
+                    "src": "1699:7:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Rewards_$1800_storage_ptr",
+                      "typeIdentifier": "t_struct$_Rewards_$1448_storage_ptr",
                       "typeString": "struct ICampaign.Rewards"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "1698:30:5"
+              "src": "1698:30:2"
             },
             "returnParameters": {
-              "id": 1847,
+              "id": 1495,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1737:0:5"
+              "src": "1737:0:2"
             },
-            "scope": 1900,
-            "src": "1680:58:5",
+            "scope": 1548,
+            "src": "1680:58:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1849,
+              "id": 1497,
               "nodeType": "StructuredDocumentation",
-              "src": "1746:327:5",
+              "src": "1746:327:2",
               "text": " @notice Update the data of a specific reward regarding its id.\n @dev Only the manager must be able to call it.\n @param newRewardData Rewards Object that contains the new data to set following the Rewards struct for the campaign\n @param rewardIndex uint256 Index of the reward to update"
             },
             "functionSelector": "6d2ffd85",
-            "id": 1857,
+            "id": 1505,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateReward",
-            "nameLocation": "2088:12:5",
+            "nameLocation": "2088:12:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1855,
+              "id": 1503,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1852,
+                  "id": 1500,
                   "mutability": "mutable",
                   "name": "newRewardData",
-                  "nameLocation": "2117:13:5",
+                  "nameLocation": "2117:13:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1857,
-                  "src": "2102:28:5",
+                  "scope": 1505,
+                  "src": "2102:28:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Rewards_$1800_memory_ptr",
+                    "typeIdentifier": "t_struct$_Rewards_$1448_memory_ptr",
                     "typeString": "struct ICampaign.Rewards"
                   },
                   "typeName": {
-                    "id": 1851,
+                    "id": 1499,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1850,
+                      "id": 1498,
                       "name": "Rewards",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1800,
-                      "src": "2102:7:5"
+                      "referencedDeclaration": 1448,
+                      "src": "2102:7:2"
                     },
-                    "referencedDeclaration": 1800,
-                    "src": "2102:7:5",
+                    "referencedDeclaration": 1448,
+                    "src": "2102:7:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Rewards_$1800_storage_ptr",
+                      "typeIdentifier": "t_struct$_Rewards_$1448_storage_ptr",
                       "typeString": "struct ICampaign.Rewards"
                     }
                   },
@@ -1114,13 +1114,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1854,
+                  "id": 1502,
                   "mutability": "mutable",
                   "name": "rewardIndex",
-                  "nameLocation": "2137:11:5",
+                  "nameLocation": "2137:11:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1857,
-                  "src": "2131:17:5",
+                  "scope": 1505,
+                  "src": "2131:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1128,10 +1128,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 1853,
+                    "id": 1501,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2131:5:5",
+                    "src": "2131:5:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -1140,48 +1140,48 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2100:49:5"
+              "src": "2100:49:2"
             },
             "returnParameters": {
-              "id": 1856,
+              "id": 1504,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2158:0:5"
+              "src": "2158:0:2"
             },
-            "scope": 1900,
-            "src": "2079:80:5",
+            "scope": 1548,
+            "src": "2079:80:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1858,
+              "id": 1506,
               "nodeType": "StructuredDocumentation",
-              "src": "2167:175:5",
+              "src": "2167:175:2",
               "text": " @notice Delete a reward by its Id.\n @dev Only the manager must be able to call it.\n @param rewardIndex uint256 Index of the reward to delete"
             },
             "functionSelector": "e21641b8",
-            "id": 1863,
+            "id": 1511,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deleteReward",
-            "nameLocation": "2357:12:5",
+            "nameLocation": "2357:12:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1861,
+              "id": 1509,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1860,
+                  "id": 1508,
                   "mutability": "mutable",
                   "name": "rewardIndex",
-                  "nameLocation": "2376:11:5",
+                  "nameLocation": "2376:11:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1863,
-                  "src": "2370:17:5",
+                  "scope": 1511,
+                  "src": "2370:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1189,10 +1189,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 1859,
+                    "id": 1507,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2370:5:5",
+                    "src": "2370:5:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -1201,81 +1201,81 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2369:19:5"
+              "src": "2369:19:2"
             },
             "returnParameters": {
-              "id": 1862,
+              "id": 1510,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2397:0:5"
+              "src": "2397:0:2"
             },
-            "scope": 1900,
-            "src": "2348:50:5",
+            "scope": 1548,
+            "src": "2348:50:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1864,
+              "id": 1512,
               "nodeType": "StructuredDocumentation",
-              "src": "2406:149:5",
+              "src": "2406:149:2",
               "text": " @notice Delete the campaign.\n @dev It's the entry point for deleting a campaign. Only the manager must be able to call it"
             },
             "functionSelector": "244c3c2c",
-            "id": 1867,
+            "id": 1515,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deleteCampaign",
-            "nameLocation": "2570:14:5",
+            "nameLocation": "2570:14:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1865,
+              "id": 1513,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2584:2:5"
+              "src": "2584:2:2"
             },
             "returnParameters": {
-              "id": 1866,
+              "id": 1514,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2595:0:5"
+              "src": "2595:0:2"
             },
-            "scope": 1900,
-            "src": "2561:35:5",
+            "scope": 1548,
+            "src": "2561:35:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1868,
+              "id": 1516,
               "nodeType": "StructuredDocumentation",
-              "src": "2604:182:5",
+              "src": "2604:182:2",
               "text": " @notice Allow the manager to setup a new one.\n @dev Only the manager must be able to call it.\n @param newManager address Address of the new manager"
             },
             "functionSelector": "58aba00f",
-            "id": 1873,
+            "id": 1521,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateManager",
-            "nameLocation": "2801:13:5",
+            "nameLocation": "2801:13:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1871,
+              "id": 1519,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1870,
+                  "id": 1518,
                   "mutability": "mutable",
                   "name": "newManager",
-                  "nameLocation": "2823:10:5",
+                  "nameLocation": "2823:10:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1873,
-                  "src": "2815:18:5",
+                  "scope": 1521,
+                  "src": "2815:18:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1283,10 +1283,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1869,
+                    "id": 1517,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2815:7:5",
+                    "src": "2815:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1296,81 +1296,81 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2814:20:5"
+              "src": "2814:20:2"
             },
             "returnParameters": {
-              "id": 1872,
+              "id": 1520,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2843:0:5"
+              "src": "2843:0:2"
             },
-            "scope": 1900,
-            "src": "2792:52:5",
+            "scope": 1548,
+            "src": "2792:52:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1874,
+              "id": 1522,
               "nodeType": "StructuredDocumentation",
-              "src": "2856:218:5",
+              "src": "2856:218:2",
               "text": " @notice Allow the manager to publish campaign and make it visible to potential contributors.\n @dev Only the manager must be able to call it and only within acceptable deadlineDate timeframe."
             },
             "functionSelector": "7ef59f84",
-            "id": 1877,
+            "id": 1525,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "publishCampaign",
-            "nameLocation": "3089:15:5",
+            "nameLocation": "3089:15:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1875,
+              "id": 1523,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3104:2:5"
+              "src": "3104:2:2"
             },
             "returnParameters": {
-              "id": 1876,
+              "id": 1524,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3115:0:5"
+              "src": "3115:0:2"
             },
-            "scope": 1900,
-            "src": "3080:36:5",
+            "scope": 1548,
+            "src": "3080:36:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1878,
+              "id": 1526,
               "nodeType": "StructuredDocumentation",
-              "src": "3128:188:5",
+              "src": "3128:188:2",
               "text": " @notice Allow contributors to contribute to the campaign.\n @dev Can only be called if campaign is published, is not completed, is not deleted and is not failed."
             },
             "functionSelector": "d0a5d845",
-            "id": 1885,
+            "id": 1533,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "contribute",
-            "nameLocation": "3331:10:5",
+            "nameLocation": "3331:10:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1883,
+              "id": 1531,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1880,
+                  "id": 1528,
                   "mutability": "mutable",
                   "name": "_amount",
-                  "nameLocation": "3350:7:5",
+                  "nameLocation": "3350:7:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1885,
-                  "src": "3342:15:5",
+                  "scope": 1533,
+                  "src": "3342:15:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1378,10 +1378,10 @@
                     "typeString": "uint128"
                   },
                   "typeName": {
-                    "id": 1879,
+                    "id": 1527,
                     "name": "uint128",
                     "nodeType": "ElementaryTypeName",
-                    "src": "3342:7:5",
+                    "src": "3342:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint128",
                       "typeString": "uint128"
@@ -1391,13 +1391,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1882,
+                  "id": 1530,
                   "mutability": "mutable",
                   "name": "rewardIndex",
-                  "nameLocation": "3365:11:5",
+                  "nameLocation": "3365:11:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1885,
-                  "src": "3359:17:5",
+                  "scope": 1533,
+                  "src": "3359:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1405,10 +1405,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 1881,
+                    "id": 1529,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "3359:5:5",
+                    "src": "3359:5:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -1417,114 +1417,114 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "3341:36:5"
+              "src": "3341:36:2"
             },
             "returnParameters": {
-              "id": 1884,
+              "id": 1532,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3386:0:5"
+              "src": "3386:0:2"
             },
-            "scope": 1900,
-            "src": "3322:65:5",
+            "scope": 1548,
+            "src": "3322:65:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1886,
+              "id": 1534,
               "nodeType": "StructuredDocumentation",
-              "src": "3395:155:5",
+              "src": "3395:155:2",
               "text": " @notice Allow contributor to get refunded.\n @dev Can only be called if campiagn deadline is passed and fundingGoal not reached."
             },
             "functionSelector": "590e1ae3",
-            "id": 1889,
+            "id": 1537,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "refund",
-            "nameLocation": "3565:6:5",
+            "nameLocation": "3565:6:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1887,
+              "id": 1535,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3571:2:5"
+              "src": "3571:2:2"
             },
             "returnParameters": {
-              "id": 1888,
+              "id": 1536,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3582:0:5"
+              "src": "3582:0:2"
             },
-            "scope": 1900,
-            "src": "3556:27:5",
+            "scope": 1548,
+            "src": "3556:27:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1890,
+              "id": 1538,
               "nodeType": "StructuredDocumentation",
-              "src": "3591:187:5",
+              "src": "3591:187:2",
               "text": " @notice Allows manager to deploy proposal contract to start submitting proposals.\n @dev Can only be called by manager and if WorkflowStatus is FundingComplete."
             },
             "functionSelector": "0d4c4a2f",
-            "id": 1893,
+            "id": 1541,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "launchProposalContract",
-            "nameLocation": "3793:22:5",
+            "nameLocation": "3793:22:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1891,
+              "id": 1539,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3815:2:5"
+              "src": "3815:2:2"
             },
             "returnParameters": {
-              "id": 1892,
+              "id": 1540,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3826:0:5"
+              "src": "3826:0:2"
             },
-            "scope": 1900,
-            "src": "3784:43:5",
+            "scope": 1548,
+            "src": "3784:43:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1894,
+              "id": 1542,
               "nodeType": "StructuredDocumentation",
-              "src": "3835:152:5",
+              "src": "3835:152:2",
               "text": " @notice Transfer unlocked funds to manager address.\n @dev Can only be called by proposal contract when proposal is accepted."
             },
             "functionSelector": "0a2d00d3",
-            "id": 1899,
+            "id": 1547,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "releaseProposalFunds",
-            "nameLocation": "4002:20:5",
+            "nameLocation": "4002:20:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1897,
+              "id": 1545,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1896,
+                  "id": 1544,
                   "mutability": "mutable",
                   "name": "_amount",
-                  "nameLocation": "4031:7:5",
+                  "nameLocation": "4031:7:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1899,
-                  "src": "4023:15:5",
+                  "scope": 1547,
+                  "src": "4023:15:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1532,10 +1532,10 @@
                     "typeString": "uint128"
                   },
                   "typeName": {
-                    "id": 1895,
+                    "id": 1543,
                     "name": "uint128",
                     "nodeType": "ElementaryTypeName",
-                    "src": "4023:7:5",
+                    "src": "4023:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint128",
                       "typeString": "uint128"
@@ -1544,48 +1544,48 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "4022:17:5"
+              "src": "4022:17:2"
             },
             "returnParameters": {
-              "id": 1898,
+              "id": 1546,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "4048:0:5"
+              "src": "4048:0:2"
             },
-            "scope": 1900,
-            "src": "3993:56:5",
+            "scope": 1548,
+            "src": "3993:56:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 1901,
-        "src": "244:3808:5",
+        "scope": 1549,
+        "src": "244:3808:2",
         "usedErrors": []
       }
     ],
-    "src": "37:4017:5"
+    "src": "37:4017:2"
   },
   "legacyAST": {
     "absolutePath": "/A/Programing/Projet_Final/SparkUp/contracts/interfaces/ICampaign.sol",
     "exportedSymbols": {
       "ICampaign": [
-        1900
+        1548
       ]
     },
-    "id": 1901,
+    "id": 1549,
     "license": "GPL-3.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1784,
+        "id": 1432,
         "literals": [
           "solidity",
           "0.8",
           ".6"
         ],
         "nodeType": "PragmaDirective",
-        "src": "37:22:5"
+        "src": "37:22:2"
       },
       {
         "abstract": false,
@@ -1593,33 +1593,33 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 1785,
+          "id": 1433,
           "nodeType": "StructuredDocumentation",
-          "src": "63:179:5",
+          "src": "63:179:2",
           "text": " @title ICampaign\n @notice The Campaign contract handle the all life of one Campaign. It's generate by the CampaignFactory.\n @dev Interface for the Campaign contract"
         },
         "fullyImplemented": false,
-        "id": 1900,
+        "id": 1548,
         "linearizedBaseContracts": [
-          1900
+          1548
         ],
         "name": "ICampaign",
-        "nameLocation": "254:9:5",
+        "nameLocation": "254:9:2",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "ICampaign.Rewards",
-            "id": 1800,
+            "id": 1448,
             "members": [
               {
                 "constant": false,
-                "id": 1787,
+                "id": 1435,
                 "mutability": "mutable",
                 "name": "title",
-                "nameLocation": "306:5:5",
+                "nameLocation": "306:5:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "299:12:5",
+                "scope": 1448,
+                "src": "299:12:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1627,10 +1627,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1786,
+                  "id": 1434,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "299:6:5",
+                  "src": "299:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -1640,13 +1640,13 @@
               },
               {
                 "constant": false,
-                "id": 1789,
+                "id": 1437,
                 "mutability": "mutable",
                 "name": "description",
-                "nameLocation": "329:11:5",
+                "nameLocation": "329:11:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "322:18:5",
+                "scope": 1448,
+                "src": "322:18:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1654,10 +1654,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1788,
+                  "id": 1436,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "322:6:5",
+                  "src": "322:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -1667,13 +1667,13 @@
               },
               {
                 "constant": false,
-                "id": 1791,
+                "id": 1439,
                 "mutability": "mutable",
                 "name": "isStockLimited",
-                "nameLocation": "356:14:5",
+                "nameLocation": "356:14:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "351:19:5",
+                "scope": 1448,
+                "src": "351:19:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1681,10 +1681,10 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 1790,
+                  "id": 1438,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
-                  "src": "351:4:5",
+                  "src": "351:4:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_bool",
                     "typeString": "bool"
@@ -1694,13 +1694,13 @@
               },
               {
                 "constant": false,
-                "id": 1793,
+                "id": 1441,
                 "mutability": "mutable",
                 "name": "stockLimit",
-                "nameLocation": "388:10:5",
+                "nameLocation": "388:10:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "381:17:5",
+                "scope": 1448,
+                "src": "381:17:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1708,10 +1708,10 @@
                   "typeString": "uint16"
                 },
                 "typeName": {
-                  "id": 1792,
+                  "id": 1440,
                   "name": "uint16",
                   "nodeType": "ElementaryTypeName",
-                  "src": "381:6:5",
+                  "src": "381:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint16",
                     "typeString": "uint16"
@@ -1721,13 +1721,13 @@
               },
               {
                 "constant": false,
-                "id": 1795,
+                "id": 1443,
                 "mutability": "mutable",
                 "name": "nbContributors",
-                "nameLocation": "416:14:5",
+                "nameLocation": "416:14:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "409:21:5",
+                "scope": 1448,
+                "src": "409:21:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1735,10 +1735,10 @@
                   "typeString": "uint64"
                 },
                 "typeName": {
-                  "id": 1794,
+                  "id": 1442,
                   "name": "uint64",
                   "nodeType": "ElementaryTypeName",
-                  "src": "409:6:5",
+                  "src": "409:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint64",
                     "typeString": "uint64"
@@ -1748,13 +1748,13 @@
               },
               {
                 "constant": false,
-                "id": 1797,
+                "id": 1445,
                 "mutability": "mutable",
                 "name": "minimumContribution",
-                "nameLocation": "449:19:5",
+                "nameLocation": "449:19:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "441:27:5",
+                "scope": 1448,
+                "src": "441:27:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1762,10 +1762,10 @@
                   "typeString": "uint128"
                 },
                 "typeName": {
-                  "id": 1796,
+                  "id": 1444,
                   "name": "uint128",
                   "nodeType": "ElementaryTypeName",
-                  "src": "441:7:5",
+                  "src": "441:7:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint128",
                     "typeString": "uint128"
@@ -1775,13 +1775,13 @@
               },
               {
                 "constant": false,
-                "id": 1799,
+                "id": 1447,
                 "mutability": "mutable",
                 "name": "amount",
-                "nameLocation": "487:6:5",
+                "nameLocation": "487:6:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1800,
-                "src": "479:14:5",
+                "scope": 1448,
+                "src": "479:14:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1789,10 +1789,10 @@
                   "typeString": "uint128"
                 },
                 "typeName": {
-                  "id": 1798,
+                  "id": 1446,
                   "name": "uint128",
                   "nodeType": "ElementaryTypeName",
-                  "src": "479:7:5",
+                  "src": "479:7:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint128",
                     "typeString": "uint128"
@@ -1802,25 +1802,25 @@
               }
             ],
             "name": "Rewards",
-            "nameLocation": "280:7:5",
+            "nameLocation": "280:7:2",
             "nodeType": "StructDefinition",
-            "scope": 1900,
-            "src": "273:228:5",
+            "scope": 1548,
+            "src": "273:228:2",
             "visibility": "public"
           },
           {
             "canonicalName": "ICampaign.Info",
-            "id": 1809,
+            "id": 1457,
             "members": [
               {
                 "constant": false,
-                "id": 1802,
+                "id": 1450,
                 "mutability": "mutable",
                 "name": "title",
-                "nameLocation": "539:5:5",
+                "nameLocation": "539:5:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1809,
-                "src": "532:12:5",
+                "scope": 1457,
+                "src": "532:12:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1828,10 +1828,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1801,
+                  "id": 1449,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "532:6:5",
+                  "src": "532:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -1841,13 +1841,13 @@
               },
               {
                 "constant": false,
-                "id": 1804,
+                "id": 1452,
                 "mutability": "mutable",
                 "name": "description",
-                "nameLocation": "562:11:5",
+                "nameLocation": "562:11:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1809,
-                "src": "555:18:5",
+                "scope": 1457,
+                "src": "555:18:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1855,10 +1855,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1803,
+                  "id": 1451,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "555:6:5",
+                  "src": "555:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -1868,13 +1868,13 @@
               },
               {
                 "constant": false,
-                "id": 1806,
+                "id": 1454,
                 "mutability": "mutable",
                 "name": "deadlineDate",
-                "nameLocation": "591:12:5",
+                "nameLocation": "591:12:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1809,
-                "src": "584:19:5",
+                "scope": 1457,
+                "src": "584:19:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1882,10 +1882,10 @@
                   "typeString": "uint64"
                 },
                 "typeName": {
-                  "id": 1805,
+                  "id": 1453,
                   "name": "uint64",
                   "nodeType": "ElementaryTypeName",
-                  "src": "584:6:5",
+                  "src": "584:6:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint64",
                     "typeString": "uint64"
@@ -1895,13 +1895,13 @@
               },
               {
                 "constant": false,
-                "id": 1808,
+                "id": 1456,
                 "mutability": "mutable",
                 "name": "fundingGoal",
-                "nameLocation": "622:11:5",
+                "nameLocation": "622:11:2",
                 "nodeType": "VariableDeclaration",
-                "scope": 1809,
-                "src": "614:19:5",
+                "scope": 1457,
+                "src": "614:19:2",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -1909,10 +1909,10 @@
                   "typeString": "uint128"
                 },
                 "typeName": {
-                  "id": 1807,
+                  "id": 1455,
                   "name": "uint128",
                   "nodeType": "ElementaryTypeName",
-                  "src": "614:7:5",
+                  "src": "614:7:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_uint128",
                     "typeString": "uint128"
@@ -1922,118 +1922,118 @@
               }
             ],
             "name": "Info",
-            "nameLocation": "516:4:5",
+            "nameLocation": "516:4:2",
             "nodeType": "StructDefinition",
-            "scope": 1900,
-            "src": "509:132:5",
+            "scope": 1548,
+            "src": "509:132:2",
             "visibility": "public"
           },
           {
             "canonicalName": "ICampaign.WorkflowStatus",
-            "id": 1816,
+            "id": 1464,
             "members": [
               {
-                "id": 1810,
+                "id": 1458,
                 "name": "CampaignDrafted",
-                "nameLocation": "680:15:5",
+                "nameLocation": "680:15:2",
                 "nodeType": "EnumValue",
-                "src": "680:15:5"
+                "src": "680:15:2"
               },
               {
-                "id": 1811,
+                "id": 1459,
                 "name": "CampaignPublished",
-                "nameLocation": "706:17:5",
+                "nameLocation": "706:17:2",
                 "nodeType": "EnumValue",
-                "src": "706:17:5"
+                "src": "706:17:2"
               },
               {
-                "id": 1812,
+                "id": 1460,
                 "name": "FundingComplete",
-                "nameLocation": "734:15:5",
+                "nameLocation": "734:15:2",
                 "nodeType": "EnumValue",
-                "src": "734:15:5"
+                "src": "734:15:2"
               },
               {
-                "id": 1813,
+                "id": 1461,
                 "name": "FundingFailed",
-                "nameLocation": "760:13:5",
+                "nameLocation": "760:13:2",
                 "nodeType": "EnumValue",
-                "src": "760:13:5"
+                "src": "760:13:2"
               },
               {
-                "id": 1814,
+                "id": 1462,
                 "name": "CampaignCompleted",
-                "nameLocation": "784:17:5",
+                "nameLocation": "784:17:2",
                 "nodeType": "EnumValue",
-                "src": "784:17:5"
+                "src": "784:17:2"
               },
               {
-                "id": 1815,
+                "id": 1463,
                 "name": "CampaignDeleted",
-                "nameLocation": "812:15:5",
+                "nameLocation": "812:15:2",
                 "nodeType": "EnumValue",
-                "src": "812:15:5"
+                "src": "812:15:2"
               }
             ],
             "name": "WorkflowStatus",
-            "nameLocation": "654:14:5",
+            "nameLocation": "654:14:2",
             "nodeType": "EnumDefinition",
-            "src": "649:185:5"
+            "src": "649:185:2"
           },
           {
             "documentation": {
-              "id": 1817,
+              "id": 1465,
               "nodeType": "StructuredDocumentation",
-              "src": "842:121:5",
+              "src": "842:121:2",
               "text": " @notice Returns the campaign information in the struct Info plus de createAt and the managerAddress."
             },
             "functionSelector": "d6290cd7",
-            "id": 1834,
+            "id": 1482,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "getCampaignInfo",
-            "nameLocation": "978:15:5",
+            "nameLocation": "978:15:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1818,
+              "id": 1466,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "993:2:5"
+              "src": "993:2:2"
             },
             "returnParameters": {
-              "id": 1833,
+              "id": 1481,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1821,
+                  "id": 1469,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1013:11:5",
+                  "scope": 1482,
+                  "src": "1013:11:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Info_$1809_memory_ptr",
+                    "typeIdentifier": "t_struct$_Info_$1457_memory_ptr",
                     "typeString": "struct ICampaign.Info"
                   },
                   "typeName": {
-                    "id": 1820,
+                    "id": 1468,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1819,
+                      "id": 1467,
                       "name": "Info",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1809,
-                      "src": "1013:4:5"
+                      "referencedDeclaration": 1457,
+                      "src": "1013:4:2"
                     },
-                    "referencedDeclaration": 1809,
-                    "src": "1013:4:5",
+                    "referencedDeclaration": 1457,
+                    "src": "1013:4:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Info_$1809_storage_ptr",
+                      "typeIdentifier": "t_struct$_Info_$1457_storage_ptr",
                       "typeString": "struct ICampaign.Info"
                     }
                   },
@@ -2041,13 +2041,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1823,
+                  "id": 1471,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1026:6:5",
+                  "scope": 1482,
+                  "src": "1026:6:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2055,10 +2055,10 @@
                     "typeString": "uint64"
                   },
                   "typeName": {
-                    "id": 1822,
+                    "id": 1470,
                     "name": "uint64",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1026:6:5",
+                    "src": "1026:6:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint64",
                       "typeString": "uint64"
@@ -2068,13 +2068,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1825,
+                  "id": 1473,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1034:7:5",
+                  "scope": 1482,
+                  "src": "1034:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2082,10 +2082,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1824,
+                    "id": 1472,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1034:7:5",
+                    "src": "1034:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2096,33 +2096,33 @@
                 },
                 {
                   "constant": false,
-                  "id": 1828,
+                  "id": 1476,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1043:14:5",
+                  "scope": 1482,
+                  "src": "1043:14:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_WorkflowStatus_$1816",
+                    "typeIdentifier": "t_enum$_WorkflowStatus_$1464",
                     "typeString": "enum ICampaign.WorkflowStatus"
                   },
                   "typeName": {
-                    "id": 1827,
+                    "id": 1475,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1826,
+                      "id": 1474,
                       "name": "WorkflowStatus",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1816,
-                      "src": "1043:14:5"
+                      "referencedDeclaration": 1464,
+                      "src": "1043:14:2"
                     },
-                    "referencedDeclaration": 1816,
-                    "src": "1043:14:5",
+                    "referencedDeclaration": 1464,
+                    "src": "1043:14:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_WorkflowStatus_$1816",
+                      "typeIdentifier": "t_enum$_WorkflowStatus_$1464",
                       "typeString": "enum ICampaign.WorkflowStatus"
                     }
                   },
@@ -2130,13 +2130,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1830,
+                  "id": 1478,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1059:7:5",
+                  "scope": 1482,
+                  "src": "1059:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2144,10 +2144,10 @@
                     "typeString": "uint128"
                   },
                   "typeName": {
-                    "id": 1829,
+                    "id": 1477,
                     "name": "uint128",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1059:7:5",
+                    "src": "1059:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint128",
                       "typeString": "uint128"
@@ -2157,13 +2157,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1832,
+                  "id": 1480,
                   "mutability": "mutable",
                   "name": "",
                   "nameLocation": "-1:-1:-1",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1834,
-                  "src": "1068:7:5",
+                  "scope": 1482,
+                  "src": "1068:7:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2171,10 +2171,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1831,
+                    "id": 1479,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1068:7:5",
+                    "src": "1068:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2184,198 +2184,198 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1012:64:5"
+              "src": "1012:64:2"
             },
-            "scope": 1900,
-            "src": "969:108:5",
+            "scope": 1548,
+            "src": "969:108:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1835,
+              "id": 1483,
               "nodeType": "StructuredDocumentation",
-              "src": "1085:259:5",
+              "src": "1085:259:2",
               "text": " @notice Update the campaign information in the struct Info.\n @dev Only the manager must be able to call it.\n @param updatedInfoData Info Object that contains all the new information following the Info struct for the campaign"
             },
             "functionSelector": "cd3fea14",
-            "id": 1841,
+            "id": 1489,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateCampaign",
-            "nameLocation": "1359:14:5",
+            "nameLocation": "1359:14:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1839,
+              "id": 1487,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1838,
+                  "id": 1486,
                   "mutability": "mutable",
                   "name": "updatedInfoData",
-                  "nameLocation": "1386:15:5",
+                  "nameLocation": "1386:15:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1841,
-                  "src": "1374:27:5",
+                  "scope": 1489,
+                  "src": "1374:27:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Info_$1809_memory_ptr",
+                    "typeIdentifier": "t_struct$_Info_$1457_memory_ptr",
                     "typeString": "struct ICampaign.Info"
                   },
                   "typeName": {
-                    "id": 1837,
+                    "id": 1485,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1836,
+                      "id": 1484,
                       "name": "Info",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1809,
-                      "src": "1374:4:5"
+                      "referencedDeclaration": 1457,
+                      "src": "1374:4:2"
                     },
-                    "referencedDeclaration": 1809,
-                    "src": "1374:4:5",
+                    "referencedDeclaration": 1457,
+                    "src": "1374:4:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Info_$1809_storage_ptr",
+                      "typeIdentifier": "t_struct$_Info_$1457_storage_ptr",
                       "typeString": "struct ICampaign.Info"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "1373:29:5"
+              "src": "1373:29:2"
             },
             "returnParameters": {
-              "id": 1840,
+              "id": 1488,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1411:0:5"
+              "src": "1411:0:2"
             },
-            "scope": 1900,
-            "src": "1350:62:5",
+            "scope": 1548,
+            "src": "1350:62:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1842,
+              "id": 1490,
               "nodeType": "StructuredDocumentation",
-              "src": "1420:254:5",
+              "src": "1420:254:2",
               "text": " @notice Add a new reward level to the campaign.\n @dev Only the manager must be able to call it.\n @param newRewardData Rewards Object that contains all the needed information following the Rewards struct for the campaign"
             },
             "functionSelector": "c97c5794",
-            "id": 1848,
+            "id": 1496,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "addReward",
-            "nameLocation": "1689:9:5",
+            "nameLocation": "1689:9:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1846,
+              "id": 1494,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1845,
+                  "id": 1493,
                   "mutability": "mutable",
                   "name": "newRewardData",
-                  "nameLocation": "1714:13:5",
+                  "nameLocation": "1714:13:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1848,
-                  "src": "1699:28:5",
+                  "scope": 1496,
+                  "src": "1699:28:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Rewards_$1800_memory_ptr",
+                    "typeIdentifier": "t_struct$_Rewards_$1448_memory_ptr",
                     "typeString": "struct ICampaign.Rewards"
                   },
                   "typeName": {
-                    "id": 1844,
+                    "id": 1492,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1843,
+                      "id": 1491,
                       "name": "Rewards",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1800,
-                      "src": "1699:7:5"
+                      "referencedDeclaration": 1448,
+                      "src": "1699:7:2"
                     },
-                    "referencedDeclaration": 1800,
-                    "src": "1699:7:5",
+                    "referencedDeclaration": 1448,
+                    "src": "1699:7:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Rewards_$1800_storage_ptr",
+                      "typeIdentifier": "t_struct$_Rewards_$1448_storage_ptr",
                       "typeString": "struct ICampaign.Rewards"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "1698:30:5"
+              "src": "1698:30:2"
             },
             "returnParameters": {
-              "id": 1847,
+              "id": 1495,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1737:0:5"
+              "src": "1737:0:2"
             },
-            "scope": 1900,
-            "src": "1680:58:5",
+            "scope": 1548,
+            "src": "1680:58:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1849,
+              "id": 1497,
               "nodeType": "StructuredDocumentation",
-              "src": "1746:327:5",
+              "src": "1746:327:2",
               "text": " @notice Update the data of a specific reward regarding its id.\n @dev Only the manager must be able to call it.\n @param newRewardData Rewards Object that contains the new data to set following the Rewards struct for the campaign\n @param rewardIndex uint256 Index of the reward to update"
             },
             "functionSelector": "6d2ffd85",
-            "id": 1857,
+            "id": 1505,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateReward",
-            "nameLocation": "2088:12:5",
+            "nameLocation": "2088:12:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1855,
+              "id": 1503,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1852,
+                  "id": 1500,
                   "mutability": "mutable",
                   "name": "newRewardData",
-                  "nameLocation": "2117:13:5",
+                  "nameLocation": "2117:13:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1857,
-                  "src": "2102:28:5",
+                  "scope": 1505,
+                  "src": "2102:28:2",
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Rewards_$1800_memory_ptr",
+                    "typeIdentifier": "t_struct$_Rewards_$1448_memory_ptr",
                     "typeString": "struct ICampaign.Rewards"
                   },
                   "typeName": {
-                    "id": 1851,
+                    "id": 1499,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 1850,
+                      "id": 1498,
                       "name": "Rewards",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1800,
-                      "src": "2102:7:5"
+                      "referencedDeclaration": 1448,
+                      "src": "2102:7:2"
                     },
-                    "referencedDeclaration": 1800,
-                    "src": "2102:7:5",
+                    "referencedDeclaration": 1448,
+                    "src": "2102:7:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Rewards_$1800_storage_ptr",
+                      "typeIdentifier": "t_struct$_Rewards_$1448_storage_ptr",
                       "typeString": "struct ICampaign.Rewards"
                     }
                   },
@@ -2383,13 +2383,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1854,
+                  "id": 1502,
                   "mutability": "mutable",
                   "name": "rewardIndex",
-                  "nameLocation": "2137:11:5",
+                  "nameLocation": "2137:11:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1857,
-                  "src": "2131:17:5",
+                  "scope": 1505,
+                  "src": "2131:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2397,10 +2397,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 1853,
+                    "id": 1501,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2131:5:5",
+                    "src": "2131:5:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -2409,48 +2409,48 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2100:49:5"
+              "src": "2100:49:2"
             },
             "returnParameters": {
-              "id": 1856,
+              "id": 1504,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2158:0:5"
+              "src": "2158:0:2"
             },
-            "scope": 1900,
-            "src": "2079:80:5",
+            "scope": 1548,
+            "src": "2079:80:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1858,
+              "id": 1506,
               "nodeType": "StructuredDocumentation",
-              "src": "2167:175:5",
+              "src": "2167:175:2",
               "text": " @notice Delete a reward by its Id.\n @dev Only the manager must be able to call it.\n @param rewardIndex uint256 Index of the reward to delete"
             },
             "functionSelector": "e21641b8",
-            "id": 1863,
+            "id": 1511,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deleteReward",
-            "nameLocation": "2357:12:5",
+            "nameLocation": "2357:12:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1861,
+              "id": 1509,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1860,
+                  "id": 1508,
                   "mutability": "mutable",
                   "name": "rewardIndex",
-                  "nameLocation": "2376:11:5",
+                  "nameLocation": "2376:11:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1863,
-                  "src": "2370:17:5",
+                  "scope": 1511,
+                  "src": "2370:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2458,10 +2458,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 1859,
+                    "id": 1507,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2370:5:5",
+                    "src": "2370:5:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -2470,81 +2470,81 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2369:19:5"
+              "src": "2369:19:2"
             },
             "returnParameters": {
-              "id": 1862,
+              "id": 1510,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2397:0:5"
+              "src": "2397:0:2"
             },
-            "scope": 1900,
-            "src": "2348:50:5",
+            "scope": 1548,
+            "src": "2348:50:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1864,
+              "id": 1512,
               "nodeType": "StructuredDocumentation",
-              "src": "2406:149:5",
+              "src": "2406:149:2",
               "text": " @notice Delete the campaign.\n @dev It's the entry point for deleting a campaign. Only the manager must be able to call it"
             },
             "functionSelector": "244c3c2c",
-            "id": 1867,
+            "id": 1515,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deleteCampaign",
-            "nameLocation": "2570:14:5",
+            "nameLocation": "2570:14:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1865,
+              "id": 1513,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2584:2:5"
+              "src": "2584:2:2"
             },
             "returnParameters": {
-              "id": 1866,
+              "id": 1514,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2595:0:5"
+              "src": "2595:0:2"
             },
-            "scope": 1900,
-            "src": "2561:35:5",
+            "scope": 1548,
+            "src": "2561:35:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1868,
+              "id": 1516,
               "nodeType": "StructuredDocumentation",
-              "src": "2604:182:5",
+              "src": "2604:182:2",
               "text": " @notice Allow the manager to setup a new one.\n @dev Only the manager must be able to call it.\n @param newManager address Address of the new manager"
             },
             "functionSelector": "58aba00f",
-            "id": 1873,
+            "id": 1521,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateManager",
-            "nameLocation": "2801:13:5",
+            "nameLocation": "2801:13:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1871,
+              "id": 1519,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1870,
+                  "id": 1518,
                   "mutability": "mutable",
                   "name": "newManager",
-                  "nameLocation": "2823:10:5",
+                  "nameLocation": "2823:10:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1873,
-                  "src": "2815:18:5",
+                  "scope": 1521,
+                  "src": "2815:18:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2552,10 +2552,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 1869,
+                    "id": 1517,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "2815:7:5",
+                    "src": "2815:7:2",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -2565,81 +2565,81 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "2814:20:5"
+              "src": "2814:20:2"
             },
             "returnParameters": {
-              "id": 1872,
+              "id": 1520,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "2843:0:5"
+              "src": "2843:0:2"
             },
-            "scope": 1900,
-            "src": "2792:52:5",
+            "scope": 1548,
+            "src": "2792:52:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1874,
+              "id": 1522,
               "nodeType": "StructuredDocumentation",
-              "src": "2856:218:5",
+              "src": "2856:218:2",
               "text": " @notice Allow the manager to publish campaign and make it visible to potential contributors.\n @dev Only the manager must be able to call it and only within acceptable deadlineDate timeframe."
             },
             "functionSelector": "7ef59f84",
-            "id": 1877,
+            "id": 1525,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "publishCampaign",
-            "nameLocation": "3089:15:5",
+            "nameLocation": "3089:15:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1875,
+              "id": 1523,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3104:2:5"
+              "src": "3104:2:2"
             },
             "returnParameters": {
-              "id": 1876,
+              "id": 1524,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3115:0:5"
+              "src": "3115:0:2"
             },
-            "scope": 1900,
-            "src": "3080:36:5",
+            "scope": 1548,
+            "src": "3080:36:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1878,
+              "id": 1526,
               "nodeType": "StructuredDocumentation",
-              "src": "3128:188:5",
+              "src": "3128:188:2",
               "text": " @notice Allow contributors to contribute to the campaign.\n @dev Can only be called if campaign is published, is not completed, is not deleted and is not failed."
             },
             "functionSelector": "d0a5d845",
-            "id": 1885,
+            "id": 1533,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "contribute",
-            "nameLocation": "3331:10:5",
+            "nameLocation": "3331:10:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1883,
+              "id": 1531,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1880,
+                  "id": 1528,
                   "mutability": "mutable",
                   "name": "_amount",
-                  "nameLocation": "3350:7:5",
+                  "nameLocation": "3350:7:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1885,
-                  "src": "3342:15:5",
+                  "scope": 1533,
+                  "src": "3342:15:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2647,10 +2647,10 @@
                     "typeString": "uint128"
                   },
                   "typeName": {
-                    "id": 1879,
+                    "id": 1527,
                     "name": "uint128",
                     "nodeType": "ElementaryTypeName",
-                    "src": "3342:7:5",
+                    "src": "3342:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint128",
                       "typeString": "uint128"
@@ -2660,13 +2660,13 @@
                 },
                 {
                   "constant": false,
-                  "id": 1882,
+                  "id": 1530,
                   "mutability": "mutable",
                   "name": "rewardIndex",
-                  "nameLocation": "3365:11:5",
+                  "nameLocation": "3365:11:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1885,
-                  "src": "3359:17:5",
+                  "scope": 1533,
+                  "src": "3359:17:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2674,10 +2674,10 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
-                    "id": 1881,
+                    "id": 1529,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
-                    "src": "3359:5:5",
+                    "src": "3359:5:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -2686,114 +2686,114 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "3341:36:5"
+              "src": "3341:36:2"
             },
             "returnParameters": {
-              "id": 1884,
+              "id": 1532,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3386:0:5"
+              "src": "3386:0:2"
             },
-            "scope": 1900,
-            "src": "3322:65:5",
+            "scope": 1548,
+            "src": "3322:65:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1886,
+              "id": 1534,
               "nodeType": "StructuredDocumentation",
-              "src": "3395:155:5",
+              "src": "3395:155:2",
               "text": " @notice Allow contributor to get refunded.\n @dev Can only be called if campiagn deadline is passed and fundingGoal not reached."
             },
             "functionSelector": "590e1ae3",
-            "id": 1889,
+            "id": 1537,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "refund",
-            "nameLocation": "3565:6:5",
+            "nameLocation": "3565:6:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1887,
+              "id": 1535,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3571:2:5"
+              "src": "3571:2:2"
             },
             "returnParameters": {
-              "id": 1888,
+              "id": 1536,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3582:0:5"
+              "src": "3582:0:2"
             },
-            "scope": 1900,
-            "src": "3556:27:5",
+            "scope": 1548,
+            "src": "3556:27:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1890,
+              "id": 1538,
               "nodeType": "StructuredDocumentation",
-              "src": "3591:187:5",
+              "src": "3591:187:2",
               "text": " @notice Allows manager to deploy proposal contract to start submitting proposals.\n @dev Can only be called by manager and if WorkflowStatus is FundingComplete."
             },
             "functionSelector": "0d4c4a2f",
-            "id": 1893,
+            "id": 1541,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "launchProposalContract",
-            "nameLocation": "3793:22:5",
+            "nameLocation": "3793:22:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1891,
+              "id": 1539,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3815:2:5"
+              "src": "3815:2:2"
             },
             "returnParameters": {
-              "id": 1892,
+              "id": 1540,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "3826:0:5"
+              "src": "3826:0:2"
             },
-            "scope": 1900,
-            "src": "3784:43:5",
+            "scope": 1548,
+            "src": "3784:43:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 1894,
+              "id": 1542,
               "nodeType": "StructuredDocumentation",
-              "src": "3835:152:5",
+              "src": "3835:152:2",
               "text": " @notice Transfer unlocked funds to manager address.\n @dev Can only be called by proposal contract when proposal is accepted."
             },
             "functionSelector": "0a2d00d3",
-            "id": 1899,
+            "id": 1547,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "releaseProposalFunds",
-            "nameLocation": "4002:20:5",
+            "nameLocation": "4002:20:2",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 1897,
+              "id": 1545,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 1896,
+                  "id": 1544,
                   "mutability": "mutable",
                   "name": "_amount",
-                  "nameLocation": "4031:7:5",
+                  "nameLocation": "4031:7:2",
                   "nodeType": "VariableDeclaration",
-                  "scope": 1899,
-                  "src": "4023:15:5",
+                  "scope": 1547,
+                  "src": "4023:15:2",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -2801,10 +2801,10 @@
                     "typeString": "uint128"
                   },
                   "typeName": {
-                    "id": 1895,
+                    "id": 1543,
                     "name": "uint128",
                     "nodeType": "ElementaryTypeName",
-                    "src": "4023:7:5",
+                    "src": "4023:7:2",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint128",
                       "typeString": "uint128"
@@ -2813,27 +2813,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "4022:17:5"
+              "src": "4022:17:2"
             },
             "returnParameters": {
-              "id": 1898,
+              "id": 1546,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "4048:0:5"
+              "src": "4048:0:2"
             },
-            "scope": 1900,
-            "src": "3993:56:5",
+            "scope": 1548,
+            "src": "3993:56:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 1901,
-        "src": "244:3808:5",
+        "scope": 1549,
+        "src": "244:3808:2",
         "usedErrors": []
       }
     ],
-    "src": "37:4017:5"
+    "src": "37:4017:2"
   },
   "compiler": {
     "name": "solc",
@@ -2841,7 +2841,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-01T17:43:23.296Z",
+  "updatedAt": "2021-08-01T20:22:26.176Z",
   "devdoc": {
     "details": "Interface for the Campaign contract",
     "kind": "dev",
