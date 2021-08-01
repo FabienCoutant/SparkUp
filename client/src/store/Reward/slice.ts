@@ -15,7 +15,7 @@ const initialState: rewardState = {
     {
       title: '',
       description: '',
-      minimumContribution: 0,
+      minimumContribution: 5,
       amount: 0,
       stockLimit: 0,
       nbContributors: 0,

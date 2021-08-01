@@ -1,5 +1,5 @@
 import { notificationActions } from '../../store/Notification/slice'
-import { Info, NOTIFICATION_TYPE, RENDER_MESSAGE, RENDER_TYPE, WORKFLOW_STATUS } from '../../constants'
+import { Info, NOTIFICATION_TYPE, RENDER_MESSAGE, RENDER_TYPE, WORKFLOW_STATUS, ZERO_ADDRESS } from '../../constants'
 import { formatDate, isValidDate, serializeTimestampsFor } from '../../utils/dateHelper'
 import { campaignActions } from '../../store/Campaign/slice'
 import { useState } from 'react'
@@ -49,6 +49,7 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
         currentBalance:0,
         manager: account as string,
         createAt: new Date().getTime(),
+        proposalAddress:ZERO_ADDRESS,
         workflowStatus:WORKFLOW_STATUS.CampaignDrafted
       })
     )
