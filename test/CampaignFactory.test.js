@@ -69,16 +69,20 @@ contract('CampaignFactory', (accounts) => {
         from: alice,
       });
       firstCampaignAddress = receipt.logs[0].args.campaignAddress; // get the Campaign created address
-      const contractExist = await CampaignFactoryContractInstance.contractExist(firstCampaignAddress);
-      expect(contractExist).to.be.true;
+      const contractExist = await CampaignFactoryContractInstance.campaignToId(firstCampaignAddress);
+      expect(contractExist).to.be.bignumber.equal(new BN(1));
+      const deployedCampaign = await CampaignFactoryContractInstance.deployedCampaigns(1);
+      expect(deployedCampaign).to.be.equal(firstCampaignAddress);
+      const campaignCounter = await CampaignFactoryContractInstance.campaignCounter();
+      expect(campaignCounter).to.be.bignumber.equal(new BN(2));
     });
     it('should emit an event when new campaign has been created', async () => {
       const receipt = await CampaignFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
         from: alice,
       });
-      const deployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaignsList();
+      const deployedCampaignAddress = receipt.logs[0].args.campaignAddress; // get the Campaign created address
       expectEvent(receipt, 'newCampaign', {
-        campaignAddress: deployedCampaignsList[0],
+        campaignAddress: deployedCampaignAddress,
       });
     });
     it('should init correctly the data of the new campaign deployed', async () => {
@@ -145,12 +149,6 @@ contract('CampaignFactory', (accounts) => {
         }),
         '!Err: deadlineDate to short'
       );
-    });
-    it('should return an array with all campaign address', async () => {
-      await CampaignFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, { from: alice });
-      await CampaignFactoryContractInstance.createCampaign(secondInitialCampaignInfo, initialRewards, { from: alice });
-      const deployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaignsList();
-      expect(deployedCampaignsList).to.have.lengthOf(2);
     });
     it('should revert if no rewards is defined', async () => {
       await expectRevert(
@@ -225,23 +223,19 @@ contract('CampaignFactory', (accounts) => {
       const secondCampaignResult = await secondCampaignContractInstance.getCampaignInfo();
       const secondCampaignInfo = secondCampaignResult['0'];
       expect(secondCampaignInfo.title).to.be.equal(secondInitialCampaignInfo.title);
-
-      const deployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaignsList();
-      expect(deployedCampaignsList).to.have.lengthOf(2);
+      const campaignCounter = await CampaignFactoryContractInstance.campaignCounter();
+      expect(campaignCounter).to.be.bignumber.equal(new BN(3));
     });
     it('should allow to create 2 Campaigns and delete the last one', async () => {
       await secondCampaignContractInstance.deleteCampaign({
         from: alice,
       });
-
-      const deployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaignsList();
-      expect(deployedCampaignsList).to.have.lengthOf(1);
-
-      const isFirstContractExist = await CampaignFactoryContractInstance.contractExist(firstCampaignAddress);
-      expect(isFirstContractExist).to.be.true;
-
-      const isSecondContractExist = await CampaignFactoryContractInstance.contractExist(secondCampaignAddress);
-      expect(isSecondContractExist).to.be.false;
+      const campaignCounter = await CampaignFactoryContractInstance.campaignCounter();
+      expect(campaignCounter).to.be.bignumber.equal(new BN(2));
+      const firstCampaignId = await CampaignFactoryContractInstance.campaignToId(firstCampaignAddress);
+      expect(firstCampaignId).to.be.bignumber.equal(new BN(1));
+      const secondCampaignId = await CampaignFactoryContractInstance.campaignToId(secondCampaignAddress);
+      expect(secondCampaignId).to.be.bignumber.equal(new BN(0));
     });
     it('should allow to create 3 Campaigns and delete the 2nd one which is replaced by the 3th one', async () => {
       const thirdInitialCampaignInfo = {
@@ -258,24 +252,19 @@ contract('CampaignFactory', (accounts) => {
       const thirdCampaignResult = await thirdCampaignContractInstance.getCampaignInfo();
       const thirdCampaignInfo = thirdCampaignResult['0'];
       expect(thirdCampaignInfo.title).to.be.equal(thirdInitialCampaignInfo.title);
-
-      const deployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaignsList();
-      expect(deployedCampaignsList).to.have.lengthOf(3);
-
+      const campaignCounterBeforeDelete = await CampaignFactoryContractInstance.campaignCounter();
+      expect(campaignCounterBeforeDelete).to.be.bignumber.equal(new BN(4));
       await secondCampaignContractInstance.deleteCampaign({
         from: alice,
       });
-
-      const newDeployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaignsList();
-      expect(newDeployedCampaignsList).to.have.lengthOf(2);
-
-      const isContract3Exist = await CampaignFactoryContractInstance.contractExist(thirdCampaignAddress);
-      expect(isContract3Exist).to.be.true;
-
-      const isPreviousContract2Exist = await CampaignFactoryContractInstance.contractExist(secondCampaignAddress);
-      expect(isPreviousContract2Exist).to.be.false;
-
-      expect(newDeployedCampaignsList[1]).to.be.equal(thirdCampaignAddress);
+      const campaignCounterAfterDelete = await CampaignFactoryContractInstance.campaignCounter();
+      expect(campaignCounterAfterDelete).to.be.bignumber.equal(new BN(3));
+      const thirdCampaignId = await CampaignFactoryContractInstance.campaignToId(thirdCampaignAddress);
+      expect(thirdCampaignId).to.be.bignumber.equal(new BN(2));
+      const secondCampaignId = await CampaignFactoryContractInstance.campaignToId(secondCampaignAddress);
+      expect(secondCampaignId).to.be.bignumber.equal(new BN(0));
+      const newCampaignId = await CampaignFactoryContractInstance.deployedCampaigns(2);
+      expect(newCampaignId).to.be.equal(thirdCampaignAddress);
     });
     it('should revert if not the manager try to delete it', async () => {
       await expectRevert(secondCampaignContractInstance.deleteCampaign({ from: bob }), '!Not Authorized');
@@ -298,8 +287,8 @@ contract('CampaignFactory', (accounts) => {
         from: alice,
       });
 
-      const deployedCampaignsList = await CampaignFactoryContractInstance.getDeployedCampaignsList();
-      expect(deployedCampaignsList).to.have.lengthOf(1);
+      const campaignCounter = await CampaignFactoryContractInstance.campaignCounter();
+      expect(campaignCounter).to.be.bignumber.equal(new BN(2));
 
       const newReward = {
         title: 'Third rewards',

@@ -20,9 +20,8 @@ interface ICampaignFactory {
     /**
      * @notice Delete a new Campaign that call this function.
      * @dev Only an contract already deployed must be able to call this function
-     * @return success bool
      */
-    function deleteCampaign() external returns(bool);
+    function deleteCampaign() external;
 
     /**
      * @notice Allow the owner to set a new owner for the factory.
@@ -30,10 +29,4 @@ interface ICampaignFactory {
      * @param newOwner address The new owner address
      */
     function updateOwner(address newOwner) external;
-
-    /**
-     * @notice Allow to get the all list of campaign address deployed
-     * @return Campaigns ICampaign[] list of campaigns address deployed and still actives
-     */
-    function getDeployedCampaignsList() external view returns (ICampaign[] memory);
 }

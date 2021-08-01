@@ -12,10 +12,11 @@ import "./interfaces/ICampaignFactory.sol";
 */
 contract CampaignFactory is ICampaignFactory {
 
+    uint128 public campaignCounter = 1;
     address public owner;
-    ICampaign[] public deployedCampaigns;
-    mapping(address => uint) public contractIndex;
-    mapping(address => bool) public contractExist;
+
+    mapping(uint128 => address) public deployedCampaigns;
+    mapping(address => uint128) public campaignToId;
     IERC20 public immutable usdcToken;
     address public immutable escrowContract;
 
@@ -33,26 +34,26 @@ contract CampaignFactory is ICampaignFactory {
      */
     function createCampaign(ICampaign.Info memory infoData, ICampaign.Rewards[] memory rewardsData) external override {
         ICampaign _newCampaign = new Campaign(infoData, rewardsData, msg.sender, usdcToken, escrowContract);
-        deployedCampaigns.push(_newCampaign);
-        contractIndex[address(_newCampaign)] = getLastDeployedCampaignsIndex();
-        contractExist[address(_newCampaign)] = true;
+        deployedCampaigns[campaignCounter] = address(_newCampaign);
+        campaignToId[address(_newCampaign)] = campaignCounter;
+        campaignCounter++;
         emit newCampaign(address(_newCampaign));
     }
 
     /**
      * @inheritdoc ICampaignFactory
      */
-    function deleteCampaign() public override returns (bool){
-        require(contractExist[msg.sender], "!Err: Not exist");
-        uint _indexToSwap = contractIndex[msg.sender];
-        if (_indexToSwap != getLastDeployedCampaignsIndex()) {
-            deployedCampaigns[_indexToSwap] = deployedCampaigns[getLastDeployedCampaignsIndex()];
-            contractIndex[address(deployedCampaigns[getLastDeployedCampaignsIndex()])] = _indexToSwap;
+    function deleteCampaign() public override {
+        require(campaignToId[msg.sender] !=0 , "!Err: Not exist");
+        uint128 _indexToSwap = campaignToId[msg.sender];
+        if (_indexToSwap != campaignCounter - 1) {
+            deployedCampaigns[_indexToSwap] = deployedCampaigns[campaignCounter - 1];
+            campaignToId[deployedCampaigns[campaignCounter-1]] = _indexToSwap;
         }
-        deployedCampaigns.pop();
-        delete contractIndex[msg.sender];
-        delete contractExist[msg.sender];
-        return true;
+
+        delete deployedCampaigns[campaignCounter - 1];
+        delete campaignToId[msg.sender];
+        campaignCounter--;
     }
 
     /**
@@ -61,20 +62,5 @@ contract CampaignFactory is ICampaignFactory {
     function updateOwner(address newOwner) external override {
         require(owner == msg.sender, "!Not Authorized");
         owner = newOwner;
-    }
-
-    /**
-     * @inheritdoc ICampaignFactory
-     */
-    function getDeployedCampaignsList() external override view returns (ICampaign[] memory){
-        return deployedCampaigns;
-    }
-
-    /**
-     * @notice Helper to get the index of the last campaign deployed
-     * @return index uint index of the last elem of the deployedCampaigns array
-     */
-    function getLastDeployedCampaignsIndex() internal view returns (uint){
-        return deployedCampaigns.length - 1;
     }
 }

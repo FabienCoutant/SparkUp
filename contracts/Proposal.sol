@@ -55,7 +55,7 @@ contract Proposal is IProposal {
         require(activeProposalCounter < 5, "!Err: Maximum amount of proposal reached");
         require(bytes(_title).length > 0, "!Err: Title empty");
         require(bytes(_description).length > 0, "!Err: Description empty");
-        require(_amount > 100 ether, "!Err: Amount too low");
+        require(_amount >= 100 ether, "!Err: Amount too low");
         require(_amount <= availableFunds, "!Err: Proposal amount exceeds campaign USDC balance");
         Proposal memory p;
         p.title = _title;
