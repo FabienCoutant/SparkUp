@@ -9,7 +9,6 @@ pragma solidity 0.8.6;
 interface IProposal {
     
     struct Proposal {
-        uint8 id;
         string title;
         string description;
         uint128 amount;
