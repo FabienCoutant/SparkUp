@@ -71,7 +71,6 @@ export interface Proposals {
   nokVotes: number;
   status: PROPOSAL_WORKFLOW_STATUS;
   deadLine: number;
-  accepted: boolean;
 }
 
 export enum RENDER_TYPE {
@@ -83,6 +82,16 @@ export enum RENDER_TYPE {
   DELETE
 }
 
+export enum PROPOSAL_TYPE{
+  active,
+  archived
+}
+
+
+export const STATE_PROPOSAL_TYPE: { [key in PROPOSAL_TYPE]: string } = {
+  [PROPOSAL_TYPE.active]: 'active',
+  [PROPOSAL_TYPE.archived]: 'archived',
+}
 
 export const RENDER_MESSAGE: { [key in RENDER_TYPE]: string } = {
   [RENDER_TYPE.LIST]: 'See More',

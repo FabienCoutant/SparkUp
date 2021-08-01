@@ -20,6 +20,7 @@ export const getContractByABI = (
       contract = new library.eth.Contract(contractJSON, USDC_CONTRACTS[chainId])
     } else if (chainId === 1337) {
       const deployedNetwork = contractJSON.networks[chainId]
+      console.log(deployedNetwork.address)
       contract = new library.eth.Contract(
         contractJSON.abi,
         deployedNetwork && deployedNetwork.address

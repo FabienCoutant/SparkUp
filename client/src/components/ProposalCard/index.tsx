@@ -1,31 +1,32 @@
-import { RENDER_TYPE } from '../../constants'
+import { PROPOSAL_TYPE, RENDER_TYPE, STATE_PROPOSAL_TYPE } from '../../constants'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useIsContributor, useIsManager } from '../../hooks/useFetchCampaign'
 import { useParams } from 'react-router-dom'
 
 
-const ProposalCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE }) => {
+const ProposalCard = ({ id,proposalType }: { id: number,proposalType:PROPOSAL_TYPE}) => {
   const dispatch = useAppDispatch()
   const { account } = useWeb3React()
   const { campaignAddress } = useParams<{ campaignAddress: string }>()
   const campaign = useAppSelector((state) => state.campaign)
-  const proposals = useAppSelector((state) => state.proposal.proposals)
-
+  // @ts-ignore
+  const proposals = useAppSelector((state) => state.proposal[STATE_PROPOSAL_TYPE[proposalType]])
+  console.log(proposals)
   const isManager = useIsManager(campaign.manager)
   const isContributor = useIsContributor(campaignAddress)
 
   const renderProposalButton = () =>{
+    // if(isContributor && )
     return(
       <div>Test</div>
     );
   }
 
-
   return(
-    <div className='card'>
+    <div className='card text-start'>
       <div className='card-body'>
-        <h5 className='card-title'> {proposals[id].title}</h5>
+        <h5 className='card-title text-center'> {proposals[id].title}</h5>
         <div className='list-inline'>
         <label htmlFor='rewardDescription' className='form-label'>
           Description :

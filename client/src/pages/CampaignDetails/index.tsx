@@ -4,7 +4,14 @@ import RewardCard from '../../components/RewardCard'
 import CampaignCard from '../../components/CampaignCard'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import Loader from '../../components/Loader'
-import { NOTIFICATION_TYPE, RENDER_TYPE, WORKFLOW_STATUS, ZERO_ADDRESS } from '../../constants'
+import {
+  NOTIFICATION_TYPE,
+  PROPOSAL_TYPE,
+  PROPOSAL_WORKFLOW_STATUS,
+  RENDER_TYPE,
+  WORKFLOW_STATUS,
+  ZERO_ADDRESS
+} from '../../constants'
 import CampaignForm from '../../components/CampaignForm'
 import { reward, rewardActions } from '../../store/Reward/slice'
 import RewardForm from '../../components/RewardForm'
@@ -17,8 +24,9 @@ import { campaignActions } from '../../store/Campaign/slice'
 import { notificationActions } from '../../store/Notification/slice'
 import { userActions } from '../../store/User/slice'
 import { useFetchProposalsList } from '../../hooks/useFetchProposals'
-import { proposal } from '../../store/Proposal/slice'
+import { proposal, proposalActions } from '../../store/Proposal/slice'
 import ProposalCard from '../../components/ProposalCard'
+import ProposalForm from '../../components/ProposalForm'
 
 const CampaignDetails = () => {
   const { account } = useActiveWeb3React()
@@ -30,7 +38,7 @@ const CampaignDetails = () => {
   const contractCampaign = useContractCampaign(campaignAddress)
   const campaign = useAppSelector(state => state.campaign)
   const rewards = useAppSelector(state => state.reward.rewards)
-  const proposals = useAppSelector(state => state.proposal.proposals)
+  const proposals = useAppSelector(state => state.proposal)
   useFetchProposalsList(campaign.proposalAddress)
   const isManager = useIsManager(campaign.manager)
   const { isContributor, contributorBalance } = useIsContributor(campaignAddress)
@@ -50,6 +58,24 @@ const CampaignDetails = () => {
             isStockLimited: false,
             onChain: false,
             confirmed: false
+          }
+        })
+    )
+  }
+
+  const addNewProposal = () => {
+    dispatch(
+      proposalActions.addActiveProposal(
+        {
+          active: {
+            title: '',
+            description: '',
+            amount: 0,
+            okVotes: 0,
+            nokVotes: 0,
+            status: PROPOSAL_WORKFLOW_STATUS.Pending,
+            deadLine: new Date().setDate(new Date().getDate() + 7),
+            onChain: false
           }
         })
     )
@@ -93,12 +119,12 @@ const CampaignDetails = () => {
     }
   }
 
-  const handleLaunchProposal =()=>{
+  const handleLaunchProposal = () => {
     if (contractCampaign && isManager) {
-      contractCampaign.methods.launchProposalContract().send({ from: account }).then(() => {
-        contractCampaign.methods.proposal().call().then((res:any)=>{
-          console.log(res)
-        })
+      contractCampaign.methods.launchProposalContract().send({ from: account }).then(async () => {
+        const proposalAddress: string = await contractCampaign.methods.proposal().call()
+        console.log(proposalAddress)
+        dispatch(campaignActions.setProposalAddress({ proposalAddress }))
         dispatch(notificationActions.setNotification({
           message: 'Your has been successfully launch the proposal part',
           type: NOTIFICATION_TYPE.SUCCESS
@@ -129,8 +155,8 @@ const CampaignDetails = () => {
     if (isContributor
       && (
         (campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
-        && campaign.amountRaise <= campaign.info.fundingGoal
-        //&& campaign.info.deadlineDate<= new Date().getTime()
+          && campaign.amountRaise <= campaign.info.fundingGoal
+          //&& campaign.info.deadlineDate<= new Date().getTime()
         )
         || campaign.workflowStatus === WORKFLOW_STATUS.FundingFailed
       )
@@ -143,13 +169,14 @@ const CampaignDetails = () => {
         </div>
       )
     }
-    if(isManager
-    && campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
+    if (isManager
+      && campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
+      && campaign.proposalAddress === ZERO_ADDRESS
       //&& campaign.info.deadlineDate <= new Date().getTime()
-    ){
+    ) {
       return (
         <div>
-          <button type='button' className='btn btn-info' onClick={handleLaunchProposal}>
+          <button type='button' className='btn btn-success' onClick={handleLaunchProposal}>
             Start Proposals
           </button>
         </div>
@@ -177,12 +204,32 @@ const CampaignDetails = () => {
     }
   }
 
-  const renderProposal = (proposal:proposal,index:number) => {
-    if(proposal.confirmed){
-      return <ProposalCard id={index} renderType={RENDER_TYPE.DETAIL}/>
+  const renderActiveProposal = (proposal: proposal, index: number) => {
+    if (proposal.onChain) {
+      return <ProposalCard id={index} proposalType={PROPOSAL_TYPE.active}/>
+    } else {
+      return <ProposalForm id={index} address={campaign.proposalAddress} />
     }
   }
-  console.log(campaign.proposalAddress)
+
+  const renderProposalList = () => {
+    if (campaign.proposalAddress !== ZERO_ADDRESS) {
+      if (proposals.active.length > 0) {
+        return (proposals.active.map((proposal, index) => {
+            return (
+              <div className='card mb-3 mt-3' key={index}>
+                {renderActiveProposal(proposal, index)}
+              </div>
+            )
+          }
+        ))
+      }
+      return <div>They is no proposal</div>
+    }
+    return <div>The campaign must be succeed to launch proposals</div>
+  }
+
+
   const renderAddRewardButton = () => {
     if (isManager && campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted) {
       return (
@@ -233,16 +280,14 @@ const CampaignDetails = () => {
         <div className='col-7'>
           <div className='text-center'>
             <h2>Proposals</h2>
-            {campaign.proposalAddress!==ZERO_ADDRESS &&
-              proposals.map((proposal, index) => {
-                  return (
-                    <div className='card mb-3 mt-3' key={index}>
-                      {renderProposal(proposal, index)}
-                    </div>
-                  )
-                }
-              )
-            }
+            {renderProposalList()}
+            {proposals.active.length < 5 && (
+              <div className='mb-3 mt-3 text-center'>
+                <button className='btn btn-primary' onClick={addNewProposal}>
+                  Add Proposal
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -3,61 +3,55 @@ import { PROPOSAL_WORKFLOW_STATUS, Proposals, VOTING_TYPE } from '../../constant
 
 export interface proposal extends Proposals {
   onChain: boolean;
-  confirmed: boolean;
 }
 
 export interface proposalState {
-  proposals: proposal[];
+  active: proposal[];
+  archived: proposal[];
 }
 
 const initialState: proposalState = {
-  proposals: [
-    {
-      title: '',
-      description: '',
-      amount: 0,
-      okVotes:0,
-      nokVotes:0,
-      status:PROPOSAL_WORKFLOW_STATUS.Pending,
-      deadLine: new Date().setDate(new Date().getDate() + 7),
-      accepted: false,
-      onChain:false,
-      confirmed:false
-    }
-  ]
+  active:[],
+  archived:[]
 }
 
 const proposalSlice = createSlice({
   name: 'proposal',
   initialState,
   reducers: {
-    addProposal(state, action: PayloadAction<{ proposal:proposal }>) {
-      state.proposals.push(action.payload.proposal)
+    addActiveProposal(state, action: PayloadAction<{ active:proposal }>) {
+      state.active.push(action.payload.active)
     },
-    updateProposal(state, action: PayloadAction<{ proposal: proposal, id: number }>) {
-      state.proposals[action.payload.id] = action.payload.proposal
+    addArchivedProposal(state, action: PayloadAction<{ proposal:proposal }>) {
+      state.archived.push(action.payload.proposal)
     },
-    setConfirmed(state, action: PayloadAction<{ id: number, confirmed: boolean }>) {
-      state.proposals[action.payload.id].confirmed = action.payload.confirmed
+    updateProposal(state, action: PayloadAction<{ active: proposal, id: number }>) {
+      state.active[action.payload.id] = action.payload.active
     },
     removeProposal(state, action: PayloadAction<{ id: number }>) {
-      state.proposals.splice(action.payload.id, 1)
+      state.active.splice(action.payload.id, 1)
     },
-    setState(state, action: PayloadAction<proposalState>) {
-      state.proposals = [];
-      for(const reward of action.payload.proposals){
-        state.proposals.push(reward)
+    setActiveProposalState(state, action: PayloadAction<{ active:proposal[] }>) {
+      state.active = [];
+      for(const proposal of action.payload.active){
+        state.active.push(proposal)
+      }
+    },
+    setArchivedProposalState(state, action: PayloadAction<{ archived:proposal[] }>) {
+      state.archived = [];
+      for(const proposal of action.payload.archived){
+        state.archived.push(proposal)
       }
     },
     addVote(state,action:PayloadAction<{votingPower:number,type:VOTING_TYPE,id:number}>){
       if(action.payload.type===VOTING_TYPE.OK){
-        state.proposals[action.payload.id].okVotes=state.proposals[action.payload.id].okVotes+action.payload.votingPower
+        state.active[action.payload.id].okVotes=state.active[action.payload.id].okVotes+action.payload.votingPower
       }else{
-        state.proposals[action.payload.id].nokVotes=state.proposals[action.payload.id].nokVotes+action.payload.votingPower
+        state.active[action.payload.id].nokVotes=state.active[action.payload.id].nokVotes+action.payload.votingPower
       }
     },
     withdraw(state,action:PayloadAction<{id:number}>){
-      state.proposals[action.payload.id].amount=0
+      state.active[action.payload.id].amount=0
     },
     resetState:()=>initialState,
   }

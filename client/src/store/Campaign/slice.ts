@@ -59,6 +59,9 @@ const campaignSlice = createSlice({
     subFunding(state,action:PayloadAction<{amount:number}>){
       state.amountRaise = state.amountRaise as number-action.payload.amount
     },
+    setProposalAddress(state,action:PayloadAction<{proposalAddress:string}>){
+      state.proposalAddress = action.payload.proposalAddress
+    },
     resetState : () => initialState,
   }
 })

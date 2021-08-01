@@ -43,7 +43,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
   }
 
   const handleCancelNew = () => {
-    dispatch(rewardActions.removeReward({ id: id }))
+    dispatch(rewardActions.removeReward({ id }))
   }
 
   const handleCancelUpdate = () => {
@@ -145,7 +145,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
     const reward: Rewards = {
       title: rewardTitle,
       description: rewardDescription,
-      minimumContribution: serializeUSDCFor(rewardMinimumContribution,true),
+      minimumContribution: serializeUSDCFor(rewardMinimumContribution, true),
       amount: 0,
       stockLimit: rewardStockLimit,
       nbContributors: 0,
@@ -153,15 +153,20 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
     }
     if (contractCampaign) {
       contractCampaign?.methods?.updateReward(reward, id).send({ from: account }).then(() => {
-        const rewardState:reward = {
+        const rewardState: reward = {
           ...reward,
           onChain: true,
           confirmed: true
         }
-        dispatch(rewardActions.updateReward({ reward: { ...rewardState, minimumContribution:rewardMinimumContribution },id }))
+        dispatch(rewardActions.updateReward({
+          reward: {
+            ...rewardState,
+            minimumContribution: rewardMinimumContribution
+          }, id
+        }))
         dispatch(notificationActions.setNotification(({
           message: `Reward ${rewardTitle} has been correctly updated`,
-          type:NOTIFICATION_TYPE.SUCCESS
+          type: NOTIFICATION_TYPE.SUCCESS
         })))
       }).catch((error: any) => {
         console.log(error)
@@ -173,7 +178,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
     const reward: Rewards = {
       title: rewardTitle,
       description: rewardDescription,
-      minimumContribution: serializeUSDCFor(rewardMinimumContribution,true),
+      minimumContribution: serializeUSDCFor(rewardMinimumContribution, true),
       amount: 0,
       stockLimit: rewardStockLimit,
       nbContributors: 0,
@@ -181,18 +186,20 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
     }
     if (contractCampaign) {
       contractCampaign?.methods?.addReward(reward).send({ from: account }).then(() => {
-        const rewardState:reward = {
+        const rewardState: reward = {
           ...reward,
           onChain: true,
-          confirmed:true
+          confirmed: true
         }
 
-        dispatch(rewardActions.updateReward({ reward:{
-          ...rewardState, minimumContribution:rewardMinimumContribution
-          },id }))
+        dispatch(rewardActions.updateReward({
+          reward: {
+            ...rewardState, minimumContribution: rewardMinimumContribution
+          }, id
+        }))
         dispatch(notificationActions.setNotification(({
           message: `Reward ${rewardTitle} has been correctly added`,
-          type:NOTIFICATION_TYPE.SUCCESS
+          type: NOTIFICATION_TYPE.SUCCESS
         })))
       }).catch((error: any) => {
         console.log(error)
@@ -222,7 +229,7 @@ const RewardForm = ({ id, reward, renderType }: { id: number, reward: reward, re
           </label>
           <textarea
             className='form-control'
-            placeholder='Describe your campaign here'
+            placeholder='Describe your reward here'
             id='rewardDescription'
             style={{ height: '100px' }}
             value={rewardDescription}
