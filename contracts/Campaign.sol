@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Campaign is ICampaign {
     using SafeERC20 for IERC20;
-
+    
     IERC20 public immutable usdcToken;
 
     uint8 public rewardsCounter;
@@ -48,18 +48,18 @@ contract Campaign is ICampaign {
         require(currentStatus == requiredStatus, "!Err : Wrong workflow status");
         _;
     }
-
+    
     modifier checkCampaignDeadline() {
         require(block.timestamp <  campaignInfo.deadlineDate, "!Err : Campaign contribution has ended");
         _;
     }
 
-    constructor(Info memory infoData, Rewards[] memory rewardsData, address _manager, IERC20 _usdcToken, address _escrowContract)
+    constructor(Info memory infoData, Rewards[] memory rewardsData, address _manager, IERC20 _usdcToken, address _escrowContract, address _factory)
     {
         require(rewardsData.length > 0, "!Err: Rewards empty");
         require(rewardsData.length <= 10, "!Err: Too much Rewards");
         manager = _manager;
-        factory = msg.sender;
+        factory = _factory;
         createAt = uint64(block.timestamp);
         status = WorkflowStatus.CampaignDrafted;
         usdcToken = _usdcToken;
@@ -171,7 +171,7 @@ contract Campaign is ICampaign {
         require(minDate >= block.timestamp, "!Err: deadlineDate to short");
         status = WorkflowStatus.CampaignPublished;
     }
-
+    
     /**
      * @inheritdoc ICampaign
      */
@@ -185,7 +185,6 @@ contract Campaign is ICampaign {
         rewardsList[rewardIndex].amount = rewardsList[rewardIndex].amount + _amount;
         if(getContractUSDCBalance() >= campaignInfo.fundingGoal) {
             status = WorkflowStatus.FundingComplete;
-            totalRaised = getContractUSDCBalance();
         }
     }
 
@@ -209,7 +208,8 @@ contract Campaign is ICampaign {
     function launchProposalContract() external override onlyManager() isNotDeleted() checkStatus(status, WorkflowStatus.FundingComplete) {
         require(proposal == address(0), "!Err: proposal already deployed");
         require(block.timestamp > campaignInfo.deadlineDate, "!Err: campaign deadline not passed");
-        usdcToken.safeTransfer(escrowContract, totalRaised*5/100);
+        usdcToken.safeTransfer(escrowContract, getContractUSDCBalance()*5/100);
+        totalRaised = getContractUSDCBalance();
         IProposal _proposalContract = new Proposal(address(this), manager);
         proposal = address(_proposalContract);
     }
