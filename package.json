@@ -10,12 +10,12 @@
     "test": "bash ./scripts/run_tests.sh",
     "coverage": "truffle run coverage --network coverage",
     "gas": "CI=true npm run test",
-    "deploy-ropsten" :"truffle deploy --network ropsten --reset -f 2",
-    "deploy-dev" :"truffle deploy --reset -f 2",
+    "deploy-ropsten" :"truffle deploy --network ropsten --reset",
+    "deploy-dev" :"truffle deploy --reset",
     "build-doc": "npx solidity-docgen --solc-module solc-0.8 -i ./contracts -o ./docs -t docs/templates && doctoc ./docs/ --maxlevel 3",
     "push-heroku" : "git subtree push --prefix client/ heroku master",
-    "local-dapp": "cd client/ && npm run start",
-    "ganache-timeTravel": "truffle exec ./scripts/run_travel10Days.js"
+    "start": "cd client/ && npm run start",
+    "timeTravel": "truffle exec ./scripts/run_travel10Days.js"
   },
   "homepage": "https://github.com/FabienCoutant/SparkUp#readme",
   "repository": {

@@ -31,5 +31,5 @@ contract ProxyFactory {
         ICampaign _newCampaign = new Campaign(infoData, rewardsData, msg.sender, usdcToken, escrow, factory);
         factoryContract.addCampaign(_newCampaign);
         emit newCampaign(address(_newCampaign));
-    } 
+    }
 }

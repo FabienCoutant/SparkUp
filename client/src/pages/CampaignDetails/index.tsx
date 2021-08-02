@@ -4,7 +4,14 @@ import RewardCard from '../../components/RewardCard'
 import CampaignCard from '../../components/CampaignCard'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import Loader from '../../components/Loader'
-import { NOTIFICATION_TYPE, RENDER_TYPE, WORKFLOW_STATUS } from '../../constants'
+import {
+  NOTIFICATION_TYPE,
+  PROPOSAL_TYPE,
+  PROPOSAL_WORKFLOW_STATUS,
+  RENDER_TYPE,
+  WORKFLOW_STATUS,
+  ZERO_ADDRESS
+} from '../../constants'
 import CampaignForm from '../../components/CampaignForm'
 import { reward, rewardActions } from '../../store/Reward/slice'
 import RewardForm from '../../components/RewardForm'
@@ -16,6 +23,10 @@ import { Redirect } from 'react-router'
 import { campaignActions } from '../../store/Campaign/slice'
 import { notificationActions } from '../../store/Notification/slice'
 import { userActions } from '../../store/User/slice'
+import { useFetchProposalsList } from '../../hooks/useFetchProposals'
+import { proposal, proposalActions } from '../../store/Proposal/slice'
+import ProposalCard from '../../components/ProposalCard'
+import ProposalForm from '../../components/ProposalForm'
 
 const CampaignDetails = () => {
   const { account } = useActiveWeb3React()
@@ -25,8 +36,10 @@ const CampaignDetails = () => {
   useFetchCampaignInfoAndDispatch(campaignAddress)
   useFetchRewardsList(campaignAddress)
   const contractCampaign = useContractCampaign(campaignAddress)
-  const rewards = useAppSelector(state => state.reward.rewards)
   const campaign = useAppSelector(state => state.campaign)
+  const rewards = useAppSelector(state => state.reward.rewards)
+  const proposals = useAppSelector(state => state.proposal)
+  useFetchProposalsList(campaign.proposalAddress)
   const isManager = useIsManager(campaign.manager)
   const { isContributor, contributorBalance } = useIsContributor(campaignAddress)
   const showLoader = useShowLoader()
@@ -45,6 +58,25 @@ const CampaignDetails = () => {
             isStockLimited: false,
             onChain: false,
             confirmed: false
+          }
+        })
+    )
+  }
+
+  const addNewProposal = () => {
+    dispatch(
+      proposalActions.addActiveProposal(
+        {
+          active: {
+            title: '',
+            description: '',
+            amount: 0,
+            okVotes: 0,
+            nokVotes: 0,
+            status: PROPOSAL_WORKFLOW_STATUS.Pending,
+            deadLine: new Date().setDate(new Date().getDate() + 7),
+            accepted:false,
+            onChain: false
           }
         })
     )
@@ -88,6 +120,22 @@ const CampaignDetails = () => {
     }
   }
 
+  const handleLaunchProposal = () => {
+    if (contractCampaign && isManager) {
+      contractCampaign.methods.launchProposalContract().send({ from: account }).then(async () => {
+        const proposalAddress: string = await contractCampaign.methods.proposal().call()
+        console.log(proposalAddress)
+        dispatch(campaignActions.setProposalAddress({ proposalAddress }))
+        dispatch(notificationActions.setNotification({
+          message: 'Your has been successfully launch the proposal part',
+          type: NOTIFICATION_TYPE.SUCCESS
+        }))
+      }).catch((error: any) => {
+        console.log(error)
+      })
+    }
+  }
+
   const renderManagerAction = () => {
     if (isManager && campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted) {
       return (
@@ -108,8 +156,8 @@ const CampaignDetails = () => {
     if (isContributor
       && (
         (campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
-        && campaign.amountRaise <= campaign.info.fundingGoal
-        //&& campaign.info.deadlineDate<= new Date().getTime()
+          && campaign.amountRaise <= campaign.info.fundingGoal
+          //&& campaign.info.deadlineDate<= new Date().getTime()
         )
         || campaign.workflowStatus === WORKFLOW_STATUS.FundingFailed
       )
@@ -118,6 +166,19 @@ const CampaignDetails = () => {
         <div>
           <button type='button' className='btn btn-info' onClick={handleContributorRefund}>
             Get Refund
+          </button>
+        </div>
+      )
+    }
+    if (isManager
+      && campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
+      && campaign.proposalAddress === ZERO_ADDRESS
+      //&& campaign.info.deadlineDate <= new Date().getTime()
+    ) {
+      return (
+        <div>
+          <button type='button' className='btn btn-success' onClick={handleLaunchProposal}>
+            Start Proposals
           </button>
         </div>
       )
@@ -144,6 +205,51 @@ const CampaignDetails = () => {
     }
   }
 
+  const renderActiveProposal = (proposal: proposal, index: number) => {
+    if (proposal.onChain) {
+      return <ProposalCard id={index} proposalType={PROPOSAL_TYPE.active} key={index}/>
+    } else {
+      return <ProposalForm id={index} address={campaign.proposalAddress} key={index} />
+    }
+  }
+
+  const renderActiveProposalList = () => {
+    if (campaign.proposalAddress !== ZERO_ADDRESS) {
+      if(!proposals.active.some((proposal) => proposal.status!==PROPOSAL_WORKFLOW_STATUS.Registered)
+        && !isManager
+      ){
+        return (<div>
+          <div>Their is no active proposals</div>
+        </div>)
+      }
+      else if (proposals.active.length > 0) {
+        return (proposals.active.map((proposal, index) => {
+            return (
+              <div key={index}>
+                {renderActiveProposal(proposal, index)}
+              </div>
+            )
+          }
+        ))
+      }
+      return <div>They is no proposal</div>
+    }
+    return <div>The campaign must be succeed to launch proposals</div>
+  }
+
+  const renderArchivedProposalList=()=>{
+    if (campaign.proposalAddress !== ZERO_ADDRESS && proposals.archived.length >0) {
+      return (proposals.archived.map((proposal, index) => {
+          return (
+            <ProposalCard id={index} proposalType={PROPOSAL_TYPE.archived} key={index}/>
+          )
+        }
+      ))
+    }else{
+      return <div>No archived proposals</div>
+    }
+  }
+
   const renderAddRewardButton = () => {
     if (isManager && campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted) {
       return (
@@ -155,7 +261,6 @@ const CampaignDetails = () => {
       )
     }
   }
-
   if (showLoader) {
     return <Loader />
   }
@@ -175,8 +280,8 @@ const CampaignDetails = () => {
       </div>
       <div className='row row-cols-2'>
         <div className='col-5'>
-          <div className='text-center'>
-            <h2>Rewards Level</h2>
+          <div className='text-center' style={{marginBottom: "56px"}}>
+            <h2 >Rewards Level</h2>
           </div>
 
           {
@@ -194,6 +299,22 @@ const CampaignDetails = () => {
         <div className='col-7'>
           <div className='text-center'>
             <h2>Proposals</h2>
+            <h3>Active list </h3>
+            {renderActiveProposalList()}
+            {proposals.active.length < 5
+            && campaign.proposalAddress!==ZERO_ADDRESS
+            && isManager
+            && (proposals.active.length <=1 || proposals.active[proposals.active.length-1].onChain)
+            && (
+              <div className='mb-3 mt-3 text-center'>
+                <button className='btn btn-primary' onClick={addNewProposal}>
+                  Add Proposal
+                </button>
+              </div>
+            )}
+            <br/>
+            <h3>Archive list </h3>
+            {renderArchivedProposalList()}
           </div>
         </div>
       </div>

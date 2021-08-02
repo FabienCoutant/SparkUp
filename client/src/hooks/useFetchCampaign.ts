@@ -13,21 +13,22 @@ import { serializeUSDCFor } from '../utils/serializeValue'
 export const useFetchCampaignAddress = (): string[] => {
   const { library, chainId } = useActiveWeb3React()
   const contractCampaignFactory = useContractCampaignFactory()
-  const [campaignAddress, setCampaignAddress] = useState([])
+  const [campaignList,setCampaignList]=useState<string[]>([])
 
   useEffect(() => {
     const fetchCampaignsAddress = async () => {
       if (contractCampaignFactory && chainId && library) {
-        const res = await contractCampaignFactory.methods
-          .getDeployedCampaignsList()
-          .call()
-        setCampaignAddress(res)
+        const campaignCounter = await contractCampaignFactory.methods.campaignCounter().call()
+        for (let i = 1; i < campaignCounter; i++) {
+          const address = await contractCampaignFactory.methods.deployedCampaigns(i).call()
+          setCampaignList(campaignList=>[...campaignList,address])
+        }
       }
     }
     fetchCampaignsAddress()
 
   }, [contractCampaignFactory, chainId, library])
-  return campaignAddress
+  return campaignList
 }
 
 export const useIsManager = (campaignManager: string): boolean => {
@@ -75,6 +76,7 @@ export const useFetchCampaignInfo = (address: string) => {
             workflowStatus: parseInt(res[3]),
             amountRaise: serializeUSDCFor(res[4], false),
             currentBalance: serializeUSDCFor(balance, false),
+            proposalAddress:res[5],
             onChain: true,
             confirmed: true
           })
@@ -105,6 +107,7 @@ export const useFetchCampaignInfoAndDispatch = (address: string) => {
             manager: res[2],
             workflowStatus: parseInt(res[3]),
             amountRaise: serializeUSDCFor(res[4], false),
+            proposalAddress:res[5],
             currentBalance: serializeUSDCFor(balance, false),
             onChain: true,
             confirmed: true

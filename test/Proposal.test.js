@@ -344,3 +344,4 @@ contract('Proposal', (accounts) => {
     });
   });
 });
+
