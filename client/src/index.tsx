@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './Pages/App';
+import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
 import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core';
 import { getLibrary } from './utils/web3React';

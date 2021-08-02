@@ -10,6 +10,7 @@ export const USDC_CONTRACTS: { [key: string]: string } = {
   '3': '0x07865c6e87b9f70255377e024ace6630c1eaa37f'
 }
 
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export enum WORKFLOW_STATUS {
   CampaignDrafted,
@@ -20,6 +21,17 @@ export enum WORKFLOW_STATUS {
   CampaignDeleted
 }
 
+export enum PROPOSAL_WORKFLOW_STATUS {
+  Pending,
+  Registered,
+  VotingSessionStarted,
+  VotesTallied,
+}
+
+export enum VOTING_TYPE {
+  OK,
+  NOK
+}
 
 export interface campaignState {
   info: Info,
@@ -28,8 +40,9 @@ export interface campaignState {
   onChain: boolean,
   confirmed: boolean,
   amountRaise: number | string,
+  currentBalance: number | string,
   workflowStatus: WORKFLOW_STATUS,
-
+  proposalAddress: string
 }
 
 export interface Info {
@@ -43,10 +56,22 @@ export interface Rewards {
   title: string;
   description: string;
   minimumContribution: number | string;
-  amount: number|string;
+  amount: number | string;
   stockLimit: number;
   nbContributors: number;
   isStockLimited: boolean;
+}
+
+export interface Proposals {
+  id?:number
+  title: string;
+  description: string;
+  amount: number | string;
+  okVotes: number;
+  nokVotes: number;
+  status: PROPOSAL_WORKFLOW_STATUS;
+  deadLine: number;
+  accepted:boolean;
 }
 
 export enum RENDER_TYPE {
@@ -58,6 +83,19 @@ export enum RENDER_TYPE {
   DELETE
 }
 
+
+export enum PROPOSAL_TYPE{
+  ACTIVE,
+  ARCHIVED,
+  DELETE
+}
+
+
+export const STATE_PROPOSAL_TYPE: { [key in PROPOSAL_TYPE]: string } = {
+  [PROPOSAL_TYPE.ACTIVE]: 'active',
+  [PROPOSAL_TYPE.ARCHIVED]: 'archived',
+  [PROPOSAL_TYPE.DELETE]: 'deleted',
+}
 
 export const RENDER_MESSAGE: { [key in RENDER_TYPE]: string } = {
   [RENDER_TYPE.LIST]: 'See More',

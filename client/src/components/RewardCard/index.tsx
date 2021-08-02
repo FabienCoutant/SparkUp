@@ -7,6 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useIsManager } from '../../hooks/useFetchCampaign'
 import { hasAtLeastNbRewardsConfirmed, hasAtLeastNbRewardsOnChain } from '../../utils/checkHelper'
 import { notificationActions } from '../../store/Notification/slice'
+import ContributeForm from '../ContributeForm'
 
 
 const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE }) => {
@@ -47,10 +48,9 @@ const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE })
   const renderLimitedStockLeft = () => {
     return rewards[id].stockLimit - rewards[id].nbContributors
   }
-  console.log((renderType === RENDER_TYPE.CREATE && rewards.length >= 2))
+
   const renderRewardButton = () => {
     if (campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && isManager) {
-      console.log()
       if (rewards[id].confirmed) {
         return (
           <div className='list-inline mt-3'>
@@ -82,10 +82,23 @@ const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE })
           </button>
         )
       }
+    } else if (
+      account
+      && (
+        campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
+      || (
+          campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
+          //&& campaign.info.deadlineDate <= new Date().getTime()
+        )
+      )) {
+      return(
+        <div className="mt-2 mb-2">
+          <ContributeForm id={id} />
+        </div>
+      )
     }
 
     return <></>
-
   }
 
   return (

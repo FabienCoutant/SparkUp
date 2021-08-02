@@ -20,9 +20,9 @@ const CampaignCard = ({ address }: { address: string }) => {
   }
 
   const renderCampaignProgressGoal = () => {
-    const amountRaise: number = typeof campaign.amountRaise === 'string' ? parseInt(campaign.amountRaise) : campaign.amountRaise
-    const fundingGoal: number = typeof campaign.info.fundingGoal === 'string' ? parseInt(campaign.info.fundingGoal) : campaign.info.fundingGoal
-    return (amountRaise / fundingGoal) * 1000
+    const fundingGoal = typeof campaign.info.fundingGoal ==="string"?parseInt(campaign.info.fundingGoal):campaign.info.fundingGoal;
+    const amountRaise = typeof campaign.amountRaise ==="string"?parseInt(campaign.amountRaise):campaign.amountRaise;
+    return (amountRaise / fundingGoal) * 100
   }
 
   const renderManagerAction = () => {
@@ -56,49 +56,57 @@ const CampaignCard = ({ address }: { address: string }) => {
 
   return (
     <div className='col'>
-      <div className='card mb-3 mt-3 '>
-        <div className='card-header text-center bg-secondary fw-bold'>
-          Title : {campaign.info.title}<br />
-          {campaign.workflowStatus !== WORKFLOW_STATUS.CampaignDrafted && `Creator : ${campaign.manager}`}
-          {campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && `Draft`}
-        </div>
-        <div className='card-body'>
-          <h6
-            className='card-subtitle mb-2'
-            id='campaignDeadline'
-          >
-            Campaign Ends On :{' '}
-            {campaign.info.deadlineDate && `${new Date(campaign.info.deadlineDate).toLocaleDateString()} (${getEndDateIn(campaign.info.deadlineDate)} days left)`
-            }
-          </h6>
-          <h6
-            className='card-subtitle mb-2'
-            id='campaignCreationDate'
-          >
-            Campaign create on :{' '}
-            {campaign.createAt && new Date(campaign.createAt).toLocaleDateString()}
+    <div className='card mb-3 mt-3 '>
+      <div className='card-header text-center bg-secondary fw-bold'>
+        Title : {campaign.info.title}<br/>
+        {campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished && `Publish : You can contribute`}
+        {campaign.workflowStatus === WORKFLOW_STATUS.CampaignDrafted && `Draft : Only you can see it`}
+        {campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete && `Funding succeeded : You can participate to the proposal vote`}
+        {campaign.workflowStatus === WORKFLOW_STATUS.FundingFailed && `Funding failed : You can ask for refund if you are a contributor`}
+      </div>
+      <div className='card-body'>
+        <h6
+          className='card-subtitle mb-2'
+          id='manager'
+        >
+          Campaign create by :{' '}
+          {campaign.manager}
+        </h6>
+        <h6
+          className='card-subtitle mb-2'
+          id='campaignDeadline'
+        >
+          Campaign Ends On :{' '}
+          {campaign.info.deadlineDate && `${new Date(campaign.info.deadlineDate).toLocaleDateString()} (${getEndDateIn(campaign.info.deadlineDate)} days left)`
+          }
+        </h6>
+        <h6
+          className='card-subtitle mb-2'
+          id='campaignCreationDate'
+        >
+          Campaign create on :{' '}
+          {campaign.createAt && new Date(campaign.createAt).toLocaleDateString()}
 
-          </h6>
-          <p className='card-text fw-bold' id='campaignDescription'>
-            Description :{' '}
-            {campaign.info.description}
-          </p>
-          <p className='card-text mb-3' id='campaignFundingGoal'>
-            Funding Goal :{' '}
-            {campaign.info.fundingGoal} USDC
-          </p>
-          <p className='card-text mb-3' id='campaignAmountRaised'>
-            Amount raised : {' '}
-
-            <span className='progress'>
+        </h6>
+        <p className='card-text fw-bold' id='campaignDescription'>
+          Description :{' '}
+          {campaign.info.description}
+        </p>
+        <p className='card-text mb-3' id='campaignFundingGoal'>
+          Funding Goal :{' '}
+          {campaign.info.fundingGoal} USDC
+        </p>
+        <p className='card-text mb-3' id='campaignAmountRaised'>
+          Amount raised : {campaign.amountRaise} USDC{' '}
+          <span className='progress'>
             <span
               className='progress-bar progress-bar-striped progress-bar-animated'
               role='progressbar'
               aria-valuenow={renderCampaignProgressGoal()}
               aria-valuemin={0}
               aria-valuemax={100}
-              style={{ width: renderCampaignProgressGoal().toString() }}
-            >`${renderCampaignProgressGoal()} %`
+              style={{ width: `${renderCampaignProgressGoal().toFixed(2)}%` }}
+            >{renderCampaignProgressGoal().toFixed(2)} %
             </span>
           </span>
           </p>

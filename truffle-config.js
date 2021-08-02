@@ -12,6 +12,12 @@ module.exports = {
       port: 7545, // Standard Ethereum port (default: none)
       network_id: '*', // Any network (default: none)
     },
+    coverage: {
+      host: '127.0.0.1', // Localhost (default: none)
+      port: 8555, // Standard Ethereum port (default: none)
+      network_id: '*', // Any network (default: none)
+      disableConfirmationListener: true,
+    },
     ropsten: {
       provider: function () {
         return new HDWalletProvider(
@@ -20,6 +26,7 @@ module.exports = {
         );
       },
       network_id: 3,
+      timeoutBlocks: 200,
     },
     mainnet: {
       provider: function () {
@@ -34,8 +41,9 @@ module.exports = {
   mocha: {
     reporter: 'eth-gas-reporter',
     reporterOptions: {
-      excludeContracts: ['Migrations']
-    }
+      excludeContracts: ['Migrations'],
+    },
+    enableTimeouts: false,
   },
   compilers: {
     solc: {
@@ -51,5 +59,5 @@ module.exports = {
       },
     },
   },
-  plugins: ["solidity-coverage"]
+  plugins: ['solidity-coverage'],
 };

@@ -1,9 +1,9 @@
 import Web3 from 'web3'
 
-export const serializeValueTo=(value:number|string,isToSolidity:boolean)=>{
-  if(isToSolidity){
+export const serializeUSDCFor=(value:number|string,isTargetSolidity:boolean)=>{
+  if(isTargetSolidity){
     return Web3.utils.toWei(value.toString(),"ether");
   }else{
-    return parseInt(Web3.utils.fromWei(Web3.utils.toBN(value),"ether"));
+    return parseInt(Web3.utils.fromWei(Web3.utils.toBN(value),"ether")) as number;
   }
 }
