@@ -11,8 +11,6 @@
 # production
 /build
 
-#migrate contract
-src/contracts/internal/
 
 # misc
 .DS_Store
