@@ -16,7 +16,7 @@ export const initialState: campaignState = {
   manager: '',
   createAt: new Date().getTime(),
   amountRaise: 0,
-  currentBalance:0,
+  currentBalance: 0,
   workflowStatus: WORKFLOW_STATUS.CampaignDrafted,
   proposalAddress: ZERO_ADDRESS
 }
@@ -37,31 +37,34 @@ const campaignSlice = createSlice({
       state.amountRaise = action.payload.amountRaise
       state.currentBalance = action.payload.currentBalance
       state.workflowStatus = action.payload.workflowStatus
-      state.proposalAddress=action.payload.proposalAddress
+      state.proposalAddress = action.payload.proposalAddress
     },
     setConfirmed(state, action: PayloadAction<{ confirmed: boolean }>) {
       state.confirmed = action.payload.confirmed
     },
-    setWorkflow(state,action:PayloadAction<{workflowStatus:WORKFLOW_STATUS}>){
+    setWorkflow(state, action: PayloadAction<{ workflowStatus: WORKFLOW_STATUS }>) {
       state.workflowStatus = action.payload.workflowStatus
     },
-    updateCampaign(state,action:PayloadAction<{campaignInfo:Info}>){
+    updateCampaign(state, action: PayloadAction<{ campaignInfo: Info }>) {
       state.info.title = action.payload.campaignInfo.title
       state.info.description = action.payload.campaignInfo.description
-      state.info.fundingGoal = serializeUSDCFor(action.payload.campaignInfo.fundingGoal,false)
-      state.info.deadlineDate = serializeTimestampsFor(action.payload.campaignInfo.deadlineDate,false)
-      state.confirmed=true
+      state.info.fundingGoal = serializeUSDCFor(action.payload.campaignInfo.fundingGoal, false)
+      state.info.deadlineDate = serializeTimestampsFor(action.payload.campaignInfo.deadlineDate, false)
+      state.confirmed = true
     },
-    addFunding(state,action:PayloadAction<{amount:number}>){
-      state.amountRaise = state.amountRaise as number+action.payload.amount
+    addFunding(state, action: PayloadAction<{ amount: number }>) {
+      state.amountRaise = state.amountRaise as number + action.payload.amount
     },
-    subFunding(state,action:PayloadAction<{amount:number}>){
-      state.amountRaise = state.amountRaise as number-action.payload.amount
+    subFunding(state, action: PayloadAction<{ amount: number }>) {
+      state.amountRaise = state.amountRaise as number - action.payload.amount
     },
-    setProposalAddress(state,action:PayloadAction<{proposalAddress:string}>){
+    setProposalAddress(state, action: PayloadAction<{ proposalAddress: string }>) {
       state.proposalAddress = action.payload.proposalAddress
     },
-    resetState : () => initialState,
+    setAmountRaise(state, action: PayloadAction<{ newAmountRaise: number }>) {
+      state.amountRaise = action.payload.newAmountRaise
+    },
+    resetState: () => initialState
   }
 })
 

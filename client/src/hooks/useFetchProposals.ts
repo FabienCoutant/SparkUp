@@ -23,10 +23,10 @@ export const useFetchProposalsList = (address: string) => {
             title: res.title,
             description: res.description,
             accepted:res.accepted,
-            amount: serializeUSDCFor(res.amount, false),
+            amount: serializeUSDCFor(res.amount, false) as number,
             okVotes: serializeUSDCFor(res.okVotes,false) as number,
             nokVotes: serializeUSDCFor(res.nokVotes,false) as number,
-            deadLine: serializeTimestampsFor(res.deadLine, false),
+            deadLine: serializeTimestampsFor(res.deadline,false),
             status: parseInt(res.status),
             onChain: true
           }
@@ -36,6 +36,7 @@ export const useFetchProposalsList = (address: string) => {
         const archivedProposalCounter = await contractProposal?.methods?.archivedProposalCounter().call()
         for (let i = 0; i < archivedProposalCounter; i++) {
           const res = await contractProposal?.methods?.archivedProposals(i).call()
+
           const archivedProposal = {
             title: res.title,
             description: res.description,
@@ -43,7 +44,7 @@ export const useFetchProposalsList = (address: string) => {
             amount: serializeUSDCFor(res.amount, false),
             okVotes: serializeUSDCFor(res.okVotes,false) as number,
             nokVotes: serializeUSDCFor(res.nokVotes,false) as number,
-            deadLine: serializeTimestampsFor(res.deadLine, false),
+            deadLine: serializeTimestampsFor(res.deadline, false),
             status: parseInt(res.status),
             onChain: true
           }
@@ -66,7 +67,8 @@ export const useHasVoted = (id: number, address: string ) => {
   useEffect(() => {
     const fetchHasVoted = async () => {
       if (contractProposal && chainId && library) {
-        const res = await contractProposal?.methods?.hasVoted(id,account).call()
+        const res = await contractProposal?.methods?.checkHasVoted(account,id).call()
+        console.log(res, id)
         setHasVoted(res)
       }
     }

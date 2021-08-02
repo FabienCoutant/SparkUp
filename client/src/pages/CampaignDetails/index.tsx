@@ -27,6 +27,7 @@ import { useFetchProposalsList } from '../../hooks/useFetchProposals'
 import { proposal, proposalActions } from '../../store/Proposal/slice'
 import ProposalCard from '../../components/ProposalCard'
 import ProposalForm from '../../components/ProposalForm'
+import { serializeUSDCFor } from '../../utils/serializeValue'
 
 const CampaignDetails = () => {
   const { account } = useActiveWeb3React()
@@ -51,7 +52,7 @@ const CampaignDetails = () => {
           reward: {
             title: '',
             description: '',
-            minimumContribution: 0,
+            minimumContribution: 5,
             amount: 0,
             stockLimit: 0,
             nbContributors: 0,
@@ -70,7 +71,7 @@ const CampaignDetails = () => {
           active: {
             title: '',
             description: '',
-            amount: 0,
+            amount: 100,
             okVotes: 0,
             nokVotes: 0,
             status: PROPOSAL_WORKFLOW_STATUS.Pending,
@@ -124,7 +125,8 @@ const CampaignDetails = () => {
     if (contractCampaign && isManager) {
       contractCampaign.methods.launchProposalContract().send({ from: account }).then(async () => {
         const proposalAddress: string = await contractCampaign.methods.proposal().call()
-        console.log(proposalAddress)
+        const newFundingRaise: string = await contractCampaign.methods.totalRaised().call()
+        dispatch(campaignActions.setAmountRaise({ newAmountRaise:(serializeUSDCFor(newFundingRaise,false) as number) }))
         dispatch(campaignActions.setProposalAddress({ proposalAddress }))
         dispatch(notificationActions.setNotification({
           message: 'Your has been successfully launch the proposal part',
@@ -156,7 +158,7 @@ const CampaignDetails = () => {
     if (isContributor
       && (
         (campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
-          && campaign.amountRaise <= campaign.info.fundingGoal
+          && campaign.amountRaise < campaign.info.fundingGoal
           //&& campaign.info.deadlineDate<= new Date().getTime()
         )
         || campaign.workflowStatus === WORKFLOW_STATUS.FundingFailed
@@ -281,7 +283,7 @@ const CampaignDetails = () => {
       <div className='row row-cols-2'>
         <div className='col-5'>
           <div className='text-center' style={{marginBottom: "56px"}}>
-            <h2 >Rewards Level</h2>
+            <h2 >Rewards Level </h2>
           </div>
 
           {
@@ -298,13 +300,14 @@ const CampaignDetails = () => {
         </div>
         <div className='col-7'>
           <div className='text-center'>
-            <h2>Proposals</h2>
+            <h2>Proposals : {proposals.availableFunds} USDC available</h2>
             <h3>Active list </h3>
             {renderActiveProposalList()}
             {proposals.active.length < 5
             && campaign.proposalAddress!==ZERO_ADDRESS
             && isManager
-            && (proposals.active.length <=1 || proposals.active[proposals.active.length-1].onChain)
+            && (proposals.active.length ===0 || proposals.active[proposals.active.length-1].onChain)
+            && proposals.availableFunds>0
             && (
               <div className='mb-3 mt-3 text-center'>
                 <button className='btn btn-primary' onClick={addNewProposal}>

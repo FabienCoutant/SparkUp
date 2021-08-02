@@ -6,7 +6,7 @@ import { useAppDispatch } from '../store/hooks'
 import { serializeCampaignInfo } from '../utils/serializeCampaignInfo'
 import { campaignActions, initialState } from '../store/Campaign/slice'
 import { serializeTimestampsFor } from '../utils/dateHelper'
-import { campaignState } from '../constants'
+import { campaignState, ZERO_ADDRESS } from '../constants'
 import { serializeUSDCFor } from '../utils/serializeValue'
 
 
@@ -18,6 +18,7 @@ export const useFetchCampaignAddress = (): string[] => {
   useEffect(() => {
     const fetchCampaignsAddress = async () => {
       if (contractCampaignFactory && chainId && library) {
+        setCampaignList([])
         const campaignCounter = await contractCampaignFactory.methods.campaignCounter().call()
         for (let i = 1; i < campaignCounter; i++) {
           const address = await contractCampaignFactory.methods.deployedCampaigns(i).call()
@@ -66,7 +67,7 @@ export const useFetchCampaignInfo = (address: string) => {
         if (contractCampaign && chainId && library) {
           const res = await contractCampaign?.methods?.getCampaignInfo().call()
           const balance = await contractCampaign?.methods?.getContractUSDCBalance().call()
-          if (res[3].workflowStatus === 1) {
+          if (res[5] === ZERO_ADDRESS) {
             res[4] = balance
           }
           setCampaignInfo({
@@ -98,7 +99,7 @@ export const useFetchCampaignInfoAndDispatch = (address: string) => {
         if (contractCampaign && chainId && library) {
           const res = await contractCampaign?.methods?.getCampaignInfo().call()
           const balance = await contractCampaign?.methods?.getContractUSDCBalance().call()
-          if (res[3] === '1') {
+          if (res[5] === ZERO_ADDRESS) {
             res[4] = balance
           }
           dispatch(campaignActions.setCampaign({
