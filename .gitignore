@@ -8,6 +8,8 @@ package-lock.json
 #Code coverage
 /coverage
 coverage.json
+
+#Solidity Docs
 /docs
 
 #eth-gas-reporter
