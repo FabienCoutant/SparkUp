@@ -5,54 +5,52 @@ import './interfaces/IProposal.sol';
 import './Campaign.sol';
 
 contract Proposal is IProposal {
-    
-    uint8 public activeProposalCounter;
-    uint8 public archivedProposalCounter;
+
     uint128 public availableFunds;
+    uint256 public proposalCounter;
     address public immutable campaignAddress;
     address public campaignManager;
 
     Campaign campaignContract;
-    
-    mapping(uint8 => Proposal) public activeProposals;
-    mapping(uint8 => Proposal) public archivedProposals;
-    mapping(uint8 => address[]) public hasVoted;
-    
+
+    mapping(uint => Proposal) public proposalsList;
+    mapping(uint => mapping(address => bool)) public hasVoted;
+
     constructor(address _campaignAddress, address _manager) {
         campaignAddress = _campaignAddress;
         campaignContract = Campaign(_campaignAddress);
         campaignManager = _manager;
         availableFunds = uint128(_getCampaignUSDCBalance());
     }
-    
+
     modifier isContributor() {
         require(campaignContract.contributorBalances(msg.sender) > 0, "!Err: not a contributor");
         _;
     }
-    
+
     modifier checkStatus(
-        uint8 proposalId,
+        uint256 proposalId,
         WorkflowStatus requiredStatus
     ) {
-        require(activeProposals[proposalId].status == requiredStatus, "!Err : Wrong workflow status");
+        require(proposalsList[proposalId].status == requiredStatus, "!Err : Wrong workflow status");
         _;
     }
-    
+
     modifier onlyManager() {
         require(msg.sender == campaignManager, "!Err: not manager");
         _;
     }
-    
-    modifier checkProposalDeadline(uint8 proposalId) {
-        require(block.timestamp < activeProposals[proposalId].deadline, "!Err: proposal voting has ended");
+
+    modifier checkProposalDeadline(uint256 proposalId) {
+        require(block.timestamp < proposalsList[proposalId].deadline, "!Err: proposal voting has ended");
         _;
     }
-    
+
     /**
      * @inheritdoc IProposal
      */
-    function createProposal(string memory _title, string memory _description, uint128 _amount ) external override onlyManager() checkStatus(activeProposalCounter, WorkflowStatus.Pending) {
-        require(activeProposalCounter < 5, "!Err: Maximum amount of proposal reached");
+    function createProposal(string memory _title, string memory _description, uint128 _amount) external override onlyManager() checkStatus(proposalCounter, WorkflowStatus.Pending) {
+        require(proposalCounter < 5, "!Err: Maximum amount of proposal reached");
         require(bytes(_title).length > 0, "!Err: Title empty");
         require(bytes(_description).length > 0, "!Err: Description empty");
         require(_amount >= 100 ether, "!Err: Amount too low");
@@ -62,67 +60,54 @@ contract Proposal is IProposal {
         p.description = _description;
         p.amount = _amount;
         p.status = WorkflowStatus.Registered;
-        activeProposals[activeProposalCounter] = p;
-        activeProposalCounter++;
+        proposalsList[proposalCounter] = p;
+        proposalCounter++;
         availableFunds = availableFunds - _amount;
     }
-    
+
     /**
      * @inheritdoc IProposal
      */
     function deleteProposal(uint8 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered) {
-        availableFunds = availableFunds + activeProposals[proposalId].amount;
-        if (proposalId != activeProposalCounter-1) {
-            activeProposals[proposalId] = activeProposals[activeProposalCounter-1];
-        }
-        delete  activeProposals[activeProposalCounter-1];
-        activeProposalCounter--;
+        availableFunds = availableFunds + proposalsList[proposalId].amount;
+        proposalsList[proposalId].proposalStatus = ProposalStatus.Deleted;
     }
-    
+
     /**
      * @inheritdoc IProposal
      */
-    function startVotingSession(uint8 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered){
-        activeProposals[proposalId].status = WorkflowStatus.VotingSessionStarted;
-        activeProposals[proposalId].deadline = uint64(block.timestamp + 7 days);
+    function startVotingSession(uint8 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered) {
+        proposalsList[proposalId].status = WorkflowStatus.VotingSessionStarted;
+        proposalsList[proposalId].deadline = uint64(block.timestamp + 7 days);
     }
-    
+
     /**
      * @inheritdoc IProposal
      */
     function voteProposal(uint8 proposalId, bool vote) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) checkProposalDeadline(proposalId) isContributor() {
-        require(!checkHasVoted(msg.sender, proposalId), "!Err: Already voted");
+        require(!hasVoted[proposalId][msg.sender], "!Err: Already voted");
         uint128 contributorVotes = campaignContract.contributorBalances(msg.sender);
         if (vote) {
-            activeProposals[proposalId].okVotes = activeProposals[proposalId].okVotes + contributorVotes;
+            proposalsList[proposalId].okVotes = proposalsList[proposalId].okVotes + contributorVotes;
         } else {
-            activeProposals[proposalId].nokVotes = activeProposals[proposalId].nokVotes + contributorVotes;  
+            proposalsList[proposalId].nokVotes = proposalsList[proposalId].nokVotes + contributorVotes;
         }
-        hasVoted[proposalId].push(msg.sender);
+        hasVoted[proposalId][msg.sender] = true;
     }
-    
+
     /**
      * @inheritdoc IProposal
      */
-    function getResults(uint8 proposalId) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted){
-        require(block.timestamp > activeProposals[proposalId].deadline, "!Err: Voting still ongoing");
-        Proposal memory p = activeProposals[proposalId];
-        p.status = WorkflowStatus.VotesTallied;
-        if (activeProposals[proposalId].okVotes > activeProposals[proposalId].nokVotes) {
-            campaignContract.releaseProposalFunds(activeProposals[proposalId].amount);
-            p.accepted = true;
+    function getResults(uint8 proposalId) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) {
+        require(block.timestamp > proposalsList[proposalId].deadline, "!Err: Voting still ongoing");
+        proposalsList[proposalId].status = WorkflowStatus.VotesTallied;
+        if (proposalsList[proposalId].okVotes > proposalsList[proposalId].nokVotes) {
+            campaignContract.releaseProposalFunds(proposalsList[proposalId].amount);
+            proposalsList[proposalId].accepted = true;
         }
-        if (proposalId != activeProposalCounter - 1) {
-            activeProposals[proposalId] = activeProposals[activeProposalCounter-1];
-            hasVoted[proposalId] = hasVoted[activeProposalCounter-1];
-        }
-        archivedProposals[proposalId] = p;
-        delete activeProposals[activeProposalCounter-1];
-        delete hasVoted[activeProposalCounter-1];
-        archivedProposalCounter++;
-        activeProposalCounter--;
-    } 
-    
+        proposalsList[proposalId].proposalStatus=ProposalStatus.Archived;
+    }
+
     /**
      * @notice Return the amount in USDC raised by the campaign
      * @dev amount uint USDC raised by the campaign in WEI
@@ -131,16 +116,16 @@ contract Proposal is IProposal {
         return campaignContract.getContractUSDCBalance();
     }
 
-    /**
-     * @notice Return true if msg.sender hasVoted and if false if not
-     * @param _voter is voter address and _proposalId id proposal id
-     */
-    function checkHasVoted(address _voter, uint8 _proposalId) public view returns(bool) {
-        for (uint256 i = 0; i < hasVoted[_proposalId].length; i++) {
-            if (hasVoted[_proposalId][i] == _voter) {
-                return true;
+
+    function getProposals(ProposalStatus _proposalStatus) external view override returns(Proposal[] memory){
+        Proposal[] memory listOfProposals;
+        uint256 j;
+        for(uint256 i=0;i<proposalCounter;i++){
+            if(proposalsList[i].proposalStatus==_proposalStatus){
+                listOfProposals[j]=proposalsList[i];
+                j++;
             }
         }
-        return false;
+        return listOfProposals;
     }
 } 
