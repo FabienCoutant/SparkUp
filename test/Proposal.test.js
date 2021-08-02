@@ -94,7 +94,7 @@ contract('Proposal', (accounts) => {
     expect(campaignManager).to.be.equal(alice);
   });
 
-  xdescribe('--- Create Proposal ---', async () => {
+  describe('--- Create Proposal ---', async () => {
     it('should allow manager to create proposal on correct workflow', async () => {
       const availableFundsBeforeProposal = await ProposalContractInstance.availableFunds();
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
@@ -175,7 +175,7 @@ contract('Proposal', (accounts) => {
       );
     });
   });
-  xdescribe('--- Delete Proposal ---', async () => {
+  describe('--- Delete Proposal ---', async () => {
     it('should allow campaignManager to delete last proposal if workflow status is Registered', async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
@@ -223,12 +223,9 @@ contract('Proposal', (accounts) => {
       });
     });
     it('should allow contributor to vote', async () => {
-      console.log(ProposalContractInstance.address);
       await ProposalContractInstance.startVotingSession(0, { from: alice });
       await ProposalContractInstance.voteProposal(0, true, { from: bob });
       await ProposalContractInstance.voteProposal(0, false, { from: john });
-      await ProposalContractInstance.voteProposal(1, true, { from: bob });
-      await ProposalContractInstance.voteProposal(1, false, { from: john });
       const registeredProposal = await ProposalContractInstance.activeProposals(0);
       const okVotes = registeredProposal.okVotes;
       const bobCampaignBalance = await CampaignContractInstance.contributorBalances(bob);
@@ -236,20 +233,15 @@ contract('Proposal', (accounts) => {
       expect(okVotes).to.be.bignumber.equal(bobCampaignBalance);
       const nokVotes = registeredProposal.nokVotes;
       expect(nokVotes).to.be.bignumber.equal(johnCampaignBalance);
-      const voters = await ProposalContractInstance.getHasVotedLength(0);
-      console.log(voters);
-      const voters2 = await ProposalContractInstance.getHasVotedLength(0);
-      console.log(voters2);
-      const bobHasVoted = await ProposalContractInstance.checkHasVoted(bob, 1);
-      console.log('check1');
+      const bobHasVoted = await ProposalContractInstance.checkHasVoted(bob, 0);
       expect(bobHasVoted).to.be.true;
-      const johnHasVoted = await ProposalContractInstance.checkHasVoted(john, 1);
+      const johnHasVoted = await ProposalContractInstance.checkHasVoted(john, 0);
       expect(johnHasVoted).to.be.true;
     });
-    xit('should revert if wrong workflow status', async () => {
+    it('should revert if wrong workflow status', async () => {
       await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: bob }), '!Err : Wrong workflow status');
     });
-    xit('should revert if proposal deadline is passed', async () => {
+    it('should revert if proposal deadline is passed', async () => {
       await ProposalContractInstance.startVotingSession(0, { from: alice });
       await time.increase(time.duration.days(10));
       await expectRevert(
@@ -257,17 +249,17 @@ contract('Proposal', (accounts) => {
         '!Err: proposal voting has ended'
       );
     });
-    xit('should revert if contributor has already voted', async () => {
+    it('should revert if contributor has already voted', async () => {
       await ProposalContractInstance.startVotingSession(0, { from: alice });
       await ProposalContractInstance.voteProposal(0, true, { from: bob });
       await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: bob }), '!Err: Already voted');
     });
-    xit('should rever it not contributor', async () => {
+    it('should rever it not contributor', async () => {
       await ProposalContractInstance.startVotingSession(0, { from: alice });
       await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: greg }), '!Err: not a contributor');
     });
   });
-  xdescribe('--- Get Results ---', async () => {
+  describe('--- Get Results ---', async () => {
     beforeEach(async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,

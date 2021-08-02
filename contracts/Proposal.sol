@@ -143,8 +143,4 @@ contract Proposal is IProposal {
         }
         return false;
     }
-
-    function getHasVotedLength(uint8 proposalId) public view returns(uint256) {
-        return hasVoted[proposalId].length;
-    }
 } 
