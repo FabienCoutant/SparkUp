@@ -13,7 +13,7 @@ import { serializeUSDCFor } from '../utils/serializeValue'
 export const useFetchCampaignAddress = (): string[] => {
   const { library, chainId } = useActiveWeb3React()
   const contractCampaignFactory = useContractCampaignFactory()
-  const campaignAddress:string[] = []
+  const [campaignList,setCampaignList]=useState<string[]>([])
 
   useEffect(() => {
     const fetchCampaignsAddress = async () => {
@@ -21,15 +21,14 @@ export const useFetchCampaignAddress = (): string[] => {
         const campaignCounter = await contractCampaignFactory.methods.campaignCounter().call()
         for (let i = 1; i < campaignCounter; i++) {
           const address = await contractCampaignFactory.methods.deployedCampaigns(i).call()
-          console.log(address)
-          campaignAddress.push(address)
+          setCampaignList(campaignList=>[...campaignList,address])
         }
       }
     }
     fetchCampaignsAddress()
 
   }, [contractCampaignFactory, chainId, library])
-  return campaignAddress
+  return campaignList
 }
 
 export const useIsManager = (campaignManager: string): boolean => {
