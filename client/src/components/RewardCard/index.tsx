@@ -88,7 +88,7 @@ const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE })
         campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
       || (
           campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
-          //&& campaign.info.deadlineDate <= new Date().getTime()
+          && campaign.info.deadlineDate <= new Date().getTime()
         )
       )) {
       return(

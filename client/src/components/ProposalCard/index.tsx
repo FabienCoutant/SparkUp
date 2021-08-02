@@ -139,7 +139,7 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
         )
       }
       if (proposals[id].status === PROPOSAL_WORKFLOW_STATUS.VotingSessionStarted
-        //&& new Date().getTime >= proposals[id].deadLine
+        && new Date().getTime >= proposals[id].deadLine
       ) {
         return (
           <div className='col-4'>

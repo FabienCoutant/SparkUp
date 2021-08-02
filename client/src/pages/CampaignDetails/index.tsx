@@ -160,7 +160,7 @@ const CampaignDetails = () => {
       && (
         (campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
           && campaign.amountRaise < campaign.info.fundingGoal
-          //&& campaign.info.deadlineDate<= new Date().getTime()
+          && campaign.info.deadlineDate<= new Date().getTime()
         )
         || campaign.workflowStatus === WORKFLOW_STATUS.FundingFailed
       )
@@ -176,7 +176,7 @@ const CampaignDetails = () => {
     if (isManager
       && campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
       && campaign.proposalAddress === ZERO_ADDRESS
-      //&& campaign.info.deadlineDate <= new Date().getTime()
+      && campaign.info.deadlineDate <= new Date().getTime()
     ) {
       return (
         <div>
