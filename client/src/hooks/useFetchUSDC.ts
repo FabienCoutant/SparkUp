@@ -36,6 +36,6 @@ export const useFetchUserBalance = () => {
         }
       }
     fetchUSDCBalance()
-    }, [contractUSDC, chainId, library, account]
+    }, [contractUSDC, chainId, library, account, dispatch]
   )
 }

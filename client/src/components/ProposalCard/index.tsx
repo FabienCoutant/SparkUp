@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { notificationActions } from '../../store/Notification/slice'
 import { proposal, proposalActions } from '../../store/Proposal/slice'
 import { serializeUSDCFor } from '../../utils/serializeValue'
+import { userActions } from '../../store/User/slice'
 
 
 const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL_TYPE }) => {
@@ -19,7 +20,7 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
   // @ts-ignore
   const proposals = useAppSelector((state) => state.proposal[STATE_PROPOSAL_TYPE[proposalType]])
   const contractProposal = useContractProposal(campaign.proposalAddress)
-  const fetchHasVoted = useHasVoted(id, campaign.proposalAddress)
+  const fetchHasVoted = useHasVoted(proposals[id].id, campaign.proposalAddress)
   const isManager = useIsManager(campaign.manager)
   const { isContributor, contributorBalance } = useIsContributor(campaignAddress)
   const [hasVoted, setHasVoted] = useState(false)
@@ -30,7 +31,7 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
 
   const handleVoteProposal = (isApprove: boolean) => {
     if (contractProposal && isContributor && !hasVoted) {
-      contractProposal.methods.voteProposal(id, isApprove).send({ from: account }).then(() => {
+      contractProposal.methods.voteProposal(proposals[id].id, isApprove).send({ from: account }).then(() => {
         setHasVoted(true)
         let proposalUpdated: proposal = { ...proposals[id] }
         if (isApprove) {
@@ -58,7 +59,7 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
 
   const handlePublishProposal = () => {
     if (contractProposal && isManager) {
-      contractProposal.methods.startVotingSession(id).send({ from: account }).then(() => {
+      contractProposal.methods.startVotingSession(proposals[id].id).send({ from: account }).then(() => {
         const proposalUpdated: proposal = { ...proposals[id], status: PROPOSAL_WORKFLOW_STATUS.VotingSessionStarted }
         dispatch(notificationActions.setNotification({
           message: 'Your proposal is now publish for 7 days',
@@ -74,7 +75,7 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
 
   const handleDeleteProposal = () => {
     if (contractProposal && isManager) {
-      contractProposal.methods.deleteProposal(id).send({ from: account }).then(() => {
+      contractProposal.methods.deleteProposal(proposals[id].id).send({ from: account }).then(() => {
         dispatch(proposalActions.removeProposal({
           id
         }))
@@ -88,7 +89,10 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
 
   const handleGetResultProposal = () => {
     if (contractProposal) {
-      contractProposal.methods.getResults(id).send({ from: account }).then(() => {
+      contractProposal.methods.getResults(proposals[id].id).send({ from: account }).then(() => {
+        if(isManager){
+          dispatch(userActions.addBalance({balance:proposals[id].amount}))
+        }
         dispatch(proposalActions.moveActiveToArchived({
           id
         }))
@@ -101,7 +105,7 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
   }
 
   const renderProposalButton = () => {
-    if (proposalType === PROPOSAL_TYPE.active) {
+    if (proposalType === PROPOSAL_TYPE.ACTIVE) {
       if (isContributor && !hasVoted && proposals[id].status === PROPOSAL_WORKFLOW_STATUS.VotingSessionStarted) {
         return (
           <div className='row'>
@@ -152,9 +156,10 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
     return <></>
   }
   return (
-    <div className="card mb-3 mt-3">
+    <div className='card mb-3 mt-3'>
       <div className='card text-start'>
-        <div className={`card-body ${proposalType===PROPOSAL_TYPE.archived?proposals[id].accepted?"bg-success":"bg-danger":""}`}>
+        <div
+          className={`card-body ${proposalType === PROPOSAL_TYPE.ARCHIVED ? proposals[id].accepted ? 'bg-success' : 'bg-danger' : ''}`}>
           <h5 className='card-title text-center'> {proposals[id].title}</h5>
           <div className='list-inline'>
             <label htmlFor='rewardDescription' className='form-label'>

@@ -35,25 +35,28 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
         proposalTitle,
         proposalDescription,
         serializeUSDCFor(proposalAmount, true)
-      ).send({ from: account }).then(() => {
-        const proposal: proposal = {
-          title: proposalTitle,
-          description: proposalDescription,
-          amount: proposalAmount,
-          okVotes: 0,
-          nokVotes: 0,
-          status: PROPOSAL_WORKFLOW_STATUS.Registered,
-          deadLine: new Date().setDate(new Date().getDate() + 7),
-          accepted:false,
-          onChain: true
-        }
+      ).send({ from: account })
+        .then((response: any) => {
+          const proposalId = response.events.proposalCreated.returnValues.proposalId
+          const proposal: proposal = {
+            id: parseInt(proposalId),
+            title: proposalTitle,
+            description: proposalDescription,
+            amount: proposalAmount,
+            okVotes: 0,
+            nokVotes: 0,
+            status: PROPOSAL_WORKFLOW_STATUS.Registered,
+            deadLine: new Date().setDate(new Date().getDate() + 7),
+            accepted: false,
+            onChain: true
+          }
 
-        dispatch(proposalActions.createProposal({ active: proposal, id }))
-        dispatch(notificationActions.setNotification(({
-          message: `Proposal ${proposalTitle} has been correctly added`,
-          type: NOTIFICATION_TYPE.SUCCESS
-        })))
-      }).catch((error: any) => {
+          dispatch(proposalActions.createProposal({ active: proposal, id }))
+          dispatch(notificationActions.setNotification(({
+            message: `Proposal ${proposalTitle} has been correctly added`,
+            type: NOTIFICATION_TYPE.SUCCESS
+          })))
+        }).catch((error: any) => {
         console.log(error)
       })
     }

@@ -1,36 +1,36 @@
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useParams } from 'react-router'
 import { useContractCampaign, useContractUSDC } from '../../hooks/useContract'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFetchUserAllowance } from '../../hooks/useFetchUSDC'
 import { notificationActions } from '../../store/Notification/slice'
 import { NOTIFICATION_TYPE } from '../../constants'
 import { serializeUSDCFor } from '../../utils/serializeValue'
 import { rewardActions } from '../../store/Reward/slice'
 import { useWeb3React } from '@web3-react/core'
-import { useEffect } from 'react'
 import { userActions } from '../../store/User/slice'
 import { campaignActions } from '../../store/Campaign/slice'
 
 const ContributeForm = ({ id }: { id: number }) => {
   const dispatch = useAppDispatch()
-  const {account} = useWeb3React()
+  const { account } = useWeb3React()
   const rewards = useAppSelector(state => state.reward.rewards)
   const { campaignAddress } = useParams<{ campaignAddress: string }>()
   const contractCampaign = useContractCampaign(campaignAddress)
   const contractUSDC = useContractUSDC()
   const allowanceAmount = useFetchUserAllowance(campaignAddress)
-  const [amountApproved,setAmountApproved] = useState(0);
+  const user = useAppSelector(state => state.user)
+  const [amountApproved, setAmountApproved] = useState(0)
   const [contributionAmount, setContributionAmount] = useState(rewards[id].minimumContribution)
   const [showContribution, setShowContribution] = useState(false)
 
-  useEffect(()=>{
+  useEffect(() => {
     setAmountApproved(allowanceAmount)
-  },[allowanceAmount])
+  }, [allowanceAmount])
 
   const handleContribution = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if(contributionAmount<rewards[id].minimumContribution){
+    if (contributionAmount < rewards[id].minimumContribution) {
       dispatch(
         notificationActions.setNotification({
           message:
@@ -40,37 +40,48 @@ const ContributeForm = ({ id }: { id: number }) => {
       )
       return
     }
-    if(amountApproved>= contributionAmount){
-      contractCampaign?.methods?.contribute(serializeUSDCFor(contributionAmount,true),id).send({from:account})
-        .then(()=>{
+    if (contributionAmount > user.balance) {
+      dispatch(
+        notificationActions.setNotification({
+          message:
+            'Your don\'t have enough USDC in your wallet',
+          type: NOTIFICATION_TYPE.ALERT
+        })
+      )
+      return
+    }
+    if (amountApproved >= contributionAmount) {
+      contractCampaign?.methods?.contribute(serializeUSDCFor(contributionAmount, true), id).send({ from: account })
+        .then(async () => {
           const amount = contributionAmount as number
-          dispatch(rewardActions.addContribution({amount,id}))
-          dispatch(userActions.subBalance({balance:amount}))
-          dispatch(campaignActions.addFunding({amount:amount}))
+          const status:number = await contractCampaign?.methods?.status().call()
+          dispatch(rewardActions.addContribution({ amount, id }))
+          dispatch(userActions.subBalance({ balance: amount }))
+          dispatch(campaignActions.addFunding({ amount: amount }))
+          dispatch(campaignActions.setWorkflow({ workflowStatus: status }))
           dispatch(notificationActions.setNotification(({
             message: `Contribution succeed`,
-            type:NOTIFICATION_TYPE.SUCCESS
+            type: NOTIFICATION_TYPE.SUCCESS
           })))
-          console.log(serializeUSDCFor(amountApproved,false))
-          console.log(amount)
-          setAmountApproved((serializeUSDCFor(amountApproved,false) as number)-amount);
-        }).catch((error:any)=>console.log(error))
-    }else{
-      const amount = serializeUSDCFor(contributionAmount,true)
-      contractUSDC?.methods?.increaseAllowance(campaignAddress,amount).send({from:account})
-        .then(()=>{
+
+          setAmountApproved((serializeUSDCFor(amountApproved, false) as number) - amount)
+        }).catch((error: any) => console.log(error))
+    } else {
+      const amount = serializeUSDCFor(contributionAmount, true)
+      contractUSDC?.methods?.increaseAllowance(campaignAddress, amount).send({ from: account })
+        .then(() => {
           setAmountApproved(amount as number)
           dispatch(notificationActions.setNotification(({
             message: `Approved succeed`,
-            type:NOTIFICATION_TYPE.SUCCESS
+            type: NOTIFICATION_TYPE.SUCCESS
           })))
-        }).catch((error:any)=>console.log(error))
+        }).catch((error: any) => console.log(error))
     }
   }
 
 
   const renderContributeButton = () => {
-    if (amountApproved>=contributionAmount && amountApproved!==0) {
+    if (amountApproved >= contributionAmount && amountApproved !== 0) {
       return (
         <button type='submit' className='btn btn-success'>Contribute</button>
       )
@@ -82,8 +93,8 @@ const ContributeForm = ({ id }: { id: number }) => {
   }
 
   const renderForm = () => {
-    if( rewards[id].isStockLimited && (rewards[id].stockLimit - rewards[id].nbContributors)===0){
-      return(
+    if (rewards[id].isStockLimited && (rewards[id].stockLimit - rewards[id].nbContributors) === 0) {
+      return (
         <>
           They no more stock available for this rewards
         </>

@@ -82,7 +82,15 @@ const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE })
           </button>
         )
       }
-    } else if (campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished && account) {
+    } else if (
+      account
+      && (
+        campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
+      || (
+          campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
+          //&& campaign.info.deadlineDate <= new Date().getTime()
+        )
+      )) {
       return(
         <div className="mt-2 mb-2">
           <ContributeForm id={id} />

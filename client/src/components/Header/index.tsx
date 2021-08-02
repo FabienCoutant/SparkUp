@@ -21,7 +21,7 @@ const Header = () => {
         if (chainId) {
             getBalance();
         }
-    }, [user]);
+    }, [user,dispatch]);
 
     const truncateWalletAddress = (
         address: string,

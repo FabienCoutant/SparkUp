@@ -7,7 +7,7 @@ import CampaignForm from '../../components/CampaignForm'
 import CampaignCard from '../../components/CampaignCard'
 import RewardCard from '../../components/RewardCard'
 import { useWeb3React } from '@web3-react/core'
-import { useContractCampaignFactory, useContractProxyFactory } from '../../hooks/useContract'
+import { useContractProxyFactory } from '../../hooks/useContract'
 import { notificationActions } from '../../store/Notification/slice'
 import { serializeTimestampsFor } from '../../utils/dateHelper'
 import { useHistory } from 'react-router'
@@ -65,8 +65,6 @@ const CreateCampaign = () => {
           rewardsInfo.push(tempReward)
           return rewardsInfo
         })
-        console.log(campaignInfo.deadlineDate)
-        console.log(campaign.info.deadlineDate)
         contractProxyFactory?.methods?.createCampaign(campaignInfo, rewardsInfo).send({ from: account })
           .then((response: any) => {
             const newCampaignAddress = response.events.newCampaign.returnValues.campaignAddress

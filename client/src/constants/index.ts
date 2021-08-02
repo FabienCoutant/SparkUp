@@ -25,7 +25,6 @@ export enum PROPOSAL_WORKFLOW_STATUS {
   Pending,
   Registered,
   VotingSessionStarted,
-  VotingSessionEnded,
   VotesTallied,
 }
 
@@ -64,6 +63,7 @@ export interface Rewards {
 }
 
 export interface Proposals {
+  id?:number
   title: string;
   description: string;
   amount: number | string;
@@ -83,15 +83,18 @@ export enum RENDER_TYPE {
   DELETE
 }
 
+
 export enum PROPOSAL_TYPE{
-  active,
-  archived
+  ACTIVE,
+  ARCHIVED,
+  DELETE
 }
 
 
 export const STATE_PROPOSAL_TYPE: { [key in PROPOSAL_TYPE]: string } = {
-  [PROPOSAL_TYPE.active]: 'active',
-  [PROPOSAL_TYPE.archived]: 'archived',
+  [PROPOSAL_TYPE.ACTIVE]: 'active',
+  [PROPOSAL_TYPE.ARCHIVED]: 'archived',
+  [PROPOSAL_TYPE.DELETE]: 'deleted',
 }
 
 export const RENDER_MESSAGE: { [key in RENDER_TYPE]: string } = {

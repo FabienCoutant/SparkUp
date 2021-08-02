@@ -128,6 +128,7 @@ const CampaignDetails = () => {
         const newFundingRaise: string = await contractCampaign.methods.totalRaised().call()
         dispatch(campaignActions.setAmountRaise({ newAmountRaise:(serializeUSDCFor(newFundingRaise,false) as number) }))
         dispatch(campaignActions.setProposalAddress({ proposalAddress }))
+        dispatch(proposalActions.setAvailableFunds({  availableFunds:(serializeUSDCFor(newFundingRaise,false) as number)  }))
         dispatch(notificationActions.setNotification({
           message: 'Your has been successfully launch the proposal part',
           type: NOTIFICATION_TYPE.SUCCESS
@@ -209,7 +210,7 @@ const CampaignDetails = () => {
 
   const renderActiveProposal = (proposal: proposal, index: number) => {
     if (proposal.onChain) {
-      return <ProposalCard id={index} proposalType={PROPOSAL_TYPE.active} key={index}/>
+      return <ProposalCard id={index} proposalType={PROPOSAL_TYPE.ACTIVE} key={index}/>
     } else {
       return <ProposalForm id={index} address={campaign.proposalAddress} key={index} />
     }
@@ -243,7 +244,7 @@ const CampaignDetails = () => {
     if (campaign.proposalAddress !== ZERO_ADDRESS && proposals.archived.length >0) {
       return (proposals.archived.map((proposal, index) => {
           return (
-            <ProposalCard id={index} proposalType={PROPOSAL_TYPE.archived} key={index}/>
+            <ProposalCard id={index} proposalType={PROPOSAL_TYPE.ARCHIVED} key={index}/>
           )
         }
       ))

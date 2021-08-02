@@ -24,8 +24,8 @@ const proposalSlice = createSlice({
     addActiveProposal(state, action: PayloadAction<{ active: proposal }>) {
       state.active.push(action.payload.active)
     },
-    addArchivedProposal(state, action: PayloadAction<{ proposal: proposal }>) {
-      state.archived.push(action.payload.proposal)
+    addArchivedProposal(state, action: PayloadAction<{ archived: proposal }>) {
+      state.archived.push(action.payload.archived)
     },
     updateProposal(state, action: PayloadAction<{ active: proposal, id: number }>) {
       state.active[action.payload.id] = action.payload.active
@@ -45,6 +45,8 @@ const proposalSlice = createSlice({
       let newArchived = { ...state.active[action.payload.id], status: PROPOSAL_WORKFLOW_STATUS.VotesTallied }
       if (state.active[action.payload.id].okVotes >= state.active[action.payload.id].nokVotes) {
         newArchived = { ...newArchived, accepted: true }
+      }else{
+        state.availableFunds=(state.availableFunds as number)+(state.active[action.payload.id].amount as number)
       }
       state.active.splice(action.payload.id, 1)
       state.archived.push(newArchived)
