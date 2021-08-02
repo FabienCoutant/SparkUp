@@ -15,7 +15,7 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
   const proposal = useAppSelector(state => state.proposal)
   const [proposalTitle, setProposalTitle] = useState('')
   const [proposalDescription, setProposalDescription] = useState('')
-  const [proposalAmount, setProposalAmount] = useState(0)
+  const [proposalAmount, setProposalAmount] = useState(100)
 
   const proposalSubmitHandle = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -26,7 +26,7 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
   }
 
   const handleCancel = () => {
-    dispatch(proposalActions.removeProposal({ id }))
+    dispatch(proposalActions.cancelProposal({ id }))
   }
 
   const createProposal = () => {
@@ -48,7 +48,7 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
           onChain: true
         }
 
-        dispatch(proposalActions.updateProposal({ active: proposal, id }))
+        dispatch(proposalActions.createProposal({ active: proposal, id }))
         dispatch(notificationActions.setNotification(({
           message: `Proposal ${proposalTitle} has been correctly added`,
           type: NOTIFICATION_TYPE.SUCCESS
@@ -82,7 +82,7 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
             type: NOTIFICATION_TYPE.ALERT
           })
         )
-      } else if (proposalAmount >= proposal.availableFunds) {
+      } else if (proposalAmount > proposal.availableFunds) {
         dispatch(
           notificationActions.setNotification({
             message: 'Not enough found available in your campaign',

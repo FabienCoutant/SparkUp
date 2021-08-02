@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Proposals, VOTING_TYPE } from '../../constants'
+import { PROPOSAL_WORKFLOW_STATUS, Proposals, VOTING_TYPE } from '../../constants'
 
 export interface proposal extends Proposals {
   onChain: boolean;
@@ -30,8 +30,24 @@ const proposalSlice = createSlice({
     updateProposal(state, action: PayloadAction<{ active: proposal, id: number }>) {
       state.active[action.payload.id] = action.payload.active
     },
+    createProposal(state, action: PayloadAction<{ active: proposal, id: number }>) {
+      state.active[action.payload.id] = action.payload.active
+      state.availableFunds = state.availableFunds as number - (action.payload.active.amount as number)
+    },
     removeProposal(state, action: PayloadAction<{ id: number }>) {
+      state.availableFunds = state.availableFunds as number + (state.active[action.payload.id].amount as number)
       state.active.splice(action.payload.id, 1)
+    },
+    cancelProposal(state, action: PayloadAction<{ id: number }>) {
+      state.active.splice(action.payload.id, 1)
+    },
+    moveActiveToArchived(state,action:PayloadAction<{ id: number }>){
+      let newArchived = { ...state.active[action.payload.id], status: PROPOSAL_WORKFLOW_STATUS.VotesTallied }
+      if (state.active[action.payload.id].okVotes >= state.active[action.payload.id].nokVotes) {
+        newArchived = { ...newArchived, accepted: true }
+      }
+      state.active.splice(action.payload.id, 1)
+      state.archived.push(newArchived)
     },
     setActiveProposalState(state, action: PayloadAction<{ active: proposal[] }>) {
       state.active = []

@@ -89,18 +89,11 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
   const handleGetResultProposal = () => {
     if (contractProposal) {
       contractProposal.methods.getResults(id).send({ from: account }).then(() => {
-        let newArchived = { ...proposals[id], status: PROPOSAL_WORKFLOW_STATUS.VotesTallied }
-        if (proposals[id].okVotes >= proposals[id].nokVotes) {
-          newArchived = { ...newArchived, accepted: true }
-        }
-        dispatch(proposalActions.removeProposal({
+        dispatch(proposalActions.moveActiveToArchived({
           id
         }))
-        dispatch(proposalActions.addArchivedProposal({
-          proposal: newArchived
-        }))
         dispatch(notificationActions.setNotification({
-          message: 'The',
+          message: 'The proposal has been closed',
           type: NOTIFICATION_TYPE.SUCCESS
         }))
       }).catch((error: any) => console.log(error))
