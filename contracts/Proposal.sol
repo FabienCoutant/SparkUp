@@ -122,7 +122,7 @@ contract Proposal is IProposal {
 
 
     function getProposals(ProposalType _proposalType) external view override returns(Proposal[] memory){
-        Proposal[] memory listOfProposals;
+        Proposal[] memory listOfProposals = new Proposal[](proposalCounter-1);
         uint256 j;
         for(uint256 i=0;i<proposalCounter;i++){
             if(proposalsList[i].proposalType==_proposalType){
@@ -131,5 +131,5 @@ contract Proposal is IProposal {
             }
         }
         return listOfProposals;
-    }
+    } 
 } 

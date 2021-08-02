@@ -95,7 +95,7 @@ contract('Proposal', (accounts) => {
     expect(campaignManager).to.be.equal(alice);
   });
 
-  xdescribe('--- Create Proposal ---', async () => {
+  describe('--- Create Proposal ---', async () => {
     it('should allow manager to create proposal on correct workflow', async () => {
       const availableFundsBeforeProposal = await ProposalContractInstance.availableFunds();
       const receipt = await ProposalContractInstance.createProposal(
@@ -183,7 +183,7 @@ contract('Proposal', (accounts) => {
     });
   });
   describe('--- Delete Proposal ---', async () => {
-    xit('should allow campaignManager to delete proposal if workflow status is Registered', async () => {
+    it('should allow campaignManager to delete proposal if workflow status is Registered', async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
@@ -196,7 +196,6 @@ contract('Proposal', (accounts) => {
       expect(availableFunds).to.be.bignumber.equal(contractBalance);
     });
     it('should return correct proposal list after delete', async () => {
-      console.log(ProposalContractInstance.address);
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
@@ -208,12 +207,11 @@ contract('Proposal', (accounts) => {
       });
       await ProposalContractInstance.deleteProposal(1, { from: alice });
       const activeProposalList = await ProposalContractInstance.getProposals(0);
-      console.log(activeProposalList);
-      expect(activeProposalList.length).to.be.bignumber.equal(new BN(2));
+      expect(activeProposalList.length).to.be.equal(2);
       const secondActiveProposalTitle = activeProposalList[1].title;
       expect(secondActiveProposalTitle).to.be.equal('Third Proposal');
     });
-    xit('should revert if wrong workflow status', async () => {
+    it('should revert if wrong workflow status', async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
@@ -224,7 +222,7 @@ contract('Proposal', (accounts) => {
       await expectRevert(ProposalContractInstance.deleteProposal(0, { from: alice }), '!Err : Wrong workflow status');
     });
   });
-  xdescribe('--- Vote ---', async () => {
+  describe('--- Vote ---', async () => {
     beforeEach(async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
@@ -268,7 +266,7 @@ contract('Proposal', (accounts) => {
       await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: greg }), '!Err: not a contributor');
     });
   });
-  xdescribe('--- Get Results ---', async () => {
+  describe('--- Get Results ---', async () => {
     beforeEach(async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
