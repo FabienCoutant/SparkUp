@@ -25,3 +25,4 @@ module.exports = async (deployer, network, accounts) => {
   const ProxyFactoryInstance = await ProxyFactory.deployed();
   await CampaignFactoryInstance.setProxy(ProxyFactoryInstance.address);
 };
+

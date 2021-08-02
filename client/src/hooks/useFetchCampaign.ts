@@ -75,6 +75,7 @@ export const useFetchCampaignInfo = (address: string) => {
             workflowStatus: parseInt(res[3]),
             amountRaise: serializeUSDCFor(res[4], false),
             currentBalance: serializeUSDCFor(balance, false),
+            proposalAddress:res[5],
             onChain: true,
             confirmed: true
           })
@@ -105,6 +106,7 @@ export const useFetchCampaignInfoAndDispatch = (address: string) => {
             manager: res[2],
             workflowStatus: parseInt(res[3]),
             amountRaise: serializeUSDCFor(res[4], false),
+            proposalAddress:res[5],
             currentBalance: serializeUSDCFor(balance, false),
             onChain: true,
             confirmed: true
