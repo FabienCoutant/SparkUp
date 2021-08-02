@@ -15,7 +15,7 @@ const initialState: rewardState = {
     {
       title: '',
       description: '',
-      minimumContribution: 0,
+      minimumContribution: 5,
       amount: 0,
       stockLimit: 0,
       nbContributors: 0,
@@ -47,6 +47,10 @@ const rewardSlice = createSlice({
       for(const reward of action.payload.rewards){
         state.rewards.push(reward)
       }
+    },
+    addContribution(state,action:PayloadAction<{amount:number,id:number}>){
+      state.rewards[action.payload.id].nbContributors ++
+      state.rewards[action.payload.id].amount=state.rewards[action.payload.id].amount as number +action.payload.amount
     },
     resetState:()=>initialState,
   }

@@ -8,7 +8,6 @@ package-lock.json
 #Code coverage
 /coverage
 coverage.json
-/docs
 
 #eth-gas-reporter
 gasReporterOutput.json

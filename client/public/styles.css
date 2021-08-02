@@ -3,6 +3,16 @@
   src: url('../src/assets/fonts/Superfats-6PRM.ttf');
 }
 
+@font-face {
+  font-family: 'Superfats';
+  src: url('../src/font/webfonts_Superfats/Superfats.ttf.woff') format('woff'),
+    url('../src/font/webfonts_Superfats/Superfats.ttf.svg#Superfats') format('svg'),
+    url('../src/font/webfonts_Superfats/Superfats.ttf.eot'),
+    url('../src/font/webfonts_Superfats/Superfats.ttf.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @import '../node_modules/bootstrap-icons/icons';
 
 body,

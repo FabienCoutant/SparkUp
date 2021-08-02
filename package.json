@@ -8,9 +8,14 @@
   },
   "scripts": {
     "test": "bash ./scripts/run_tests.sh",
-    "coverage": "npx truffle run coverage",
+    "coverage": "truffle run coverage --network coverage",
     "gas": "CI=true npm run test",
-    "build-doc": "npx solidity-docgen --solc-module solc-0.8 -i ./contracts -o ./docs -t docs/templates && doctoc ./docs/ --maxlevel 3"
+    "deploy-ropsten": "truffle deploy --network ropsten --reset",
+    "deploy-local": "truffle deploy --reset",
+    "build-doc": "npx solidity-docgen --solc-module solc-0.8 -i ./contracts -o ./docs/contracts -t docs/contracts/templates && doctoc ./docs/contracts --maxlevel 3",
+    "push-heroku": "git subtree push --prefix client/ heroku master",
+    "start": "cd client/ && npm run start",
+    "timeTravel": "truffle exec ./scripts/run_travel10Days.js"
   },
   "homepage": "https://github.com/FabienCoutant/SparkUp#readme",
   "repository": {
@@ -22,7 +27,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "devDependencies": {
     "@codechecks/client": "^0.1.11",
     "@openzeppelin/contracts": "^4.2.0",

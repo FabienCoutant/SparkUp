@@ -1,5 +1,5 @@
 import { notificationActions } from '../../store/Notification/slice'
-import { Info, NOTIFICATION_TYPE, RENDER_MESSAGE, RENDER_TYPE, WORKFLOW_STATUS } from '../../constants'
+import { Info, NOTIFICATION_TYPE, RENDER_MESSAGE, RENDER_TYPE, WORKFLOW_STATUS, ZERO_ADDRESS } from '../../constants'
 import { formatDate, isValidDate, serializeTimestampsFor } from '../../utils/dateHelper'
 import { campaignActions } from '../../store/Campaign/slice'
 import { useState } from 'react'
@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { useContractCampaign } from '../../hooks/useContract'
 import { useParams } from 'react-router'
-import { serializeValueTo } from '../../utils/serializeValue'
+import { serializeUSDCFor } from '../../utils/serializeValue'
 
 const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
   const dispatch = useAppDispatch()
@@ -46,8 +46,10 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
         confirmed: true,
         onChain: false,
         amountRaise:0,
+        currentBalance:0,
         manager: account as string,
         createAt: new Date().getTime(),
+        proposalAddress:ZERO_ADDRESS,
         workflowStatus:WORKFLOW_STATUS.CampaignDrafted
       })
     )
@@ -65,7 +67,7 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
     const campaignInfo: Info = {
       title: campaignTitle,
       description: campaignDescription,
-      fundingGoal: serializeValueTo(campaignFundingGoal,true),
+      fundingGoal: serializeUSDCFor(campaignFundingGoal,true),
       deadlineDate: serializeTimestampsFor(campaignDeadLine, true)
     }
     if (contractCampaign) {
@@ -103,10 +105,10 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
             type: NOTIFICATION_TYPE.ALERT
           })
         )
-      } else if (fundingGoal === undefined || fundingGoal < 10000) {
+      } else if (fundingGoal === undefined || fundingGoal < 1000) {
         dispatch(
           notificationActions.setNotification({
-            message: 'Your funding goal must be at least 10 000 USDC!',
+            message: 'Your funding goal must be at least 1000 USDC!',
             type: NOTIFICATION_TYPE.ALERT
           })
         )

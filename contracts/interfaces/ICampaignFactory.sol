@@ -11,18 +11,23 @@ import "../interfaces/ICampaign.sol";
 interface ICampaignFactory {
 
     /**
-     * @notice Create a new Campaign contract and init it
-     * @param infoData ICampaign.Info basic information for a campaign following the Campaign Info structure
-     * @param rewardsData ICampaign.Rewards array of rewards information for a campaign following the Campaign Info structure
+     * @notice Add campaign contract address to mapping
+     * @param _newCampaign is ICampaign of created campaign from proxy
      */
-    function createCampaign(ICampaign.Info memory infoData,ICampaign.Rewards[] memory rewardsData) external;
+    function addCampaign(ICampaign _newCampaign) external;
+
+    /**
+     * @notice Delete a new proposal contract.
+     * @param _manager is campaign manager.
+     * @dev Can only be called by an existing campaign contract.
+     */
+    function deployProposalContract(address _manager) external;
 
     /**
      * @notice Delete a new Campaign that call this function.
      * @dev Only an contract already deployed must be able to call this function
-     * @return success bool
      */
-    function deleteCampaign() external returns(bool);
+    function deleteCampaign() external;
 
     /**
      * @notice Allow the owner to set a new owner for the factory.
@@ -32,8 +37,9 @@ interface ICampaignFactory {
     function updateOwner(address newOwner) external;
 
     /**
-     * @notice Allow to get the all list of campaign address deployed
-     * @return Campaigns ICampaign[] list of campaigns address deployed and still actives
+     * @notice Allow the owner to set ProxyContract address.
+     * @dev Only the actual owner must be able to call this function
+     * @param _proxyContract address the ProxyContract
      */
-    function getDeployedCampaignsList() external view returns (ICampaign[] memory);
+    function setProxy(address _proxyContract) external;
 }
