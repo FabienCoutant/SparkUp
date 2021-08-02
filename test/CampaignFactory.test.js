@@ -5,9 +5,10 @@ const CampaignContract = artifacts.require('Campaign');
 const TestUSDCContract = artifacts.require('TestUSDC');
 const EscrowContract = artifacts.require('Escrow');
 const ProxyFactoryContract = artifacts.require('ProxyFactory');
+const ProposalContract = artifacts.require('Proposal');
 
 contract('CampaignFactory', (accounts) => {
-  const [owner, alice, bob] = accounts;
+  const [owner, alice, bob, john] = accounts;
   const initialCampaignInfo = {
     title: 'First Campaign',
     description: 'This is the first campaign of SparkUp',
@@ -67,7 +68,7 @@ contract('CampaignFactory', (accounts) => {
     };
   });
 
-  describe('--- Creation ---', async () => {
+  describe('--- Add Campaign ---', async () => {
     it('should allow people to create new campaign', async () => {
       const receipt = await ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
         from: alice,
@@ -202,7 +203,7 @@ contract('CampaignFactory', (accounts) => {
       );
     });
   });
-  describe('--- Update ---', async () => {
+  describe('--- Update Campaign ---', async () => {
     it('should allow the owner to set a new owner', async () => {
       await CampaignFactoryContractInstance.updateOwner(alice, { from: owner });
       const newOwner = await CampaignFactoryContractInstance.owner();
@@ -218,6 +219,53 @@ contract('CampaignFactory', (accounts) => {
     });
     it('should revert if not owner try to set a new owner', async () => {
       await expectRevert(CampaignFactoryContractInstance.setProxy(bob, { from: alice }), '!Not Authorized');
+    });
+  });
+  describe('--- Deploy Proposal ---', async () => {
+    beforeEach(async () => {
+      const newCampaignInfo = {
+        title: 'First Campaign',
+        description: 'This is the first campaign of SparkUp',
+        fundingGoal: ether('10000').toString(),
+        deadlineDate: parseInt((await time.latest()).add(time.duration.days(30))),
+      };
+      const newCampaign = await ProxyFactoryContractInstance.createCampaign(newCampaignInfo, initialRewards, {
+        from: alice,
+      });
+      newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
+      CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
+      await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      const spender = CampaignContractInstance.address;
+      await TestUSDCContractInstance.transfer(john, ether('2000').toString(), { from: bob });
+      const bobContribution = ether('9000').toString();
+      const johnContribution = ether('2000').toString();
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      TestUSDCContractInstance.increaseAllowance(spender, johnContribution, {
+        from: john,
+      });
+      await CampaignContractInstance.contribute(bobContribution, 0, {
+        from: bob,
+      });
+      await CampaignContractInstance.contribute(johnContribution, 0, {
+        from: john,
+      });
+      await time.increase(time.duration.days(35));
+    });
+    it('should deploy proposal contract correctly', async () => {
+      await CampaignContractInstance.launchProposalContract({ from: alice });
+      const proposalContractAddress = await CampaignContractInstance.proposal();
+      ProposalContractInstance = await ProposalContract.at(proposalContractAddress);
+      expect(proposalContractAddress).to.be.equal(ProposalContractInstance.address);
+    });
+    it('should revert if called by other than campaign contract', async () => {
+      await expectRevert(
+        CampaignFactoryContractInstance.deployProposalContract(alice, { from: alice }),
+        '!Not Authorized'
+      );
     });
   });
   describe('--- Deletion ---', async () => {

@@ -4,7 +4,6 @@ pragma solidity 0.8.6;
 import "./interfaces/ICampaign.sol";
 import "./interfaces/ICampaignFactory.sol";
 import "./interfaces/IProposal.sol";
-import "./Proposal.sol";
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
@@ -210,9 +209,16 @@ contract Campaign is ICampaign {
         require(block.timestamp > campaignInfo.deadlineDate, "!Err: campaign deadline not passed");
         usdcToken.safeTransfer(escrowContract, getContractUSDCBalance()*5/100);
         totalRaised = getContractUSDCBalance();
-        IProposal _proposalContract = new Proposal(address(this), manager);
-        proposal = address(_proposalContract);
+        ICampaignFactory(factory).deployProposalContract(manager);
     }
+
+    /**
+     * @inheritdoc ICampaign
+     */
+    function setProposal(address _proposalContract) external override {
+        require(msg.sender == factory, "!Not Authorized");
+        proposal = _proposalContract;
+    } 
 
     /**
      * @inheritdoc ICampaign

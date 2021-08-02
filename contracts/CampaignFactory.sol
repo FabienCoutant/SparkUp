@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.6;
 
-import "./Campaign.sol";
+import "./Proposal.sol";
+import "./interfaces/IProposal.sol";
 import "./interfaces/ICampaign.sol";
 import "./interfaces/ICampaignFactory.sol";
 
@@ -52,6 +53,15 @@ contract CampaignFactory is ICampaignFactory {
         delete deployedCampaigns[campaignCounter - 1];
         delete campaignToId[msg.sender];
         campaignCounter--;
+    }
+
+    /**
+     * @inheritdoc ICampaignFactory
+     */
+    function deployProposalContract(address _manager) external override {
+        require(campaignToId[msg.sender] != 0, "!Not Authorized");
+        IProposal _proposalContract = new Proposal(msg.sender, _manager);
+        ICampaign(msg.sender).setProposal(address(_proposalContract));
     }
 
     /**

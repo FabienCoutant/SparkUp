@@ -17,6 +17,13 @@ interface ICampaignFactory {
     function addCampaign(ICampaign _newCampaign) external;
 
     /**
+     * @notice Delete a new proposal contract.
+     * @param _manager is campaign manager.
+     * @dev Can only be called by an existing campaign contract.
+     */
+    function deployProposalContract(address _manager) external;
+
+    /**
      * @notice Delete a new Campaign that call this function.
      * @dev Only an contract already deployed must be able to call this function
      */

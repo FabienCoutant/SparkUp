@@ -591,6 +591,10 @@ contract('Campaign', (accounts) => {
         '!Err: proposal already deployed'
       );
     });
+    it('set proposal should revert if called by other than factory', async () => {
+      await time.increase(time.duration.days(15));
+      await expectRevert(CampaignContractInstance.setProposal(bob, { from: alice }), '!Not Authorized');
+    });
   });
   describe('--- Release Funds ---', async () => {
     beforeEach(async () => {

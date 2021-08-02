@@ -106,6 +106,12 @@ interface ICampaign {
     function launchProposalContract() external;
 
     /**
+     * @notice Allows campiagn factory contract to set proposal contract address.
+     * @dev Can only be called by campaign factory contract.
+     */
+    function setProposal(address _proposalContract) external;
+
+    /**
      * @notice Transfer unlocked funds to manager address.
      * @dev Can only be called by proposal contract when proposal is accepted.
      */
