@@ -236,7 +236,10 @@ contract Campaign is ICampaign {
         return uint128(usdcToken.balanceOf(address(this)));
     }
 
-
+    /**
+     * @notice Return true if reward inventory > 0 and false if = 0
+     * @param rewardIndex is rewardi id
+     */
     function checkRewardInventory(uint8 rewardIndex) internal view returns (bool) {
         if (!rewardsList[rewardIndex].isStockLimited) {
             return true;

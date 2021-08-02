@@ -16,7 +16,7 @@ contract Proposal is IProposal {
     
     mapping(uint8 => Proposal) public activeProposals;
     mapping(uint8 => Proposal) public archivedProposals;
-    mapping(uint8 => mapping(address => bool)) public hasVoted;
+    mapping(uint8 => address[]) public hasVoted;
     
     constructor(address _campaignAddress, address _manager) {
         campaignAddress = _campaignAddress;
@@ -91,14 +91,14 @@ contract Proposal is IProposal {
      * @inheritdoc IProposal
      */
     function voteProposal(uint8 proposalId, bool vote) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) checkProposalDeadline(proposalId) isContributor() {
-        require(!hasVoted[proposalId][msg.sender], "!Err: Already voted");
+        require(!checkHasVoted(msg.sender, proposalId), "!Err: Already voted");
         uint128 contributorVotes = campaignContract.contributorBalances(msg.sender);
         if (vote) {
             activeProposals[proposalId].okVotes = activeProposals[proposalId].okVotes + contributorVotes;
         } else {
             activeProposals[proposalId].nokVotes = activeProposals[proposalId].nokVotes + contributorVotes;  
         }
-        hasVoted[proposalId][msg.sender] = true;
+        hasVoted[proposalId].push(msg.sender);
     }
     
     /**
@@ -114,14 +114,37 @@ contract Proposal is IProposal {
         }
         if (proposalId != activeProposalCounter - 1) {
             activeProposals[proposalId] = activeProposals[activeProposalCounter-1];
+            hasVoted[proposalId] = hasVoted[activeProposalCounter-1];
         }
         archivedProposals[proposalId] = p;
         delete activeProposals[activeProposalCounter-1];
+        delete hasVoted[activeProposalCounter-1];
         archivedProposalCounter++;
         activeProposalCounter--;
-    }
+    } 
     
+    /**
+     * @notice Return the amount in USDC raised by the campaign
+     * @dev amount uint USDC raised by the campaign in WEI
+     */
     function _getCampaignUSDCBalance() internal view returns (uint256) {
         return campaignContract.getContractUSDCBalance();
+    }
+
+    /**
+     * @notice Return true if msg.sender hasVoted and if false if not
+     * @param _voter is voter address and _proposalId id proposal id
+     */
+    function checkHasVoted(address _voter, uint8 _proposalId) public view returns(bool) {
+        for (uint256 i = 0; i < hasVoted[_proposalId].length; i++) {
+            if (hasVoted[_proposalId][i] == _voter) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function getHasVotedLength(uint8 proposalId) public view returns(uint256) {
+        return hasVoted[proposalId].length;
     }
 } 
