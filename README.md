@@ -141,6 +141,7 @@ You also need to create an **.env** file in the project's client folder. This fi
 below:
 _This configuration allow fetch data like the campaign list even if the user isn't connected_
 
+**In case you want to deploy this DApp on external provider you should use the config var of it instead of the .env file** 
 ```
 REACT_APP_INFURA_KEY = "YOUR_INFURA_ID"
 REACT_APP_DEFAULT_NETWORK_CHAINID= "DEPLOYED_NETWORK_ID"
@@ -156,8 +157,8 @@ You will first need to deploy the back-end (solidity files) and then the front.
 
   Take not that you need to be at the project's root folder.
 
-  - Local Deployment (Ganache) : `npm truffle deploy --reset --network development`
-  - Ropsten Deployment : `npm truffle deploy --reset --network ropsten`
+  - Local Deployment (Ganache) : `npm run deploy-local`
+  - Ropsten Deployment : `npm run deploy-ropsten`
   - Ethereum Deployment : `npm truffle deploy --reset --network mainnet`
 
 :white_check_mark: Take not that our smart-contracts are deployed on Ropsten at the addresses defined
@@ -165,7 +166,7 @@ You will first need to deploy the back-end (solidity files) and then the front.
 
 - #### Front End
   - Local Deployment (two choices):
-    - at the project's root folder : `npm run local-dapp` and then open your browser at the following url : https://localhost:3000/
+    - at the project's root folder : `npm run start` and then open your browser at the following url : https://localhost:3000/
     - move into the client folder and run `npm run start` and then open your browser at the following url : https://localhost:3000/
   - Ropsten : in order to interact with our DApp and smart-contract use [Heroku](https://sparkup-alyra.herokuapp.com/)
 
@@ -182,8 +183,8 @@ To run the tests you have several options but both need to be launch in the proj
   `npm run test`
 - Running test with code coverage :
   `npm run coverage`
-- Running test with report of gas consumed by the smart-contracts and each function :
-  `npm run gas`
+
+:white_check_mark: Take not that both first points run gas consumption report but you could also run `npm run gas`
 
 :white_check_mark: Take not that by using CI/CD, we perform tests with **code coverage** and **gas report** on each Pull Request
 
@@ -193,13 +194,19 @@ This part is explains in detail [here](AVOIDING_COMMON_ATTACKS.md)
 
 ## Events
 
-There is only one events in our contracts in CampaignFactory.sol which is triggered when a new campaign is created :
+There is only two events in our contracts :
+* One in the ProxyFactory.sol which return the campaign address when a new campaign is created
 
 ```
 event newCampaign(address campaignAddress);
 ```
 
-We chose to limit events in order to optimize contract size.
+* One in the Proposal.sol which return proposal Id  when a new proposal is created :
+```
+event proposalCreated(uint256 proposalId);
+```
+
+We chose to limit events in order to optimize contract size and avoid duplicated events triggering on the UI
 
 ## Contributors
 
