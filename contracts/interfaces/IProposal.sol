@@ -69,8 +69,10 @@ interface IProposal {
      */
     function getResults(uint8 proposalId) external;
 
-
-
+    /**
+     * @notice return list of proposal matching proposalType of param
+     * @param _proposalStatus is proposalType (active, archived or deleted)
+     */
     function getProposals(ProposalType _proposalStatus) external view returns(Proposal[] memory);
 
 }

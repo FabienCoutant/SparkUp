@@ -120,9 +120,11 @@ contract Proposal is IProposal {
         return campaignContract.getContractUSDCBalance();
     }
 
-
+    /**
+     * @inheritdoc IProposal
+     */
     function getProposals(ProposalType _proposalType) external view override returns(Proposal[] memory){
-        Proposal[] memory listOfProposals = new Proposal[](proposalCounter-1);
+        Proposal[] memory listOfProposals = new Proposal[](proposalCounter);
         uint256 j;
         for(uint256 i=0;i<proposalCounter;i++){
             if(proposalsList[i].proposalType==_proposalType){
