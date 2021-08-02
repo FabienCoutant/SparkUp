@@ -8,6 +8,7 @@ contract Proposal is IProposal {
 
     uint128 public availableFunds;
     uint256 public proposalCounter;
+    mapping(ProposalType => uint256) public proposalTypeCounter;
     address public immutable campaignAddress;
     address public campaignManager;
 
@@ -64,6 +65,7 @@ contract Proposal is IProposal {
         p.amount = _amount;
         p.status = WorkflowStatus.Registered;
         proposalsList[proposalCounter] = p;
+        proposalTypeCounter[ProposalType.Active]++;
         emit proposalCreated(proposalCounter);
         proposalCounter++;
         availableFunds = availableFunds - _amount;
@@ -75,6 +77,8 @@ contract Proposal is IProposal {
     function deleteProposal(uint8 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered) {
         availableFunds = availableFunds + proposalsList[proposalId].amount;
         proposalsList[proposalId].proposalType = ProposalType.Deleted;
+        proposalTypeCounter[ProposalType.Deleted]++;
+        proposalTypeCounter[ProposalType.Active]--;
     }
 
     /**
@@ -110,6 +114,8 @@ contract Proposal is IProposal {
             proposalsList[proposalId].accepted = true;
         }
         proposalsList[proposalId].proposalType=ProposalType.Archived;
+        proposalTypeCounter[ProposalType.Archived]++;
+        proposalTypeCounter[ProposalType.Active]--;
     }
 
     /**
@@ -124,7 +130,7 @@ contract Proposal is IProposal {
      * @inheritdoc IProposal
      */
     function getProposals(ProposalType _proposalType) external view override returns(Proposal[] memory){
-        Proposal[] memory listOfProposals = new Proposal[](proposalCounter);
+        Proposal[] memory listOfProposals = new Proposal[](proposalTypeCounter[_proposalType]);
         uint256 j;
         for(uint256 i=0;i<proposalCounter;i++){
             if(proposalsList[i].proposalType==_proposalType){
