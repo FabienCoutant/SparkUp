@@ -19,10 +19,13 @@ module.exports = async (deployer, network, accounts) => {
   }
   await deployer.deploy(Escrow, addressUSDC);
   const EscrowInstance = await Escrow.deployed();
+
   await deployer.deploy(CampaignFactory);
   const CampaignFactoryInstance = await CampaignFactory.deployed();
+
   await deployer.deploy(ProxyFactory, CampaignFactoryInstance.address, EscrowInstance.address, addressUSDC);
   const ProxyFactoryInstance = await ProxyFactory.deployed();
+
   await CampaignFactoryInstance.setProxy(ProxyFactoryInstance.address);
 };
 

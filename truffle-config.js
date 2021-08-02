@@ -22,20 +22,33 @@ module.exports = {
       provider: function () {
         return new HDWalletProvider(
           [process.env.PRIVATE_KEYS],
-          `https://ropsten.infura.io/v3/${process.env.INFURA_KEY}`
+          `wss://ropsten.infura.io/ws/v3/${process.env.INFURA_KEY}`
         );
       },
       network_id: 3,
-      timeoutBlocks: 200,
+      gas: 5000000,
+      gasPrice: 45000000000,
+      confirmations: 2,
+      skipDryRun: false,
+      websocket: true,
+      timeoutBlocks: 50000,
+      networkCheckTimeout: 1000000,
     },
     mainnet: {
       provider: function () {
         return new HDWalletProvider(
           [process.env.PRIVATE_KEYS],
-          `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`
+          `wss://mainnet.infura.io/ws/v3/${process.env.INFURA_KEY}`
         );
       },
       network_id: 1,
+      gas: 5000000,
+      gasPrice: 45000000000,
+      confirmations: 2,
+      skipDryRun: false,
+      websocket: true,
+      timeoutBlocks: 50000,
+      networkCheckTimeout: 1000000,
     },
   },
   mocha: {
