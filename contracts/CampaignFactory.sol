@@ -14,30 +14,28 @@ contract CampaignFactory is ICampaignFactory {
 
     uint128 public campaignCounter = 1;
     address public owner;
+    address public proxyContract;
 
     mapping(uint128 => address) public deployedCampaigns;
     mapping(address => uint128) public campaignToId;
-    IERC20 public immutable usdcToken;
-    address public immutable escrowContract;
 
-    //Events
-    event newCampaign(address campaignAddress);
-
-    constructor(address _usdcToken, address _escrowContract){
+    constructor(){
         owner = msg.sender;
-        usdcToken = IERC20(_usdcToken);
-        escrowContract = _escrowContract;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "!Not Authorized");
+        _;
     }
 
     /**
      * @inheritdoc ICampaignFactory
      */
-    function createCampaign(ICampaign.Info memory infoData, ICampaign.Rewards[] memory rewardsData) external override {
-        ICampaign _newCampaign = new Campaign(infoData, rewardsData, msg.sender, usdcToken, escrowContract);
+    function addCampaign(ICampaign _newCampaign) external override {
+        require(msg.sender == proxyContract, "!Not Authorized");
         deployedCampaigns[campaignCounter] = address(_newCampaign);
         campaignToId[address(_newCampaign)] = campaignCounter;
         campaignCounter++;
-        emit newCampaign(address(_newCampaign));
     }
 
     /**
@@ -59,8 +57,14 @@ contract CampaignFactory is ICampaignFactory {
     /**
      * @inheritdoc ICampaignFactory
      */
-    function updateOwner(address newOwner) external override {
-        require(owner == msg.sender, "!Not Authorized");
+    function updateOwner(address newOwner) external override onlyOwner() {
         owner = newOwner;
+    }
+
+    /**
+     * @inheritdoc ICampaignFactory
+     */
+    function setProxy(address _proxyContract) external override onlyOwner() {
+        proxyContract = _proxyContract;
     }
 }

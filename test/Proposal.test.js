@@ -5,6 +5,7 @@ const CampaignFactoryContract = artifacts.require('CampaignFactory');
 const ProposalContract = artifacts.require('Proposal');
 const TestUSDCContract = artifacts.require('TestUSDC.sol');
 const EscrowContract = artifacts.require('Escrow');
+const ProxyFactoryContract = artifacts.require('ProxyFactory');
 
 contract('Proposal', (accounts) => {
   const [alice, bob, john, greg] = accounts;
@@ -49,16 +50,19 @@ contract('Proposal', (accounts) => {
   beforeEach(async () => {
     TestUSDCContractInstance = await TestUSDCContract.new(bob, { from: bob });
     EscrowContractInstance = await EscrowContract.new(TestUSDCContractInstance.address, { from: alice });
-    CampaignFactoryContractInstance = await CampaignFactoryContract.new(
-      TestUSDCContractInstance.address,
+    CampaignFactoryContractInstance = await CampaignFactoryContract.new({
+      from: alice,
+    });
+    ProxyFactoryContractInstance = await ProxyFactoryContract.new(
+      CampaignFactoryContractInstance.address,
       EscrowContractInstance.address,
-      {
-        from: alice,
-      }
+      TestUSDCContractInstance.address,
+      { from: alice }
     );
+    await CampaignFactoryContractInstance.setProxy(ProxyFactoryContractInstance.address, { from: alice });
     const deadline = parseInt((await time.latest()).add(time.duration.days(8)));
     initialCampaignInfo.deadlineDate = deadline;
-    const newCampaign = await CampaignFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
+    const newCampaign = await ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
       from: alice,
     });
     newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
@@ -297,6 +301,37 @@ contract('Proposal', (accounts) => {
       expect(archivedProposalCounter).to.be.bignumber.equal(new BN(1));
       const proposalAccepted = archivedProposal.accepted;
       expect(proposalAccepted).to.be.false;
+    });
+    it('should reorganize activeProposals correctly if middle proposal accepted', async () => {
+      await ProposalContractInstance.createProposal(
+        'Second Proposal',
+        'This is the second proposal',
+        ether('500').toString(),
+        {
+          from: alice,
+        }
+      );
+      await ProposalContractInstance.createProposal(
+        'Third Proposal',
+        'This is the third proposal',
+        ether('1000').toString(),
+        {
+          from: alice,
+        }
+      );
+      await ProposalContractInstance.startVotingSession(0, { from: alice });
+      await ProposalContractInstance.startVotingSession(1, { from: alice });
+      await ProposalContractInstance.startVotingSession(2, { from: alice });
+      await ProposalContractInstance.voteProposal(1, true, { from: bob });
+      await ProposalContractInstance.voteProposal(1, true, { from: john });
+      await time.increase(time.duration.days(10));
+      await ProposalContractInstance.getResults(1, { from: alice });
+      const secondActiveProposal = await ProposalContractInstance.activeProposals(1);
+      expect(secondActiveProposal.title).to.be.equal('Third Proposal');
+      const activeProposalCounter = await ProposalContractInstance.activeProposalCounter();
+      expect(activeProposalCounter).to.be.bignumber.equal(new BN(2));
+      const archivedProposalCounter = await ProposalContractInstance.archivedProposalCounter();
+      expect(archivedProposalCounter).to.be.bignumber.equal(new BN(1));
     });
     it('should revert if wrong workflow status', async () => {
       await expectRevert(ProposalContractInstance.getResults(0, { from: alice }), '!Err : Wrong workflow status');

@@ -72,10 +72,10 @@ contract Proposal is IProposal {
      */
     function deleteProposal(uint8 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered) {
         availableFunds = availableFunds + activeProposals[proposalId].amount;
-        if (proposalId != activeProposalCounter - 1) {
-            activeProposals[proposalId] = activeProposals[activeProposalCounter - 1];
+        if (proposalId != activeProposalCounter-1) {
+            activeProposals[proposalId] = activeProposals[activeProposalCounter-1];
         }
-        delete  activeProposals[proposalId];
+        delete  activeProposals[activeProposalCounter-1];
         activeProposalCounter--;
     }
     
@@ -112,13 +112,13 @@ contract Proposal is IProposal {
             campaignContract.releaseProposalFunds(activeProposals[proposalId].amount);
             p.accepted = true;
         }
-        if (proposalId != activeProposalCounter) {
-            activeProposals[proposalId] = activeProposals[activeProposalCounter - 1];
+        if (proposalId != activeProposalCounter - 1) {
+            activeProposals[proposalId] = activeProposals[activeProposalCounter-1];
         }
         archivedProposals[proposalId] = p;
+        delete activeProposals[activeProposalCounter-1];
         archivedProposalCounter++;
         activeProposalCounter--;
-        delete activeProposals[proposalId];
     }
     
     function _getCampaignUSDCBalance() internal view returns (uint256) {

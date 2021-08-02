@@ -5,6 +5,7 @@ const CampaignFactoryContract = artifacts.require('CampaignFactory');
 const TestUSDCContract = artifacts.require('TestUSDC');
 const EscrowContract = artifacts.require('Escrow');
 const ProposalContract = artifacts.require('Proposal');
+const ProxyFactoryContract = artifacts.require('ProxyFactory');
 
 contract('Campaign', (accounts) => {
   const [alice, bob, john] = accounts;
@@ -68,16 +69,19 @@ contract('Campaign', (accounts) => {
   beforeEach(async () => {
     TestUSDCContractInstance = await TestUSDCContract.new(bob, { from: bob });
     EscrowContractInstance = await EscrowContract.new(TestUSDCContractInstance.address, { from: alice });
-    CampaignFactoryContractInstance = await CampaignFactoryContract.new(
-      TestUSDCContractInstance.address,
+    CampaignFactoryContractInstance = await CampaignFactoryContract.new({
+      from: alice,
+    });
+    ProxyFactoryContractInstance = await ProxyFactoryContract.new(
+      CampaignFactoryContractInstance.address,
       EscrowContractInstance.address,
-      {
-        from: alice,
-      }
+      TestUSDCContractInstance.address,
+      { from: alice }
     );
+    await CampaignFactoryContractInstance.setProxy(ProxyFactoryContractInstance.address, { from: alice });
     const deadline = parseInt((await time.latest()).add(time.duration.days(8)));
     initialCampaignInfo.deadlineDate = deadline;
-    const newCampaign = await CampaignFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
+    const newCampaign = await ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
       from: alice,
     });
     newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
@@ -420,7 +424,7 @@ contract('Campaign', (accounts) => {
       });
       const status = await CampaignContractInstance.status();
       expect(status).to.be.bignumber.equal(new BN(2));
-      const totalRaised = await CampaignContractInstance.totalRaised();
+      const totalRaised = await CampaignContractInstance.getContractUSDCBalance();
       expect(totalRaised).to.be.bignumber.equal(new BN(bobContribution));
     });
     it('should revert if wrong workflow status', async () => {
@@ -559,7 +563,7 @@ contract('Campaign', (accounts) => {
         from: bob,
       });
     });
-    it('should allow manager create proposal contract if funding complete and campaign deadline passed', async () => {
+    it('should allow manager to create proposal contract if funding complete and campaign deadline passed', async () => {
       await time.increase(time.duration.days(15));
       await CampaignContractInstance.launchProposalContract({ from: alice });
       const proposal = await CampaignContractInstance.proposal();

@@ -11,11 +11,10 @@ import "../interfaces/ICampaign.sol";
 interface ICampaignFactory {
 
     /**
-     * @notice Create a new Campaign contract and init it
-     * @param infoData ICampaign.Info basic information for a campaign following the Campaign Info structure
-     * @param rewardsData ICampaign.Rewards array of rewards information for a campaign following the Campaign Info structure
+     * @notice Add campaign contract address to mapping
+     * @param _newCampaign is ICampaign of created campaign from proxy
      */
-    function createCampaign(ICampaign.Info memory infoData,ICampaign.Rewards[] memory rewardsData) external;
+    function addCampaign(ICampaign _newCampaign) external;
 
     /**
      * @notice Delete a new Campaign that call this function.
@@ -29,4 +28,11 @@ interface ICampaignFactory {
      * @param newOwner address The new owner address
      */
     function updateOwner(address newOwner) external;
+
+    /**
+     * @notice Allow the owner to set ProxyContract address.
+     * @dev Only the actual owner must be able to call this function
+     * @param _proxyContract address the ProxyContract
+     */
+    function setProxy(address _proxyContract) external;
 }
