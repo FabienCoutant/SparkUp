@@ -227,6 +227,7 @@ contract('Proposal', (accounts) => {
       await ProposalContractInstance.startVotingSession(0, { from: alice });
       await ProposalContractInstance.voteProposal(0, true, { from: bob });
       await ProposalContractInstance.voteProposal(0, false, { from: john });
+      await ProposalContractInstance.startVotingSession(1, { from: alice });
       await ProposalContractInstance.voteProposal(1, true, { from: bob });
       await ProposalContractInstance.voteProposal(1, false, { from: john });
       const registeredProposal = await ProposalContractInstance.activeProposals(0);
@@ -236,10 +237,6 @@ contract('Proposal', (accounts) => {
       expect(okVotes).to.be.bignumber.equal(bobCampaignBalance);
       const nokVotes = registeredProposal.nokVotes;
       expect(nokVotes).to.be.bignumber.equal(johnCampaignBalance);
-      const voters = await ProposalContractInstance.getHasVotedLength(0);
-      console.log(voters);
-      const voters2 = await ProposalContractInstance.getHasVotedLength(0);
-      console.log(voters2);
       const bobHasVoted = await ProposalContractInstance.checkHasVoted(bob, 1);
       console.log('check1');
       expect(bobHasVoted).to.be.true;
