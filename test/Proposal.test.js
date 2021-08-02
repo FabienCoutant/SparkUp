@@ -1,4 +1,5 @@
 const { expectRevert, time, BN, ether } = require('@openzeppelin/test-helpers');
+const expectEvent = require('@openzeppelin/test-helpers/src/expectEvent');
 const { expect } = require('chai');
 const CampaignContract = artifacts.require('Campaign');
 const CampaignFactoryContract = artifacts.require('CampaignFactory');
@@ -94,15 +95,21 @@ contract('Proposal', (accounts) => {
     expect(campaignManager).to.be.equal(alice);
   });
 
-  describe('--- Create Proposal ---', async () => {
+  xdescribe('--- Create Proposal ---', async () => {
     it('should allow manager to create proposal on correct workflow', async () => {
       const availableFundsBeforeProposal = await ProposalContractInstance.availableFunds();
-      await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
-        from: alice,
-      });
-      const activeProposalCounter = await ProposalContractInstance.activeProposalCounter();
-      expect(activeProposalCounter).to.be.bignumber.equal(new BN(1));
-      const newProposal = await ProposalContractInstance.activeProposals(0);
+      const receipt = await ProposalContractInstance.createProposal(
+        proposal.title,
+        proposal.description,
+        proposal.amount,
+        {
+          from: alice,
+        }
+      );
+      expectEvent(receipt, 'proposalCreated', { proposalId: new BN(0) });
+      const proposalCounter = await ProposalContractInstance.proposalCounter();
+      expect(proposalCounter).to.be.bignumber.equal(new BN(1));
+      const newProposal = await ProposalContractInstance.proposalsList(0);
       expect(newProposal.title).to.be.equal(proposal.title);
       expect(newProposal.description).to.be.equal(proposal.description);
       expect(newProposal.amount).to.be.bignumber.equal(new BN(proposal.amount));
@@ -176,44 +183,48 @@ contract('Proposal', (accounts) => {
     });
   });
   describe('--- Delete Proposal ---', async () => {
-    it('should allow campaignManager to delete last proposal if workflow status is Registered', async () => {
+    xit('should allow campaignManager to delete proposal if workflow status is Registered', async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
       await ProposalContractInstance.deleteProposal(0, { from: alice });
-      const deletedProposal = await ProposalContractInstance.activeProposals(0);
-      expect(deletedProposal.title).to.be.equal('');
-      const activeProposalCounter = await ProposalContractInstance.activeProposalCounter();
-      expect(activeProposalCounter).to.be.bignumber.equal(new BN(0));
+      const deletedProposal = await ProposalContractInstance.proposalsList(0);
+      const deletedProposalType = deletedProposal.proposalType;
+      expect(deletedProposalType).to.be.bignumber.equal(new BN(2));
       const availableFunds = await ProposalContractInstance.availableFunds();
       const contractBalance = await CampaignContractInstance.getContractUSDCBalance();
       expect(availableFunds).to.be.bignumber.equal(contractBalance);
     });
-    it('should allow campaignManager to delete first proposal if workflow status is Registered', async () => {
+    it('should return correct proposal list after delete', async () => {
+      console.log(ProposalContractInstance.address);
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
-      await ProposalContractInstance.createProposal('Second Proposal', 'This is the second proposal', proposal.amount, {
+      await ProposalContractInstance.createProposal('Second Proposal', proposal.description, proposal.amount, {
         from: alice,
       });
-      await ProposalContractInstance.deleteProposal(0, { from: alice });
-      const activeProposalCounter = await ProposalContractInstance.activeProposalCounter();
-      expect(activeProposalCounter).to.be.bignumber.equal(new BN(1));
-      const deletedProposal = await ProposalContractInstance.activeProposals(0);
-      expect(deletedProposal.title).to.be.equal('Second Proposal');
+      await ProposalContractInstance.createProposal('Third Proposal', proposal.description, proposal.amount, {
+        from: alice,
+      });
+      await ProposalContractInstance.deleteProposal(1, { from: alice });
+      const activeProposalList = await ProposalContractInstance.getProposals(0);
+      console.log(activeProposalList);
+      expect(activeProposalList.length).to.be.bignumber.equal(new BN(2));
+      const secondActiveProposalTitle = activeProposalList[1].title;
+      expect(secondActiveProposalTitle).to.be.equal('Third Proposal');
     });
-    it('should revert if wrong workflow status', async () => {
+    xit('should revert if wrong workflow status', async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
       });
       await ProposalContractInstance.startVotingSession(0, { from: alice });
-      const registeredProposal = await ProposalContractInstance.activeProposals(0);
+      const registeredProposal = await ProposalContractInstance.proposalsList(0);
       const proposalStatus = registeredProposal.status;
       expect(proposalStatus).to.be.bignumber.equal(new BN(2));
       await expectRevert(ProposalContractInstance.deleteProposal(0, { from: alice }), '!Err : Wrong workflow status');
     });
   });
-  describe('--- Vote ---', async () => {
+  xdescribe('--- Vote ---', async () => {
     beforeEach(async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
@@ -226,17 +237,15 @@ contract('Proposal', (accounts) => {
       await ProposalContractInstance.startVotingSession(0, { from: alice });
       await ProposalContractInstance.voteProposal(0, true, { from: bob });
       await ProposalContractInstance.voteProposal(0, false, { from: john });
-      const registeredProposal = await ProposalContractInstance.activeProposals(0);
+      const registeredProposal = await ProposalContractInstance.proposalsList(0);
       const okVotes = registeredProposal.okVotes;
       const bobCampaignBalance = await CampaignContractInstance.contributorBalances(bob);
       const johnCampaignBalance = await CampaignContractInstance.contributorBalances(john);
       expect(okVotes).to.be.bignumber.equal(bobCampaignBalance);
       const nokVotes = registeredProposal.nokVotes;
       expect(nokVotes).to.be.bignumber.equal(johnCampaignBalance);
-      const bobHasVoted = await ProposalContractInstance.checkHasVoted(bob, 0);
-      expect(bobHasVoted).to.be.true;
-      const johnHasVoted = await ProposalContractInstance.checkHasVoted(john, 0);
-      expect(johnHasVoted).to.be.true;
+      const hasVoted = await ProposalContractInstance.hasVoted(0, bob);
+      expect(hasVoted).to.be.true;
     });
     it('should revert if wrong workflow status', async () => {
       await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: bob }), '!Err : Wrong workflow status');
@@ -259,7 +268,7 @@ contract('Proposal', (accounts) => {
       await expectRevert(ProposalContractInstance.voteProposal(0, true, { from: greg }), '!Err: not a contributor');
     });
   });
-  describe('--- Get Results ---', async () => {
+  xdescribe('--- Get Results ---', async () => {
     beforeEach(async () => {
       await ProposalContractInstance.createProposal(proposal.title, proposal.description, proposal.amount, {
         from: alice,
@@ -272,16 +281,13 @@ contract('Proposal', (accounts) => {
       await time.increase(time.duration.days(10));
       const campaignBalanceBeforeTransfer = await CampaignContractInstance.getContractUSDCBalance();
       await ProposalContractInstance.getResults(0, { from: alice });
-      const votedActiveProposal = await ProposalContractInstance.activeProposals(0);
-      const activeProposalStatus = votedActiveProposal.status;
-      expect(activeProposalStatus).to.be.bignumber.equal(new BN(0));
-      const archivedProposal = await ProposalContractInstance.archivedProposals(0);
-      const archivedProposalStatus = archivedProposal.status;
-      expect(archivedProposalStatus).to.be.bignumber.equal(new BN(4));
-      const archivedProposalCounter = await ProposalContractInstance.archivedProposalCounter();
-      expect(archivedProposalCounter).to.be.bignumber.equal(new BN(1));
-      const proposalAccepted = archivedProposal.accepted;
-      expect(proposalAccepted).to.be.true;
+      const votedProposal = await ProposalContractInstance.proposalsList(0);
+      const votedProposalStatus = votedProposal.status;
+      expect(votedProposalStatus).to.be.bignumber.equal(new BN(3));
+      const votedProposalType = votedProposal.proposalType;
+      expect(votedProposalType).to.be.bignumber.equal(new BN(1));
+      const proposalIsAccepted = votedProposal.accepted;
+      expect(proposalIsAccepted).to.be.true;
       const campaignBalanceAfterTransfer = await CampaignContractInstance.getContractUSDCBalance();
       const balanceDiff = campaignBalanceBeforeTransfer.sub(campaignBalanceAfterTransfer);
       expect(balanceDiff).to.be.bignumber.equal(new BN(proposal.amount));
@@ -294,47 +300,13 @@ contract('Proposal', (accounts) => {
       await ProposalContractInstance.voteProposal(0, true, { from: john });
       await time.increase(time.duration.days(10));
       await ProposalContractInstance.getResults(0, { from: alice });
-      const votedActiveProposal = await ProposalContractInstance.activeProposals(0);
-      const proposalStatus = votedActiveProposal.status;
-      expect(proposalStatus).to.be.bignumber.equal(new BN(0));
-      const archivedProposal = await ProposalContractInstance.archivedProposals(0);
-      const archivedProposalStatus = archivedProposal.status;
-      expect(archivedProposalStatus).to.be.bignumber.equal(new BN(4));
-      const archivedProposalCounter = await ProposalContractInstance.archivedProposalCounter();
-      expect(archivedProposalCounter).to.be.bignumber.equal(new BN(1));
-      const proposalAccepted = archivedProposal.accepted;
-      expect(proposalAccepted).to.be.false;
-    });
-    it('should reorganize activeProposals correctly if middle proposal accepted', async () => {
-      await ProposalContractInstance.createProposal(
-        'Second Proposal',
-        'This is the second proposal',
-        ether('500').toString(),
-        {
-          from: alice,
-        }
-      );
-      await ProposalContractInstance.createProposal(
-        'Third Proposal',
-        'This is the third proposal',
-        ether('1000').toString(),
-        {
-          from: alice,
-        }
-      );
-      await ProposalContractInstance.startVotingSession(0, { from: alice });
-      await ProposalContractInstance.startVotingSession(1, { from: alice });
-      await ProposalContractInstance.startVotingSession(2, { from: alice });
-      await ProposalContractInstance.voteProposal(1, true, { from: bob });
-      await ProposalContractInstance.voteProposal(1, true, { from: john });
-      await time.increase(time.duration.days(10));
-      await ProposalContractInstance.getResults(1, { from: alice });
-      const secondActiveProposal = await ProposalContractInstance.activeProposals(1);
-      expect(secondActiveProposal.title).to.be.equal('Third Proposal');
-      const activeProposalCounter = await ProposalContractInstance.activeProposalCounter();
-      expect(activeProposalCounter).to.be.bignumber.equal(new BN(2));
-      const archivedProposalCounter = await ProposalContractInstance.archivedProposalCounter();
-      expect(archivedProposalCounter).to.be.bignumber.equal(new BN(1));
+      const votedProposal = await ProposalContractInstance.proposalsList(0);
+      const proposalStatus = votedProposal.status;
+      expect(proposalStatus).to.be.bignumber.equal(new BN(3));
+      const votedProposalType = votedProposal.proposalType;
+      expect(votedProposalType).to.be.bignumber.equal(new BN(1));
+      const proposalIsAccepted = votedProposal.accepted;
+      expect(proposalIsAccepted).to.be.false;
     });
     it('should revert if wrong workflow status', async () => {
       await expectRevert(ProposalContractInstance.getResults(0, { from: alice }), '!Err : Wrong workflow status');

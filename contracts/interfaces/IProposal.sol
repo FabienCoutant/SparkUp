@@ -9,6 +9,7 @@ pragma solidity 0.8.6;
 interface IProposal {
 
     struct Proposal {
+        uint256 id;
         string title;
         string description;
         bool accepted;
@@ -16,11 +17,11 @@ interface IProposal {
         uint128 amount;
         uint128 okVotes;
         uint128 nokVotes;
-        ProposalStatus proposalStatus;
+        ProposalType proposalType;
         WorkflowStatus status;
     }
 
-    enum ProposalStatus{
+    enum ProposalType{
         Active,
         Archived,
         Deleted
@@ -30,7 +31,6 @@ interface IProposal {
         Pending,
         Registered,
         VotingSessionStarted,
-        VotingSessionEnded,
         VotesTallied
     }
 
@@ -71,6 +71,6 @@ interface IProposal {
 
 
 
-    function getProposals(ProposalStatus _proposalStatus) external view returns(Proposal[] memory);
+    function getProposals(ProposalType _proposalStatus) external view returns(Proposal[] memory);
 
 }

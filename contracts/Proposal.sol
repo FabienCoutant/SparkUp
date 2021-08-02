@@ -16,6 +16,8 @@ contract Proposal is IProposal {
     mapping(uint => Proposal) public proposalsList;
     mapping(uint => mapping(address => bool)) public hasVoted;
 
+    event proposalCreated(uint256 proposalId);
+
     constructor(address _campaignAddress, address _manager) {
         campaignAddress = _campaignAddress;
         campaignContract = Campaign(_campaignAddress);
@@ -56,11 +58,13 @@ contract Proposal is IProposal {
         require(_amount >= 100 ether, "!Err: Amount too low");
         require(_amount <= availableFunds, "!Err: Proposal amount exceeds campaign USDC balance");
         Proposal memory p;
+        p.id = proposalCounter;
         p.title = _title;
         p.description = _description;
         p.amount = _amount;
         p.status = WorkflowStatus.Registered;
         proposalsList[proposalCounter] = p;
+        emit proposalCreated(proposalCounter);
         proposalCounter++;
         availableFunds = availableFunds - _amount;
     }
@@ -70,7 +74,7 @@ contract Proposal is IProposal {
      */
     function deleteProposal(uint8 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered) {
         availableFunds = availableFunds + proposalsList[proposalId].amount;
-        proposalsList[proposalId].proposalStatus = ProposalStatus.Deleted;
+        proposalsList[proposalId].proposalType = ProposalType.Deleted;
     }
 
     /**
@@ -105,7 +109,7 @@ contract Proposal is IProposal {
             campaignContract.releaseProposalFunds(proposalsList[proposalId].amount);
             proposalsList[proposalId].accepted = true;
         }
-        proposalsList[proposalId].proposalStatus=ProposalStatus.Archived;
+        proposalsList[proposalId].proposalType=ProposalType.Archived;
     }
 
     /**
@@ -117,11 +121,11 @@ contract Proposal is IProposal {
     }
 
 
-    function getProposals(ProposalStatus _proposalStatus) external view override returns(Proposal[] memory){
+    function getProposals(ProposalType _proposalType) external view override returns(Proposal[] memory){
         Proposal[] memory listOfProposals;
         uint256 j;
         for(uint256 i=0;i<proposalCounter;i++){
-            if(proposalsList[i].proposalStatus==_proposalStatus){
+            if(proposalsList[i].proposalType==_proposalType){
                 listOfProposals[j]=proposalsList[i];
                 j++;
             }
