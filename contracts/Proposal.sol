@@ -112,6 +112,8 @@ contract Proposal is IProposal {
         if (proposalsList[proposalId].okVotes > proposalsList[proposalId].nokVotes) {
             campaignContract.releaseProposalFunds(proposalsList[proposalId].amount);
             proposalsList[proposalId].accepted = true;
+        }else{
+            availableFunds = availableFunds + proposalsList[proposalId].amount;
         }
         proposalsList[proposalId].proposalType=ProposalType.Archived;
         proposalTypeCounter[ProposalType.Archived]++;

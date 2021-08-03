@@ -54,17 +54,15 @@ const ContributeForm = ({ id }: { id: number }) => {
       contractCampaign?.methods?.contribute(serializeUSDCFor(contributionAmount, true), id).send({ from: account })
         .then(async () => {
           const amount = contributionAmount
-          const status:number = await contractCampaign?.methods?.status().call()
           dispatch(rewardActions.addContribution({ amount, id }))
           dispatch(userActions.subBalance({ balance: amount }))
-          dispatch(campaignActions.addFunding({ amount: amount }))
-          dispatch(campaignActions.setWorkflow({ workflowStatus: status }))
+          dispatch(campaignActions.addContribution({ amount: amount }))
           dispatch(notificationActions.setNotification(({
             message: `Contribution succeed`,
             type: NOTIFICATION_TYPE.SUCCESS
           })))
-
           setAmountApproved(serializeUSDCFor(amountApproved, false) - amount)
+          setShowContribution(false)
         }).catch((error: any) => console.log(error))
     } else {
       const amount = serializeUSDCFor(contributionAmount, true)

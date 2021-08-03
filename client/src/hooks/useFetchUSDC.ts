@@ -31,7 +31,6 @@ export const useFetchUserBalance = () => {
       const fetchUSDCBalance = async () => {
         if (contractUSDC && chainId && library) {
           const amount = await contractUSDC?.methods?.balanceOf(account).call()
-          console.log(typeof amount)
           const balance = serializeUSDCFor(amount,false);
           dispatch(userActions.setBalance({balance}))
         }
