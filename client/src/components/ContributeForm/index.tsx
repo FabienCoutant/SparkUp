@@ -53,24 +53,22 @@ const ContributeForm = ({ id }: { id: number }) => {
     if (amountApproved >= contributionAmount) {
       contractCampaign?.methods?.contribute(serializeUSDCFor(contributionAmount, true), id).send({ from: account })
         .then(async () => {
-          const amount = contributionAmount as number
-          const status:number = await contractCampaign?.methods?.status().call()
+          const amount = contributionAmount
           dispatch(rewardActions.addContribution({ amount, id }))
           dispatch(userActions.subBalance({ balance: amount }))
-          dispatch(campaignActions.addFunding({ amount: amount }))
-          dispatch(campaignActions.setWorkflow({ workflowStatus: status }))
+          dispatch(campaignActions.addContribution({ amount: amount }))
           dispatch(notificationActions.setNotification(({
             message: `Contribution succeed`,
             type: NOTIFICATION_TYPE.SUCCESS
           })))
-
-          setAmountApproved((serializeUSDCFor(amountApproved, false) as number) - amount)
+          setAmountApproved(serializeUSDCFor(amountApproved, false) - amount)
+          setShowContribution(false)
         }).catch((error: any) => console.log(error))
     } else {
       const amount = serializeUSDCFor(contributionAmount, true)
       contractUSDC?.methods?.increaseAllowance(campaignAddress, amount).send({ from: account })
         .then(() => {
-          setAmountApproved(amount as number)
+          setAmountApproved(amount)
           dispatch(notificationActions.setNotification(({
             message: `Approved succeed`,
             type: NOTIFICATION_TYPE.SUCCESS

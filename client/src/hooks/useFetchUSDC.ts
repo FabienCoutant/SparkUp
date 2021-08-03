@@ -14,7 +14,7 @@ export const useFetchUserAllowance = (address: string) => {
       const fetchUSDC = async () => {
         if (contractUSDC && chainId && library) {
           const amount = await contractUSDC?.methods?.allowance(account,address).call()
-          setAllowanceAmount(serializeUSDCFor(amount,false) as number);
+          setAllowanceAmount(serializeUSDCFor(amount,false));
         }
       }
       fetchUSDC()
@@ -30,8 +30,8 @@ export const useFetchUserBalance = () => {
   useEffect(() => {
       const fetchUSDCBalance = async () => {
         if (contractUSDC && chainId && library) {
-          const amount:number = await contractUSDC?.methods?.balanceOf(account).call()
-          const balance = amount/1e6;
+          const amount = await contractUSDC?.methods?.balanceOf(account).call()
+          const balance = serializeUSDCFor(amount,false);
           dispatch(userActions.setBalance({balance}))
         }
       }

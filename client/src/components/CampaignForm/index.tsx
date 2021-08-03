@@ -47,7 +47,7 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
         onChain: false,
         amountRaise:0,
         currentBalance:0,
-        manager: account as string,
+        manager: account!,
         createAt: new Date().getTime(),
         proposalAddress:ZERO_ADDRESS,
         workflowStatus:WORKFLOW_STATUS.CampaignDrafted

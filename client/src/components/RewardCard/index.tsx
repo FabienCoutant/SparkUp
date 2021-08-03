@@ -1,6 +1,6 @@
 import { rewardActions } from '../../store/Reward/slice'
 import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { NOTIFICATION_TYPE, RENDER_TYPE, WORKFLOW_STATUS } from '../../constants'
+import { NOTIFICATION_TYPE, RENDER_TYPE, WORKFLOW_STATUS, ZERO_ADDRESS } from '../../constants'
 import { useParams } from 'react-router'
 import { useContractCampaign } from '../../hooks/useContract'
 import { useWeb3React } from '@web3-react/core'
@@ -84,15 +84,16 @@ const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE })
       }
     } else if (
       account
-      && (
+      && campaign.proposalAddress ===ZERO_ADDRESS
+      &&(
         campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
-      || (
+        || (
           campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
-          && campaign.info.deadlineDate <= new Date().getTime()
+          // && campaign.info.deadlineDate <= new Date().getTime() //Disabled for local test
         )
       )) {
-      return(
-        <div className="mt-2 mb-2">
+      return (
+        <div className='mt-2 mb-2'>
           <ContributeForm id={id} />
         </div>
       )

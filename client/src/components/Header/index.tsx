@@ -7,6 +7,7 @@ import {Link} from 'react-router-dom';
 import {NOTIFICATION_TYPE} from "../../constants";
 import PlusSquareFill from '../../assets/images/PlusSquareFill'
 import { useFetchUserBalance } from '../../hooks/useFetchUSDC'
+import Logo from "../../assets/images/sparkup.png"
 
 const Header = () => {
     const dispatch = useAppDispatch();
@@ -21,7 +22,7 @@ const Header = () => {
         if (chainId) {
             getBalance();
         }
-    }, [user,dispatch]);
+    }, [user,dispatch,chainId]);
 
     const truncateWalletAddress = (
         address: string,
@@ -67,12 +68,7 @@ const Header = () => {
         <nav className='navbar navbar-expand-lg navbar-light'>
             <div className='container-fluid'>
                 <Link to='/' style={{textDecoration: 'none', color: 'white'}}>
-                    <div
-                        className='navbar-brand mb-0'
-                        style={{color: 'white', fontSize: '30px'}}
-                    >
-                        SparkUp
-                    </div>
+                    <img src={Logo} alt='SPARKUP' style={{width:"250px"}}/>
                 </Link>
                 <button
                     className='navbar-toggler'

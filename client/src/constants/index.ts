@@ -39,8 +39,8 @@ export interface campaignState {
   manager: string
   onChain: boolean,
   confirmed: boolean,
-  amountRaise: number | string,
-  currentBalance: number | string,
+  amountRaise: number,
+  currentBalance: number,
   workflowStatus: WORKFLOW_STATUS,
   proposalAddress: string
 }
@@ -48,15 +48,15 @@ export interface campaignState {
 export interface Info {
   title: string;
   description: string;
-  fundingGoal: number | string;
+  fundingGoal: number;
   deadlineDate: number;
 }
 
 export interface Rewards {
   title: string;
   description: string;
-  minimumContribution: number | string;
-  amount: number | string;
+  minimumContribution: number;
+  amount: number;
   stockLimit: number;
   nbContributors: number;
   isStockLimited: boolean;
@@ -66,7 +66,7 @@ export interface Proposals {
   id?:number
   title: string;
   description: string;
-  amount: number | string;
+  amount: number;
   okVotes: number;
   nokVotes: number;
   status: PROPOSAL_WORKFLOW_STATUS;

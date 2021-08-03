@@ -126,9 +126,9 @@ const CampaignDetails = () => {
       contractCampaign.methods.launchProposalContract().send({ from: account }).then(async () => {
         const proposalAddress: string = await contractCampaign.methods.proposal().call()
         const newFundingRaise: string = await contractCampaign.methods.totalRaised().call()
-        dispatch(campaignActions.setAmountRaise({ newAmountRaise:(serializeUSDCFor(newFundingRaise,false) as number) }))
+        dispatch(campaignActions.setAmountRaise({ newAmountRaise:serializeUSDCFor(newFundingRaise,false)}))
         dispatch(campaignActions.setProposalAddress({ proposalAddress }))
-        dispatch(proposalActions.setAvailableFunds({  availableFunds:(serializeUSDCFor(newFundingRaise,false) as number)  }))
+        dispatch(proposalActions.setAvailableFunds({  availableFunds:serializeUSDCFor(newFundingRaise,false)  }))
         dispatch(notificationActions.setNotification({
           message: 'Your has been successfully launch the proposal part',
           type: NOTIFICATION_TYPE.SUCCESS
@@ -160,7 +160,7 @@ const CampaignDetails = () => {
       && (
         (campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
           && campaign.amountRaise < campaign.info.fundingGoal
-          && campaign.info.deadlineDate<= new Date().getTime()
+          // && campaign.info.deadlineDate<= new Date().getTime() //Disabled for local test
         )
         || campaign.workflowStatus === WORKFLOW_STATUS.FundingFailed
       )
@@ -176,7 +176,7 @@ const CampaignDetails = () => {
     if (isManager
       && campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
       && campaign.proposalAddress === ZERO_ADDRESS
-      && campaign.info.deadlineDate <= new Date().getTime()
+      // && campaign.info.deadlineDate <= new Date().getTime() //Disabled for local test
     ) {
       return (
         <div>

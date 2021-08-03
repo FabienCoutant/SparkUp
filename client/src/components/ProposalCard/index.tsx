@@ -37,12 +37,12 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
         if (isApprove) {
           proposalUpdated = {
             ...proposalUpdated,
-            okVotes: proposalUpdated.okVotes + (serializeUSDCFor(contributorBalance, false) as number)
+            okVotes: proposalUpdated.okVotes + serializeUSDCFor(contributorBalance, false)
           }
         } else {
           proposalUpdated = {
             ...proposalUpdated,
-            nokVotes: proposalUpdated.nokVotes + (serializeUSDCFor(contributorBalance, false) as number)
+            nokVotes: proposalUpdated.nokVotes + serializeUSDCFor(contributorBalance, false)
           }
         }
         dispatch(proposalActions.updateProposal({
@@ -90,8 +90,8 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
   const handleGetResultProposal = () => {
     if (contractProposal) {
       contractProposal.methods.getResults(proposals[id].id).send({ from: account }).then(() => {
-        if(isManager){
-          dispatch(userActions.addBalance({balance:proposals[id].amount}))
+        if (isManager) {
+          dispatch(userActions.addBalance({ balance: proposals[id].amount }))
         }
         dispatch(proposalActions.moveActiveToArchived({
           id
@@ -139,7 +139,7 @@ const ProposalCard = ({ id, proposalType }: { id: number, proposalType: PROPOSAL
         )
       }
       if (proposals[id].status === PROPOSAL_WORKFLOW_STATUS.VotingSessionStarted
-        && new Date().getTime >= proposals[id].deadLine
+        // && new Date().getTime >= proposals[id].deadLine //Disabled for local test
       ) {
         return (
           <div className='col-4'>
