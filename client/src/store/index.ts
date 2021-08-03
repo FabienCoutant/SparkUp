@@ -1,13 +1,13 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import notificationSlice from './Notification/slice';
-import campaignSlice from './Campaign/slice';
-import rewardSlice from './Reward/slice';
-import proposalSlice from './Proposal/slice';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import notificationSlice from './Notification/slice'
+import campaignSlice from './Campaign/slice'
+import rewardSlice from './Reward/slice'
+import proposalSlice from './Proposal/slice'
 import userSlice from './User/slice'
 
 const customizedMiddleware = getDefaultMiddleware({
-  serializableCheck: false,
-});
+  serializableCheck: false
+})
 
 const store = configureStore({
   reducer: {
@@ -17,10 +17,10 @@ const store = configureStore({
     proposal: proposalSlice.reducer,
     user: userSlice.reducer
   },
-  middleware: customizedMiddleware,
-});
+  middleware: customizedMiddleware
+})
 
-export default store;
+export default store
 
 export type RootState = ReturnType<typeof store.getState>;
 

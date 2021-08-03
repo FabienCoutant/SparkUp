@@ -53,10 +53,10 @@ const campaignSlice = createSlice({
       state.confirmed = true
     },
     addFunding(state, action: PayloadAction<{ amount: number }>) {
-      state.amountRaise = state.amountRaise as number + action.payload.amount
+      state.amountRaise = state.amountRaise + action.payload.amount
     },
     subFunding(state, action: PayloadAction<{ amount: number }>) {
-      state.amountRaise = state.amountRaise as number - action.payload.amount
+      state.amountRaise = state.amountRaise - action.payload.amount
     },
     setProposalAddress(state, action: PayloadAction<{ proposalAddress: string }>) {
       state.proposalAddress = action.payload.proposalAddress

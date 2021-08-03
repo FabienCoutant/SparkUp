@@ -53,7 +53,7 @@ const ContributeForm = ({ id }: { id: number }) => {
     if (amountApproved >= contributionAmount) {
       contractCampaign?.methods?.contribute(serializeUSDCFor(contributionAmount, true), id).send({ from: account })
         .then(async () => {
-          const amount = contributionAmount as number
+          const amount = contributionAmount
           const status:number = await contractCampaign?.methods?.status().call()
           dispatch(rewardActions.addContribution({ amount, id }))
           dispatch(userActions.subBalance({ balance: amount }))
@@ -64,13 +64,13 @@ const ContributeForm = ({ id }: { id: number }) => {
             type: NOTIFICATION_TYPE.SUCCESS
           })))
 
-          setAmountApproved((serializeUSDCFor(amountApproved, false) as number) - amount)
+          setAmountApproved(serializeUSDCFor(amountApproved, false) - amount)
         }).catch((error: any) => console.log(error))
     } else {
       const amount = serializeUSDCFor(contributionAmount, true)
       contractUSDC?.methods?.increaseAllowance(campaignAddress, amount).send({ from: account })
         .then(() => {
-          setAmountApproved(amount as number)
+          setAmountApproved(amount)
           dispatch(notificationActions.setNotification(({
             message: `Approved succeed`,
             type: NOTIFICATION_TYPE.SUCCESS

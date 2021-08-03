@@ -1,9 +1,10 @@
-import Web3 from 'web3'
-
-export const serializeUSDCFor=(value:number|string,isTargetSolidity:boolean)=>{
-  if(isTargetSolidity){
-    return Web3.utils.toWei(value.toString(),"ether");
-  }else{
-    return parseInt(Web3.utils.fromWei(Web3.utils.toBN(value),"ether")) as number;
+export const serializeUSDCFor = (value: number | string, isTargetSolidity: boolean):number => {
+  if (typeof value === 'string') {
+    value = parseInt(value)
+  }
+  if (isTargetSolidity) {
+    return value * 10 ** 6
+  } else {
+    return (value / 10 ** 6)
   }
 }

@@ -10,8 +10,8 @@ contract TestUSDC is ERC20, Ownable {
     uint8 private _decimals;
 
     constructor(address receiver) ERC20("TestUSDC", "TUSDC") {
-        _decimals = 2;
-        _totalSupply = 100000000000000000000000;
+        _decimals = 6;
+        _totalSupply = 100000000000;
         _mint(receiver, _totalSupply);
     }
 }

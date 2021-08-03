@@ -86,13 +86,13 @@ const RewardCard = ({ id, renderType }: { id: number, renderType: RENDER_TYPE })
       account
       && (
         campaign.workflowStatus === WORKFLOW_STATUS.CampaignPublished
-      || (
+        || (
           campaign.workflowStatus === WORKFLOW_STATUS.FundingComplete
-          && campaign.info.deadlineDate <= new Date().getTime()
+          // && campaign.info.deadlineDate <= new Date().getTime() //Disabled for local test
         )
       )) {
-      return(
-        <div className="mt-2 mb-2">
+      return (
+        <div className='mt-2 mb-2'>
           <ContributeForm id={id} />
         </div>
       )

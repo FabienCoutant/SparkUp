@@ -30,8 +30,8 @@ const rewardSlice = createSlice({
   name: 'reward',
   initialState,
   reducers: {
-    addReward(state, action: PayloadAction<{ reward:reward }>) {
-        state.rewards.push(action.payload.reward)
+    addReward(state, action: PayloadAction<{ reward: reward }>) {
+      state.rewards.push(action.payload.reward)
     },
     updateReward(state, action: PayloadAction<{ reward: reward, id: number }>) {
       state.rewards[action.payload.id] = action.payload.reward
@@ -43,16 +43,16 @@ const rewardSlice = createSlice({
       state.rewards.splice(action.payload.id, 1)
     },
     setState(state, action: PayloadAction<rewardState>) {
-      state.rewards = [];
-      for(const reward of action.payload.rewards){
+      state.rewards = []
+      for (const reward of action.payload.rewards) {
         state.rewards.push(reward)
       }
     },
-    addContribution(state,action:PayloadAction<{amount:number,id:number}>){
-      state.rewards[action.payload.id].nbContributors ++
-      state.rewards[action.payload.id].amount=state.rewards[action.payload.id].amount as number +action.payload.amount
+    addContribution(state, action: PayloadAction<{ amount: number, id: number }>) {
+      state.rewards[action.payload.id].nbContributors++
+      state.rewards[action.payload.id].amount = state.rewards[action.payload.id].amount + action.payload.amount
     },
-    resetState:()=>initialState,
+    resetState: () => initialState
   }
 })
 
