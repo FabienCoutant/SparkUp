@@ -34,7 +34,7 @@ const ContributeForm = ({ id }: { id: number }) => {
       dispatch(
         notificationActions.setNotification({
           message:
-            'Your contribution must be at least equal to the minimum required',
+            `Your contribution must be greater than ${rewards[id].minimumContribution}`,
           type: NOTIFICATION_TYPE.ALERT
         })
       )
@@ -108,6 +108,7 @@ const ContributeForm = ({ id }: { id: number }) => {
               </label>
               <input
                 type='number'
+                min="0"
                 className='form-control'
                 id='rewardMinimumContribution'
                 value={contributionAmount}

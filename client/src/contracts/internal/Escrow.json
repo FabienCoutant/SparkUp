@@ -6500,10 +6500,30 @@
   },
   "networks": {
     "3": {
-      "events": {},
+      "events": {
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        }
+      },
       "links": {},
-      "address": "0xf4353A9092bb1494E70e22370D52C6435d58e7b8",
-      "transactionHash": "0xec5f1af53b3fbbc6ba49a36e6f270aa4a8aa6206550552c65c45a1fcb8efef24"
+      "address": "0x037FA881718344b150C313103F716cC8235D6e58",
+      "transactionHash": "0xa77ce8e6990182d3f8b70b22068dc7ff5f0510e4fc6bed5ff41cea4980f0722e"
     },
     "1337": {
       "events": {
@@ -6533,7 +6553,7 @@
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-03T13:48:31.807Z",
+  "updatedAt": "2021-08-03T14:19:01.955Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Inherit of for the CampaignFactory Interface",

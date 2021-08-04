@@ -10,6 +10,7 @@
 
 - [Functions](#functions)
   - [constructor](#constructor)
+  - [decimals](#decimals)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -32,6 +33,21 @@ No description
 | Modifier |
 | --- |
 | ERC20 |
+
+
+
+### decimals
+No description
+
+
+#### Declaration
+```solidity
+  function decimals(
+  ) public returns (uint8)
+```
+
+#### Modifiers:
+No modifiers
 
 
 
