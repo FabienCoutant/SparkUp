@@ -134,6 +134,14 @@ contract('Proposal', (accounts) => {
         '!Err: Description empty'
       );
     });
+    it('should revert if amount is 0 USDC', async () => {
+      await expectRevert(
+        ProposalContractInstance.createProposal(proposal.title, proposal.description, ether('0').toString(), {
+          from: alice,
+        }),
+        '!Err: Amount too low'
+      );
+    });
     it('should revert if amount more than campaign balance', async () => {
       await expectRevert(
         ProposalContractInstance.createProposal(proposal.title, proposal.description, ether('11001').toString(), {
