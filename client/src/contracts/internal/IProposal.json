@@ -1,0 +1,2065 @@
+{
+  "contractName": "IProposal",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_title",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_description",
+          "type": "string"
+        },
+        {
+          "internalType": "uint128",
+          "name": "_amount",
+          "type": "uint128"
+        }
+      ],
+      "name": "createProposal",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "proposalId",
+          "type": "uint8"
+        }
+      ],
+      "name": "deleteProposal",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "proposalId",
+          "type": "uint8"
+        }
+      ],
+      "name": "startVotingSession",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "proposalId",
+          "type": "uint8"
+        },
+        {
+          "internalType": "bool",
+          "name": "vote",
+          "type": "bool"
+        }
+      ],
+      "name": "voteProposal",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "proposalId",
+          "type": "uint8"
+        }
+      ],
+      "name": "getResults",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum IProposal.ProposalType",
+          "name": "_proposalStatus",
+          "type": "uint8"
+        }
+      ],
+      "name": "getProposals",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "title",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "description",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "accepted",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint64",
+              "name": "deadline",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint128",
+              "name": "amount",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "okVotes",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "nokVotes",
+              "type": "uint128"
+            },
+            {
+              "internalType": "enum IProposal.ProposalType",
+              "name": "proposalType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "enum IProposal.WorkflowStatus",
+              "name": "status",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct IProposal.Proposal[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.6+commit.11564f7e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_title\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_description\",\"type\":\"string\"},{\"internalType\":\"uint128\",\"name\":\"_amount\",\"type\":\"uint128\"}],\"name\":\"createProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"proposalId\",\"type\":\"uint8\"}],\"name\":\"deleteProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"enum IProposal.ProposalType\",\"name\":\"_proposalStatus\",\"type\":\"uint8\"}],\"name\":\"getProposals\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"title\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"description\",\"type\":\"string\"},{\"internalType\":\"bool\",\"name\":\"accepted\",\"type\":\"bool\"},{\"internalType\":\"uint64\",\"name\":\"deadline\",\"type\":\"uint64\"},{\"internalType\":\"uint128\",\"name\":\"amount\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"okVotes\",\"type\":\"uint128\"},{\"internalType\":\"uint128\",\"name\":\"nokVotes\",\"type\":\"uint128\"},{\"internalType\":\"enum IProposal.ProposalType\",\"name\":\"proposalType\",\"type\":\"uint8\"},{\"internalType\":\"enum IProposal.WorkflowStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"internalType\":\"struct IProposal.Proposal[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"proposalId\",\"type\":\"uint8\"}],\"name\":\"getResults\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"proposalId\",\"type\":\"uint8\"}],\"name\":\"startVotingSession\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"proposalId\",\"type\":\"uint8\"},{\"internalType\":\"bool\",\"name\":\"vote\",\"type\":\"bool\"}],\"name\":\"voteProposal\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Interface for the Proposal contract\",\"kind\":\"dev\",\"methods\":{\"createProposal(string,string,uint128)\":{\"details\":\"can only be called by campaign manager and if WorkflowStatus is Pending\",\"params\":{\"_title\":\"as proposal title, _description as proposal description and _amount as amount to be unlocked for spending\"}},\"deleteProposal(uint8)\":{\"details\":\"can only be called by campaign manager and if WorkflowStatus is Registered\",\"params\":{\"proposalId\":\"as proposal index in proposalList array\"}},\"getProposals(uint8)\":{\"params\":{\"_proposalStatus\":\"is proposalType (active, archived or deleted)\"}},\"getResults(uint8)\":{\"details\":\"can only be called only if proposal deadline is passed\",\"params\":{\"proposalId\":\"as proposal index in proposalList array\"}},\"startVotingSession(uint8)\":{\"details\":\"can only be called by campaign manager and if WorkflowStatus is Registered\",\"params\":{\"proposalId\":\"as proposal index in proposalList array\"}},\"voteProposal(uint8,bool)\":{\"details\":\"can only be called by contributors and if WorkflowStatus is VotingSessionStarted\",\"params\":{\"proposalId\":\"as proposal index in proposalList array and _vote as 1 for ok and 0 for nok\"}}},\"title\":\"IProposal\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"createProposal(string,string,uint128)\":{\"notice\":\"Create a new proposal\"},\"deleteProposal(uint8)\":{\"notice\":\"Delete proposal\"},\"getProposals(uint8)\":{\"notice\":\"return list of proposal matching proposalType of param\"},\"getResults(uint8)\":{\"notice\":\"check if proposal is ok or nok\"},\"startVotingSession(uint8)\":{\"notice\":\"start proposal voting process\"},\"voteProposal(uint8,bool)\":{\"notice\":\"enable contributors to vote for or against proposal\"}},\"notice\":\"The Proposal contract handles all proposals submitted by campaign manager and votes by contributors\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/interfaces/IProposal.sol\":\"IProposal\"},\"evmVersion\":\"berlin\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/interfaces/IProposal.sol\":{\"keccak256\":\"0xa1607c724ccd10ae1edd9bd830fef533acd3496c1288f76c4f51c5f546abd129\",\"license\":\"GPL-3.0\",\"urls\":[\"bzz-raw://9c9013f954ff5217082f5ee7602ef5d8804464a3f09b4edc3dba16a83dd577a1\",\"dweb:/ipfs/QmZF75k8DpD6Q871bKDPzFA8jdytHAAwEqpPWkLhWLN35p\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "// SPDX-License-Identifier: GPL-3.0\npragma solidity 0.8.6;\n\n/**\n* @title IProposal\n* @notice The Proposal contract handles all proposals submitted by campaign manager and votes by contributors\n* @dev Interface for the Proposal contract\n*/\ninterface IProposal {\n\n    struct Proposal {\n        uint256 id;\n        string title;\n        string description;\n        bool accepted;\n        uint64 deadline;\n        uint128 amount;\n        uint128 okVotes;\n        uint128 nokVotes;\n        ProposalType proposalType;\n        WorkflowStatus status;\n    }\n\n    enum ProposalType{\n        Active,\n        Archived,\n        Deleted\n    }\n\n    enum WorkflowStatus {\n        Pending,\n        Registered,\n        VotingSessionStarted,\n        VotesTallied\n    }\n\n    /**\n     * @notice Create a new proposal\n     * @param _title as proposal title, _description as proposal description and _amount as amount to be unlocked for spending\n     * @dev can only be called by campaign manager and if WorkflowStatus is Pending\n     */\n    function createProposal(string memory _title, string memory _description, uint128 _amount) external;\n\n    /**\n     * @notice Delete proposal\n     * @param proposalId as proposal index in proposalList array\n     * @dev can only be called by campaign manager and if WorkflowStatus is Registered\n     */\n    function deleteProposal(uint8 proposalId) external;\n\n    /**\n     * @notice start proposal voting process\n     * @param proposalId as proposal index in proposalList array\n     * @dev can only be called by campaign manager and if WorkflowStatus is Registered\n     */\n    function startVotingSession(uint8 proposalId) external;\n\n    /**\n     * @notice enable contributors to vote for or against proposal\n     * @param proposalId as proposal index in proposalList array and _vote as 1 for ok and 0 for nok\n     * @dev can only be called by contributors and if WorkflowStatus is VotingSessionStarted\n     */\n    function voteProposal(uint8 proposalId, bool vote) external;\n\n    /**\n     * @notice check if proposal is ok or nok\n     * @param proposalId as proposal index in proposalList array\n     * @dev can only be called only if proposal deadline is passed\n     */\n    function getResults(uint8 proposalId) external;\n\n    /**\n     * @notice return list of proposal matching proposalType of param\n     * @param _proposalStatus is proposalType (active, archived or deleted)\n     */\n    function getProposals(ProposalType _proposalStatus) external view returns(Proposal[] memory);\n\n}\n",
+  "sourcePath": "/Users/Xutyr/Documents/Lab/SparkUp/contracts/interfaces/IProposal.sol",
+  "ast": {
+    "absolutePath": "project:/contracts/interfaces/IProposal.sol",
+    "exportedSymbols": {
+      "IProposal": [
+        2673
+      ]
+    },
+    "id": 2674,
+    "license": "GPL-3.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2592,
+        "literals": [
+          "solidity",
+          "0.8",
+          ".6"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "36:22:9"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 2593,
+          "nodeType": "StructuredDocumentation",
+          "src": "60:178:9",
+          "text": " @title IProposal\n @notice The Proposal contract handles all proposals submitted by campaign manager and votes by contributors\n @dev Interface for the Proposal contract"
+        },
+        "fullyImplemented": false,
+        "id": 2673,
+        "linearizedBaseContracts": [
+          2673
+        ],
+        "name": "IProposal",
+        "nameLocation": "249:9:9",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IProposal.Proposal",
+            "id": 2616,
+            "members": [
+              {
+                "constant": false,
+                "id": 2595,
+                "mutability": "mutable",
+                "name": "id",
+                "nameLocation": "300:2:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "292:10:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 2594,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "292:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2597,
+                "mutability": "mutable",
+                "name": "title",
+                "nameLocation": "319:5:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "312:12:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 2596,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "312:6:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2599,
+                "mutability": "mutable",
+                "name": "description",
+                "nameLocation": "341:11:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "334:18:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 2598,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "334:6:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2601,
+                "mutability": "mutable",
+                "name": "accepted",
+                "nameLocation": "367:8:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "362:13:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 2600,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "362:4:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2603,
+                "mutability": "mutable",
+                "name": "deadline",
+                "nameLocation": "392:8:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "385:15:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint64",
+                  "typeString": "uint64"
+                },
+                "typeName": {
+                  "id": 2602,
+                  "name": "uint64",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "385:6:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint64",
+                    "typeString": "uint64"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2605,
+                "mutability": "mutable",
+                "name": "amount",
+                "nameLocation": "418:6:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "410:14:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint128",
+                  "typeString": "uint128"
+                },
+                "typeName": {
+                  "id": 2604,
+                  "name": "uint128",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "410:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2607,
+                "mutability": "mutable",
+                "name": "okVotes",
+                "nameLocation": "442:7:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "434:15:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint128",
+                  "typeString": "uint128"
+                },
+                "typeName": {
+                  "id": 2606,
+                  "name": "uint128",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "434:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2609,
+                "mutability": "mutable",
+                "name": "nokVotes",
+                "nameLocation": "467:8:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "459:16:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint128",
+                  "typeString": "uint128"
+                },
+                "typeName": {
+                  "id": 2608,
+                  "name": "uint128",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "459:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2612,
+                "mutability": "mutable",
+                "name": "proposalType",
+                "nameLocation": "498:12:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "485:25:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_ProposalType_$2620",
+                  "typeString": "enum IProposal.ProposalType"
+                },
+                "typeName": {
+                  "id": 2611,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 2610,
+                    "name": "ProposalType",
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 2620,
+                    "src": "485:12:9"
+                  },
+                  "referencedDeclaration": 2620,
+                  "src": "485:12:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_ProposalType_$2620",
+                    "typeString": "enum IProposal.ProposalType"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2615,
+                "mutability": "mutable",
+                "name": "status",
+                "nameLocation": "535:6:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "520:21:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_WorkflowStatus_$2625",
+                  "typeString": "enum IProposal.WorkflowStatus"
+                },
+                "typeName": {
+                  "id": 2614,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 2613,
+                    "name": "WorkflowStatus",
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 2625,
+                    "src": "520:14:9"
+                  },
+                  "referencedDeclaration": 2625,
+                  "src": "520:14:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_WorkflowStatus_$2625",
+                    "typeString": "enum IProposal.WorkflowStatus"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "Proposal",
+            "nameLocation": "273:8:9",
+            "nodeType": "StructDefinition",
+            "scope": 2673,
+            "src": "266:282:9",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IProposal.ProposalType",
+            "id": 2620,
+            "members": [
+              {
+                "id": 2617,
+                "name": "Active",
+                "nameLocation": "581:6:9",
+                "nodeType": "EnumValue",
+                "src": "581:6:9"
+              },
+              {
+                "id": 2618,
+                "name": "Archived",
+                "nameLocation": "597:8:9",
+                "nodeType": "EnumValue",
+                "src": "597:8:9"
+              },
+              {
+                "id": 2619,
+                "name": "Deleted",
+                "nameLocation": "615:7:9",
+                "nodeType": "EnumValue",
+                "src": "615:7:9"
+              }
+            ],
+            "name": "ProposalType",
+            "nameLocation": "559:12:9",
+            "nodeType": "EnumDefinition",
+            "src": "554:74:9"
+          },
+          {
+            "canonicalName": "IProposal.WorkflowStatus",
+            "id": 2625,
+            "members": [
+              {
+                "id": 2621,
+                "name": "Pending",
+                "nameLocation": "664:7:9",
+                "nodeType": "EnumValue",
+                "src": "664:7:9"
+              },
+              {
+                "id": 2622,
+                "name": "Registered",
+                "nameLocation": "681:10:9",
+                "nodeType": "EnumValue",
+                "src": "681:10:9"
+              },
+              {
+                "id": 2623,
+                "name": "VotingSessionStarted",
+                "nameLocation": "701:20:9",
+                "nodeType": "EnumValue",
+                "src": "701:20:9"
+              },
+              {
+                "id": 2624,
+                "name": "VotesTallied",
+                "nameLocation": "731:12:9",
+                "nodeType": "EnumValue",
+                "src": "731:12:9"
+              }
+            ],
+            "name": "WorkflowStatus",
+            "nameLocation": "639:14:9",
+            "nodeType": "EnumDefinition",
+            "src": "634:115:9"
+          },
+          {
+            "documentation": {
+              "id": 2626,
+              "nodeType": "StructuredDocumentation",
+              "src": "755:259:9",
+              "text": " @notice Create a new proposal\n @param _title as proposal title, _description as proposal description and _amount as amount to be unlocked for spending\n @dev can only be called by campaign manager and if WorkflowStatus is Pending"
+            },
+            "functionSelector": "5cbd4d05",
+            "id": 2635,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "createProposal",
+            "nameLocation": "1028:14:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2633,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2628,
+                  "mutability": "mutable",
+                  "name": "_title",
+                  "nameLocation": "1057:6:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2635,
+                  "src": "1043:20:9",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 2627,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1043:6:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2630,
+                  "mutability": "mutable",
+                  "name": "_description",
+                  "nameLocation": "1079:12:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2635,
+                  "src": "1065:26:9",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 2629,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1065:6:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2632,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nameLocation": "1101:7:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2635,
+                  "src": "1093:15:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  },
+                  "typeName": {
+                    "id": 2631,
+                    "name": "uint128",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1093:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint128",
+                      "typeString": "uint128"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1042:67:9"
+            },
+            "returnParameters": {
+              "id": 2634,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1118:0:9"
+            },
+            "scope": 2673,
+            "src": "1019:100:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2636,
+              "nodeType": "StructuredDocumentation",
+              "src": "1125:194:9",
+              "text": " @notice Delete proposal\n @param proposalId as proposal index in proposalList array\n @dev can only be called by campaign manager and if WorkflowStatus is Registered"
+            },
+            "functionSelector": "34bdcdd7",
+            "id": 2641,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "deleteProposal",
+            "nameLocation": "1333:14:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2639,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2638,
+                  "mutability": "mutable",
+                  "name": "proposalId",
+                  "nameLocation": "1354:10:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2641,
+                  "src": "1348:16:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2637,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1348:5:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1347:18:9"
+            },
+            "returnParameters": {
+              "id": 2640,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1374:0:9"
+            },
+            "scope": 2673,
+            "src": "1324:51:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2642,
+              "nodeType": "StructuredDocumentation",
+              "src": "1381:208:9",
+              "text": " @notice start proposal voting process\n @param proposalId as proposal index in proposalList array\n @dev can only be called by campaign manager and if WorkflowStatus is Registered"
+            },
+            "functionSelector": "05f86040",
+            "id": 2647,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "startVotingSession",
+            "nameLocation": "1603:18:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2645,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2644,
+                  "mutability": "mutable",
+                  "name": "proposalId",
+                  "nameLocation": "1628:10:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2647,
+                  "src": "1622:16:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2643,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1622:5:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1621:18:9"
+            },
+            "returnParameters": {
+              "id": 2646,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1648:0:9"
+            },
+            "scope": 2673,
+            "src": "1594:55:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2648,
+              "nodeType": "StructuredDocumentation",
+              "src": "1655:272:9",
+              "text": " @notice enable contributors to vote for or against proposal\n @param proposalId as proposal index in proposalList array and _vote as 1 for ok and 0 for nok\n @dev can only be called by contributors and if WorkflowStatus is VotingSessionStarted"
+            },
+            "functionSelector": "fe48e8b1",
+            "id": 2655,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "voteProposal",
+            "nameLocation": "1941:12:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2653,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2650,
+                  "mutability": "mutable",
+                  "name": "proposalId",
+                  "nameLocation": "1960:10:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2655,
+                  "src": "1954:16:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2649,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1954:5:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2652,
+                  "mutability": "mutable",
+                  "name": "vote",
+                  "nameLocation": "1977:4:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2655,
+                  "src": "1972:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 2651,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1972:4:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1953:29:9"
+            },
+            "returnParameters": {
+              "id": 2654,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1991:0:9"
+            },
+            "scope": 2673,
+            "src": "1932:60:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2656,
+              "nodeType": "StructuredDocumentation",
+              "src": "1998:189:9",
+              "text": " @notice check if proposal is ok or nok\n @param proposalId as proposal index in proposalList array\n @dev can only be called only if proposal deadline is passed"
+            },
+            "functionSelector": "21686945",
+            "id": 2661,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getResults",
+            "nameLocation": "2201:10:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2659,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2658,
+                  "mutability": "mutable",
+                  "name": "proposalId",
+                  "nameLocation": "2218:10:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2661,
+                  "src": "2212:16:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2657,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2212:5:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2211:18:9"
+            },
+            "returnParameters": {
+              "id": 2660,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2238:0:9"
+            },
+            "scope": 2673,
+            "src": "2192:47:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2662,
+              "nodeType": "StructuredDocumentation",
+              "src": "2245:157:9",
+              "text": " @notice return list of proposal matching proposalType of param\n @param _proposalStatus is proposalType (active, archived or deleted)"
+            },
+            "functionSelector": "4caae8a0",
+            "id": 2672,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getProposals",
+            "nameLocation": "2416:12:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2666,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2665,
+                  "mutability": "mutable",
+                  "name": "_proposalStatus",
+                  "nameLocation": "2442:15:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2672,
+                  "src": "2429:28:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_ProposalType_$2620",
+                    "typeString": "enum IProposal.ProposalType"
+                  },
+                  "typeName": {
+                    "id": 2664,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 2663,
+                      "name": "ProposalType",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 2620,
+                      "src": "2429:12:9"
+                    },
+                    "referencedDeclaration": 2620,
+                    "src": "2429:12:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_ProposalType_$2620",
+                      "typeString": "enum IProposal.ProposalType"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2428:30:9"
+            },
+            "returnParameters": {
+              "id": 2671,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2670,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2672,
+                  "src": "2481:17:9",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Proposal_$2616_memory_ptr_$dyn_memory_ptr",
+                    "typeString": "struct IProposal.Proposal[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2668,
+                      "nodeType": "UserDefinedTypeName",
+                      "pathNode": {
+                        "id": 2667,
+                        "name": "Proposal",
+                        "nodeType": "IdentifierPath",
+                        "referencedDeclaration": 2616,
+                        "src": "2481:8:9"
+                      },
+                      "referencedDeclaration": 2616,
+                      "src": "2481:8:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Proposal_$2616_storage_ptr",
+                        "typeString": "struct IProposal.Proposal"
+                      }
+                    },
+                    "id": 2669,
+                    "nodeType": "ArrayTypeName",
+                    "src": "2481:10:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_Proposal_$2616_storage_$dyn_storage_ptr",
+                      "typeString": "struct IProposal.Proposal[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2480:19:9"
+            },
+            "scope": 2673,
+            "src": "2407:93:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 2674,
+        "src": "239:2264:9",
+        "usedErrors": []
+      }
+    ],
+    "src": "36:2468:9"
+  },
+  "legacyAST": {
+    "absolutePath": "project:/contracts/interfaces/IProposal.sol",
+    "exportedSymbols": {
+      "IProposal": [
+        2673
+      ]
+    },
+    "id": 2674,
+    "license": "GPL-3.0",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2592,
+        "literals": [
+          "solidity",
+          "0.8",
+          ".6"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "36:22:9"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 2593,
+          "nodeType": "StructuredDocumentation",
+          "src": "60:178:9",
+          "text": " @title IProposal\n @notice The Proposal contract handles all proposals submitted by campaign manager and votes by contributors\n @dev Interface for the Proposal contract"
+        },
+        "fullyImplemented": false,
+        "id": 2673,
+        "linearizedBaseContracts": [
+          2673
+        ],
+        "name": "IProposal",
+        "nameLocation": "249:9:9",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IProposal.Proposal",
+            "id": 2616,
+            "members": [
+              {
+                "constant": false,
+                "id": 2595,
+                "mutability": "mutable",
+                "name": "id",
+                "nameLocation": "300:2:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "292:10:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 2594,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "292:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2597,
+                "mutability": "mutable",
+                "name": "title",
+                "nameLocation": "319:5:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "312:12:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 2596,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "312:6:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2599,
+                "mutability": "mutable",
+                "name": "description",
+                "nameLocation": "341:11:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "334:18:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_string_storage_ptr",
+                  "typeString": "string"
+                },
+                "typeName": {
+                  "id": 2598,
+                  "name": "string",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "334:6:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_storage_ptr",
+                    "typeString": "string"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2601,
+                "mutability": "mutable",
+                "name": "accepted",
+                "nameLocation": "367:8:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "362:13:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 2600,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "362:4:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2603,
+                "mutability": "mutable",
+                "name": "deadline",
+                "nameLocation": "392:8:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "385:15:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint64",
+                  "typeString": "uint64"
+                },
+                "typeName": {
+                  "id": 2602,
+                  "name": "uint64",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "385:6:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint64",
+                    "typeString": "uint64"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2605,
+                "mutability": "mutable",
+                "name": "amount",
+                "nameLocation": "418:6:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "410:14:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint128",
+                  "typeString": "uint128"
+                },
+                "typeName": {
+                  "id": 2604,
+                  "name": "uint128",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "410:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2607,
+                "mutability": "mutable",
+                "name": "okVotes",
+                "nameLocation": "442:7:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "434:15:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint128",
+                  "typeString": "uint128"
+                },
+                "typeName": {
+                  "id": 2606,
+                  "name": "uint128",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "434:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2609,
+                "mutability": "mutable",
+                "name": "nokVotes",
+                "nameLocation": "467:8:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "459:16:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint128",
+                  "typeString": "uint128"
+                },
+                "typeName": {
+                  "id": 2608,
+                  "name": "uint128",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "459:7:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2612,
+                "mutability": "mutable",
+                "name": "proposalType",
+                "nameLocation": "498:12:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "485:25:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_ProposalType_$2620",
+                  "typeString": "enum IProposal.ProposalType"
+                },
+                "typeName": {
+                  "id": 2611,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 2610,
+                    "name": "ProposalType",
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 2620,
+                    "src": "485:12:9"
+                  },
+                  "referencedDeclaration": 2620,
+                  "src": "485:12:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_ProposalType_$2620",
+                    "typeString": "enum IProposal.ProposalType"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 2615,
+                "mutability": "mutable",
+                "name": "status",
+                "nameLocation": "535:6:9",
+                "nodeType": "VariableDeclaration",
+                "scope": 2616,
+                "src": "520:21:9",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_enum$_WorkflowStatus_$2625",
+                  "typeString": "enum IProposal.WorkflowStatus"
+                },
+                "typeName": {
+                  "id": 2614,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 2613,
+                    "name": "WorkflowStatus",
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 2625,
+                    "src": "520:14:9"
+                  },
+                  "referencedDeclaration": 2625,
+                  "src": "520:14:9",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_WorkflowStatus_$2625",
+                    "typeString": "enum IProposal.WorkflowStatus"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "Proposal",
+            "nameLocation": "273:8:9",
+            "nodeType": "StructDefinition",
+            "scope": 2673,
+            "src": "266:282:9",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IProposal.ProposalType",
+            "id": 2620,
+            "members": [
+              {
+                "id": 2617,
+                "name": "Active",
+                "nameLocation": "581:6:9",
+                "nodeType": "EnumValue",
+                "src": "581:6:9"
+              },
+              {
+                "id": 2618,
+                "name": "Archived",
+                "nameLocation": "597:8:9",
+                "nodeType": "EnumValue",
+                "src": "597:8:9"
+              },
+              {
+                "id": 2619,
+                "name": "Deleted",
+                "nameLocation": "615:7:9",
+                "nodeType": "EnumValue",
+                "src": "615:7:9"
+              }
+            ],
+            "name": "ProposalType",
+            "nameLocation": "559:12:9",
+            "nodeType": "EnumDefinition",
+            "src": "554:74:9"
+          },
+          {
+            "canonicalName": "IProposal.WorkflowStatus",
+            "id": 2625,
+            "members": [
+              {
+                "id": 2621,
+                "name": "Pending",
+                "nameLocation": "664:7:9",
+                "nodeType": "EnumValue",
+                "src": "664:7:9"
+              },
+              {
+                "id": 2622,
+                "name": "Registered",
+                "nameLocation": "681:10:9",
+                "nodeType": "EnumValue",
+                "src": "681:10:9"
+              },
+              {
+                "id": 2623,
+                "name": "VotingSessionStarted",
+                "nameLocation": "701:20:9",
+                "nodeType": "EnumValue",
+                "src": "701:20:9"
+              },
+              {
+                "id": 2624,
+                "name": "VotesTallied",
+                "nameLocation": "731:12:9",
+                "nodeType": "EnumValue",
+                "src": "731:12:9"
+              }
+            ],
+            "name": "WorkflowStatus",
+            "nameLocation": "639:14:9",
+            "nodeType": "EnumDefinition",
+            "src": "634:115:9"
+          },
+          {
+            "documentation": {
+              "id": 2626,
+              "nodeType": "StructuredDocumentation",
+              "src": "755:259:9",
+              "text": " @notice Create a new proposal\n @param _title as proposal title, _description as proposal description and _amount as amount to be unlocked for spending\n @dev can only be called by campaign manager and if WorkflowStatus is Pending"
+            },
+            "functionSelector": "5cbd4d05",
+            "id": 2635,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "createProposal",
+            "nameLocation": "1028:14:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2633,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2628,
+                  "mutability": "mutable",
+                  "name": "_title",
+                  "nameLocation": "1057:6:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2635,
+                  "src": "1043:20:9",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 2627,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1043:6:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2630,
+                  "mutability": "mutable",
+                  "name": "_description",
+                  "nameLocation": "1079:12:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2635,
+                  "src": "1065:26:9",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_string_memory_ptr",
+                    "typeString": "string"
+                  },
+                  "typeName": {
+                    "id": 2629,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1065:6:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_string_storage_ptr",
+                      "typeString": "string"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2632,
+                  "mutability": "mutable",
+                  "name": "_amount",
+                  "nameLocation": "1101:7:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2635,
+                  "src": "1093:15:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint128",
+                    "typeString": "uint128"
+                  },
+                  "typeName": {
+                    "id": 2631,
+                    "name": "uint128",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1093:7:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint128",
+                      "typeString": "uint128"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1042:67:9"
+            },
+            "returnParameters": {
+              "id": 2634,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1118:0:9"
+            },
+            "scope": 2673,
+            "src": "1019:100:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2636,
+              "nodeType": "StructuredDocumentation",
+              "src": "1125:194:9",
+              "text": " @notice Delete proposal\n @param proposalId as proposal index in proposalList array\n @dev can only be called by campaign manager and if WorkflowStatus is Registered"
+            },
+            "functionSelector": "34bdcdd7",
+            "id": 2641,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "deleteProposal",
+            "nameLocation": "1333:14:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2639,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2638,
+                  "mutability": "mutable",
+                  "name": "proposalId",
+                  "nameLocation": "1354:10:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2641,
+                  "src": "1348:16:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2637,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1348:5:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1347:18:9"
+            },
+            "returnParameters": {
+              "id": 2640,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1374:0:9"
+            },
+            "scope": 2673,
+            "src": "1324:51:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2642,
+              "nodeType": "StructuredDocumentation",
+              "src": "1381:208:9",
+              "text": " @notice start proposal voting process\n @param proposalId as proposal index in proposalList array\n @dev can only be called by campaign manager and if WorkflowStatus is Registered"
+            },
+            "functionSelector": "05f86040",
+            "id": 2647,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "startVotingSession",
+            "nameLocation": "1603:18:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2645,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2644,
+                  "mutability": "mutable",
+                  "name": "proposalId",
+                  "nameLocation": "1628:10:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2647,
+                  "src": "1622:16:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2643,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1622:5:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1621:18:9"
+            },
+            "returnParameters": {
+              "id": 2646,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1648:0:9"
+            },
+            "scope": 2673,
+            "src": "1594:55:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2648,
+              "nodeType": "StructuredDocumentation",
+              "src": "1655:272:9",
+              "text": " @notice enable contributors to vote for or against proposal\n @param proposalId as proposal index in proposalList array and _vote as 1 for ok and 0 for nok\n @dev can only be called by contributors and if WorkflowStatus is VotingSessionStarted"
+            },
+            "functionSelector": "fe48e8b1",
+            "id": 2655,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "voteProposal",
+            "nameLocation": "1941:12:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2653,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2650,
+                  "mutability": "mutable",
+                  "name": "proposalId",
+                  "nameLocation": "1960:10:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2655,
+                  "src": "1954:16:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2649,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1954:5:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2652,
+                  "mutability": "mutable",
+                  "name": "vote",
+                  "nameLocation": "1977:4:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2655,
+                  "src": "1972:9:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 2651,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1972:4:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1953:29:9"
+            },
+            "returnParameters": {
+              "id": 2654,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1991:0:9"
+            },
+            "scope": 2673,
+            "src": "1932:60:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2656,
+              "nodeType": "StructuredDocumentation",
+              "src": "1998:189:9",
+              "text": " @notice check if proposal is ok or nok\n @param proposalId as proposal index in proposalList array\n @dev can only be called only if proposal deadline is passed"
+            },
+            "functionSelector": "21686945",
+            "id": 2661,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getResults",
+            "nameLocation": "2201:10:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2659,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2658,
+                  "mutability": "mutable",
+                  "name": "proposalId",
+                  "nameLocation": "2218:10:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2661,
+                  "src": "2212:16:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint8",
+                    "typeString": "uint8"
+                  },
+                  "typeName": {
+                    "id": 2657,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2212:5:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2211:18:9"
+            },
+            "returnParameters": {
+              "id": 2660,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2238:0:9"
+            },
+            "scope": 2673,
+            "src": "2192:47:9",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "documentation": {
+              "id": 2662,
+              "nodeType": "StructuredDocumentation",
+              "src": "2245:157:9",
+              "text": " @notice return list of proposal matching proposalType of param\n @param _proposalStatus is proposalType (active, archived or deleted)"
+            },
+            "functionSelector": "4caae8a0",
+            "id": 2672,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getProposals",
+            "nameLocation": "2416:12:9",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2666,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2665,
+                  "mutability": "mutable",
+                  "name": "_proposalStatus",
+                  "nameLocation": "2442:15:9",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2672,
+                  "src": "2429:28:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_enum$_ProposalType_$2620",
+                    "typeString": "enum IProposal.ProposalType"
+                  },
+                  "typeName": {
+                    "id": 2664,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 2663,
+                      "name": "ProposalType",
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 2620,
+                      "src": "2429:12:9"
+                    },
+                    "referencedDeclaration": 2620,
+                    "src": "2429:12:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_enum$_ProposalType_$2620",
+                      "typeString": "enum IProposal.ProposalType"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2428:30:9"
+            },
+            "returnParameters": {
+              "id": 2671,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2670,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2672,
+                  "src": "2481:17:9",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_Proposal_$2616_memory_ptr_$dyn_memory_ptr",
+                    "typeString": "struct IProposal.Proposal[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 2668,
+                      "nodeType": "UserDefinedTypeName",
+                      "pathNode": {
+                        "id": 2667,
+                        "name": "Proposal",
+                        "nodeType": "IdentifierPath",
+                        "referencedDeclaration": 2616,
+                        "src": "2481:8:9"
+                      },
+                      "referencedDeclaration": 2616,
+                      "src": "2481:8:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Proposal_$2616_storage_ptr",
+                        "typeString": "struct IProposal.Proposal"
+                      }
+                    },
+                    "id": 2669,
+                    "nodeType": "ArrayTypeName",
+                    "src": "2481:10:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_Proposal_$2616_storage_$dyn_storage_ptr",
+                      "typeString": "struct IProposal.Proposal[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2480:19:9"
+            },
+            "scope": 2673,
+            "src": "2407:93:9",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 2674,
+        "src": "239:2264:9",
+        "usedErrors": []
+      }
+    ],
+    "src": "36:2468:9"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.6+commit.11564f7e.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-08-04T10:36:14.210Z",
+  "devdoc": {
+    "details": "Interface for the Proposal contract",
+    "kind": "dev",
+    "methods": {
+      "createProposal(string,string,uint128)": {
+        "details": "can only be called by campaign manager and if WorkflowStatus is Pending",
+        "params": {
+          "_title": "as proposal title, _description as proposal description and _amount as amount to be unlocked for spending"
+        }
+      },
+      "deleteProposal(uint8)": {
+        "details": "can only be called by campaign manager and if WorkflowStatus is Registered",
+        "params": {
+          "proposalId": "as proposal index in proposalList array"
+        }
+      },
+      "getProposals(uint8)": {
+        "params": {
+          "_proposalStatus": "is proposalType (active, archived or deleted)"
+        }
+      },
+      "getResults(uint8)": {
+        "details": "can only be called only if proposal deadline is passed",
+        "params": {
+          "proposalId": "as proposal index in proposalList array"
+        }
+      },
+      "startVotingSession(uint8)": {
+        "details": "can only be called by campaign manager and if WorkflowStatus is Registered",
+        "params": {
+          "proposalId": "as proposal index in proposalList array"
+        }
+      },
+      "voteProposal(uint8,bool)": {
+        "details": "can only be called by contributors and if WorkflowStatus is VotingSessionStarted",
+        "params": {
+          "proposalId": "as proposal index in proposalList array and _vote as 1 for ok and 0 for nok"
+        }
+      }
+    },
+    "title": "IProposal",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "createProposal(string,string,uint128)": {
+        "notice": "Create a new proposal"
+      },
+      "deleteProposal(uint8)": {
+        "notice": "Delete proposal"
+      },
+      "getProposals(uint8)": {
+        "notice": "return list of proposal matching proposalType of param"
+      },
+      "getResults(uint8)": {
+        "notice": "check if proposal is ok or nok"
+      },
+      "startVotingSession(uint8)": {
+        "notice": "start proposal voting process"
+      },
+      "voteProposal(uint8,bool)": {
+        "notice": "enable contributors to vote for or against proposal"
+      }
+    },
+    "notice": "The Proposal contract handles all proposals submitted by campaign manager and votes by contributors",
+    "version": 1
+  }
+}

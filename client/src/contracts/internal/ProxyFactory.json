@@ -10779,12 +10779,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x3F11a7804Bf8D326BBC50665C3b17e52b1c80e51",
-      "transactionHash": "0xb54af45d565cdbbb854f8d3c9f0d4cca3aaddccacd79af3bde5cd74c279b61aa"
+      "address": "0x02A8e9b3d352ed2f6B789988d586353669e27406",
+      "transactionHash": "0xb2dce5950bb02704c7903955d7ed51b5bc052c0396a9f23f4bce92b00a3e52bf"
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-04T10:39:35.314Z",
+  "updatedAt": "2021-08-04T11:17:40.454Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Inherit of for the CampaignFactory Interface",

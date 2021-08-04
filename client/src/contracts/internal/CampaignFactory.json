@@ -7694,12 +7694,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x240F8E3Ad75e98Ba10Ed52dE549957eF0a6C5d22",
-      "transactionHash": "0x7c21f192e8253b860a253d828b07d4a694dc3356bfbcf51fa556808416044ba0"
+      "address": "0x9e56Ce304C31a79d0de550fB5c9DF5197acB35Fa",
+      "transactionHash": "0x24f2fc46d0fe95cb070591a5d94b80f52ac7a718e9a2ff61f93f0c5998a74749"
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-04T10:39:35.305Z",
+  "updatedAt": "2021-08-04T11:17:40.445Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Inherit of for the CampaignFactory Interface",
