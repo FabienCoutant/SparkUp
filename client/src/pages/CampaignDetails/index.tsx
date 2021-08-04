@@ -71,7 +71,7 @@ const CampaignDetails = () => {
           active: {
             title: '',
             description: '',
-            amount: 100,
+            amount: 0.01,
             okVotes: 0,
             nokVotes: 0,
             status: PROPOSAL_WORKFLOW_STATUS.Pending,

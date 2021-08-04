@@ -162,6 +162,7 @@ const CampaignForm = ({ renderType }: { renderType: RENDER_TYPE }) => {
           </label>
           <input
             type='number'
+            min="0"
             className='form-control'
             id='fundingGoal'
             value={campaignFundingGoal}

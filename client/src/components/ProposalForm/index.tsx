@@ -78,10 +78,10 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
             type: NOTIFICATION_TYPE.ALERT
           })
         )
-      } else if (proposalAmount < 100) {
+      } else if (!(proposalAmount >0) ) {
         dispatch(
           notificationActions.setNotification({
-            message: 'Please enter an amount equal or higher than 100!',
+            message: 'Please enter an amount greater than 0!',
             type: NOTIFICATION_TYPE.ALERT
           })
         )
@@ -134,6 +134,8 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
             </label>
             <input
               type='number'
+              step="0.01"
+              min="0"
               className='form-control'
               id='proposalAmount'
               value={proposalAmount}
