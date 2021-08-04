@@ -1,4 +1,5 @@
-const { expectRevert, time, BN, ether } = require('@openzeppelin/test-helpers');
+const { expectRevert, time, BN } = require('@openzeppelin/test-helpers');
+const usdc = require('../utils/usdc');
 const expectEvent = require('@openzeppelin/test-helpers/src/expectEvent');
 const { expect } = require('chai');
 const CampaignContract = artifacts.require('Campaign');
@@ -13,14 +14,14 @@ contract('Proposal', (accounts) => {
   const initialCampaignInfo = {
     title: 'First Campaign',
     description: 'This is the first campaign of SparkUp',
-    fundingGoal: ether('11000').toString(),
+    fundingGoal: usdc('11000').toString(),
     deadlineDate: 0,
   };
   const initialRewards = [
     {
       title: 'First rewards',
       description: 'level1',
-      minimumContribution: ether('100').toString(),
+      minimumContribution: usdc('100').toString(),
       stockLimit: 0,
       nbContributors: 0,
       amount: 0,
@@ -29,7 +30,7 @@ contract('Proposal', (accounts) => {
     {
       title: 'Second rewards',
       description: 'level2',
-      minimumContribution: ether('5').toString(),
+      minimumContribution: usdc('5').toString(),
       stockLimit: 1000,
       nbContributors: 0,
       amount: 0,
@@ -40,7 +41,7 @@ contract('Proposal', (accounts) => {
   const proposal = {
     title: 'First Proposal',
     description: 'This is the first proposal',
-    amount: ether('1500').toString(),
+    amount: usdc('1500').toString(),
   };
 
   let CampaignFactoryContractInstance;
@@ -72,9 +73,9 @@ contract('Proposal', (accounts) => {
       from: alice,
     });
     const spender = CampaignContractInstance.address;
-    await TestUSDCContractInstance.transfer(john, ether('2000').toString(), { from: bob });
-    const bobContribution = ether('9000').toString();
-    const johnContribution = ether('2000').toString();
+    await TestUSDCContractInstance.transfer(john, usdc('2000').toString(), { from: bob });
+    const bobContribution = usdc('9000').toString();
+    const johnContribution = usdc('2000').toString();
     TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
       from: bob,
     });
@@ -136,7 +137,7 @@ contract('Proposal', (accounts) => {
     });
     it('should revert if amount is 0 USDC', async () => {
       await expectRevert(
-        ProposalContractInstance.createProposal(proposal.title, proposal.description, ether('0').toString(), {
+        ProposalContractInstance.createProposal(proposal.title, proposal.description, usdc('0').toString(), {
           from: alice,
         }),
         '!Err: Amount too low'
@@ -144,7 +145,7 @@ contract('Proposal', (accounts) => {
     });
     it('should revert if amount more than campaign balance', async () => {
       await expectRevert(
-        ProposalContractInstance.createProposal(proposal.title, proposal.description, ether('11001').toString(), {
+        ProposalContractInstance.createProposal(proposal.title, proposal.description, usdc('11001').toString(), {
           from: alice,
         }),
         '!Err: Proposal amount exceeds campaign USDC balance'

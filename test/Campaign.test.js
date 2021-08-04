@@ -1,4 +1,5 @@
-const { expectRevert, time, BN, ether } = require('@openzeppelin/test-helpers');
+const { expectRevert, time, BN } = require('@openzeppelin/test-helpers');
+const usdc = require('../utils/usdc');
 const { expect } = require('chai');
 const CampaignContract = artifacts.require('Campaign');
 const CampaignFactoryContract = artifacts.require('CampaignFactory');
@@ -12,14 +13,14 @@ contract('Campaign', (accounts) => {
   const initialCampaignInfo = {
     title: 'First Campaign',
     description: 'This is the first campaign of SparkUp',
-    fundingGoal: ether('11000').toString(),
+    fundingGoal: usdc('11000').toString(),
     deadlineDate: 0,
   };
   const initialRewards = [
     {
       title: 'First rewards',
       description: 'level1',
-      minimumContribution: ether('100').toString(),
+      minimumContribution: usdc('100').toString(),
       stockLimit: 0,
       nbContributors: 0,
       amount: 0,
@@ -28,7 +29,7 @@ contract('Campaign', (accounts) => {
     {
       title: 'Second rewards',
       description: 'level2',
-      minimumContribution: ether('5').toString(),
+      minimumContribution: usdc('5').toString(),
       stockLimit: 1000,
       nbContributors: 0,
       amount: 0,
@@ -38,7 +39,7 @@ contract('Campaign', (accounts) => {
   const newReward = {
     title: 'Third rewards',
     description: 'level3',
-    minimumContribution: ether('150').toString(),
+    minimumContribution: usdc('150').toString(),
     stockLimit: 100,
     nbContributors: 0,
     amount: 0,
@@ -48,7 +49,7 @@ contract('Campaign', (accounts) => {
   const newReward2 = {
     title: 'Third rewards',
     description: 'level3',
-    minimumContribution: ether('150').toString(),
+    minimumContribution: usdc('150').toString(),
     stockLimit: 1,
     nbContributors: 0,
     amount: 0,
@@ -58,7 +59,7 @@ contract('Campaign', (accounts) => {
   const proposal = {
     title: 'First Proposal',
     description: 'This is the first proposal',
-    amount: ether('1500').toString(),
+    amount: usdc('1500').toString(),
   };
 
   let CampaignContractInstance;
@@ -157,7 +158,7 @@ contract('Campaign', (accounts) => {
     it('should update the fundingGoal', async () => {
       const updatedData = {
         ...initialCampaignInfo,
-        fundingGoal: ether('20000').toString(),
+        fundingGoal: usdc('20000').toString(),
       };
       await CampaignContractInstance.updateCampaign(updatedData, {
         from: alice,
@@ -169,7 +170,7 @@ contract('Campaign', (accounts) => {
     it('should revert if fundingGoal is not greater than 1 000', async () => {
       const badUpdatedData = {
         ...initialCampaignInfo,
-        fundingGoal: ether('999').toString(),
+        fundingGoal: usdc('999').toString(),
       };
       await expectRevert(
         CampaignContractInstance.updateCampaign(badUpdatedData, {
@@ -393,7 +394,7 @@ contract('Campaign', (accounts) => {
     it('should allow contributor to contribute to campaign', async () => {
       await CampaignContractInstance.publishCampaign({ from: alice });
       const spender = CampaignContractInstance.address;
-      const bobContribution = ether('100').toString();
+      const bobContribution = usdc('100').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -415,7 +416,7 @@ contract('Campaign', (accounts) => {
     it('should update workflow to FundingComplete and set totalRaised if funding goal reached before campaignDeadlineDate', async () => {
       await CampaignContractInstance.publishCampaign({ from: alice });
       const spender = CampaignContractInstance.address;
-      const bobContribution = ether('11000').toString();
+      const bobContribution = usdc('11000').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -429,7 +430,7 @@ contract('Campaign', (accounts) => {
     });
     it('should revert if wrong workflow status', async () => {
       const spender = CampaignContractInstance.address;
-      const bobContribution = ether('5').toString();
+      const bobContribution = usdc('5').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -444,7 +445,7 @@ contract('Campaign', (accounts) => {
       await CampaignContractInstance.addReward(newReward2);
       await CampaignContractInstance.publishCampaign({ from: alice });
       const spender = CampaignContractInstance.address;
-      const bobContribution = ether('150').toString();
+      const bobContribution = usdc('150').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -466,7 +467,7 @@ contract('Campaign', (accounts) => {
       await CampaignContractInstance.publishCampaign({ from: alice });
       await time.increase(time.duration.days(15));
       const spender = CampaignContractInstance.address;
-      const bobContribution = ether('11000').toString();
+      const bobContribution = usdc('11000').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -484,7 +485,7 @@ contract('Campaign', (accounts) => {
       spender = CampaignContractInstance.address;
     });
     it('should revert if campaignDeadline not passed', async () => {
-      const bobContribution = ether('1000').toString();
+      const bobContribution = usdc('1000').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -494,7 +495,7 @@ contract('Campaign', (accounts) => {
       await expectRevert(CampaignContractInstance.refund({ from: bob }), '!Err: conditions not met');
     });
     it('should allow contributor to get refund and update workflow status to campaignFailed if campaignPublished, fundingGoal not reached and campaignDeadline passed', async () => {
-      const bobContribution = ether('1000').toString();
+      const bobContribution = usdc('1000').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -515,7 +516,7 @@ contract('Campaign', (accounts) => {
       expect(status).to.be.bignumber.equal(new BN(3));
     });
     it('should refund contributor if fundingFailed', async () => {
-      const bobContribution = ether('1000').toString();
+      const bobContribution = usdc('1000').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -540,7 +541,7 @@ contract('Campaign', (accounts) => {
       await expectRevert(CampaignContractInstance.refund({ from: bob }), '!Err: conditions not met');
     });
     it('should revert if wrong workflow status', async () => {
-      const bobContribution = ether('11000').toString();
+      const bobContribution = usdc('11000').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -555,7 +556,7 @@ contract('Campaign', (accounts) => {
     beforeEach(async () => {
       await CampaignContractInstance.publishCampaign({ from: alice });
       const spender = CampaignContractInstance.address;
-      const bobContribution = ether('11000').toString();
+      const bobContribution = usdc('11000').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -574,7 +575,7 @@ contract('Campaign', (accounts) => {
       const campaignAddress = await ProposalContractInstance.campaignAddress();
       expect(campaignAddress).to.be.equal(CampaignContractInstance.address);
       const escrowContractTUSDCBalance = await EscrowContractInstance.getContractUSDCBalance();
-      const fee = ether((11000 * 0.05).toString());
+      const fee = usdc((11000 * 0.05).toString());
       expect(escrowContractTUSDCBalance).to.be.bignumber.equal(fee);
     });
     it('should revert if campaignDeadline not passed', async () => {
@@ -602,9 +603,9 @@ contract('Campaign', (accounts) => {
         from: alice,
       });
       const spender = CampaignContractInstance.address;
-      await TestUSDCContractInstance.transfer(john, ether('2000').toString(), { from: bob });
-      const bobContribution = ether('9000').toString();
-      const johnContribution = ether('2000').toString();
+      await TestUSDCContractInstance.transfer(john, usdc('2000').toString(), { from: bob });
+      const bobContribution = usdc('9000').toString();
+      const johnContribution = usdc('2000').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });

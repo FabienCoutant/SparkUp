@@ -1,4 +1,5 @@
-const { expectRevert, expectEvent, time, BN, ether } = require('@openzeppelin/test-helpers');
+const { expectRevert, expectEvent, time, BN } = require('@openzeppelin/test-helpers');
+const usdc = require('../utils/usdc');
 const { expect } = require('chai');
 const CampaignFactoryContract = artifacts.require('CampaignFactory');
 const CampaignContract = artifacts.require('Campaign');
@@ -12,7 +13,7 @@ contract('CampaignFactory', (accounts) => {
   const initialCampaignInfo = {
     title: 'First Campaign',
     description: 'This is the first campaign of SparkUp',
-    fundingGoal: ether('100000').toString(),
+    fundingGoal: usdc('100000').toString(),
     deadlineDate: 0,
   };
 
@@ -21,7 +22,7 @@ contract('CampaignFactory', (accounts) => {
     {
       title: 'First rewards',
       description: 'level1',
-      minimumContribution: ether('100').toString(),
+      minimumContribution: usdc('100').toString(),
       stockLimit: 0,
       nbContributors: 0,
       amount: 0,
@@ -30,7 +31,7 @@ contract('CampaignFactory', (accounts) => {
     {
       title: 'Second rewards',
       description: 'level2',
-      minimumContribution: ether('5').toString(),
+      minimumContribution: usdc('5').toString(),
       stockLimit: 1000,
       nbContributors: 0,
       amount: 0,
@@ -136,7 +137,7 @@ contract('CampaignFactory', (accounts) => {
     it('should revert if campaign fundingGoal is not greater than 1 000', async () => {
       const badCampaignInfo = {
         ...initialCampaignInfo,
-        fundingGoal: ether('999').toString(),
+        fundingGoal: usdc('999').toString(),
       };
       await expectRevert(
         ProxyFactoryContractInstance.createCampaign(badCampaignInfo, initialRewards, {
@@ -226,7 +227,7 @@ contract('CampaignFactory', (accounts) => {
       const newCampaignInfo = {
         title: 'First Campaign',
         description: 'This is the first campaign of SparkUp',
-        fundingGoal: ether('10000').toString(),
+        fundingGoal: usdc('10000').toString(),
         deadlineDate: parseInt((await time.latest()).add(time.duration.days(30))),
       };
       const newCampaign = await ProxyFactoryContractInstance.createCampaign(newCampaignInfo, initialRewards, {
@@ -238,9 +239,9 @@ contract('CampaignFactory', (accounts) => {
         from: alice,
       });
       const spender = CampaignContractInstance.address;
-      await TestUSDCContractInstance.transfer(john, ether('2000').toString(), { from: bob });
-      const bobContribution = ether('9000').toString();
-      const johnContribution = ether('2000').toString();
+      await TestUSDCContractInstance.transfer(john, usdc('2000').toString(), { from: bob });
+      const bobContribution = usdc('9000').toString();
+      const johnContribution = usdc('2000').toString();
       TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
         from: bob,
       });
@@ -361,7 +362,7 @@ contract('CampaignFactory', (accounts) => {
       const newReward = {
         title: 'Third rewards',
         description: 'level3',
-        minimumContribution: ether('150').toString(),
+        minimumContribution: usdc('150').toString(),
         stockLimit: 100,
         nbContributors: 0,
         amount: 0,
