@@ -139,7 +139,7 @@ const ProposalForm = ({ id, address }: { id: number, address: string }) => {
               className='form-control'
               id='proposalAmount'
               value={proposalAmount}
-              onChange={(e) => setProposalAmount(parseInt(e.target.value))}
+              onChange={(e) => setProposalAmount(parseFloat(e.target.value))}
             />
           </div>
           <div className='list-inline'>
