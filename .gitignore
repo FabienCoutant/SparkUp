@@ -11,7 +11,3 @@ coverage.json
 
 #eth-gas-reporter
 gasReporterOutput.json
-
-
-/client/src/contracts/internal/
-/docs/contracts/
