@@ -70,40 +70,40 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "// SPDX-License-Identifier: GPL-3.0\r\npragma solidity 0.8.6;\r\n\r\nimport \"../interfaces/ICampaign.sol\";\r\n\r\n/**\r\n* @title ICampaignFactory\r\n* @notice The Campaign factory facilitate the deployment of new campaigns\r\n* @dev Interface for the CampaignFactory contract\r\n*/\r\ninterface ICampaignFactory {\r\n\r\n    /**\r\n     * @notice Add campaign contract address to mapping\r\n     * @param _newCampaign is ICampaign of created campaign from proxy\r\n     */\r\n    function addCampaign(ICampaign _newCampaign) external;\r\n\r\n    /**\r\n     * @notice Delete a new proposal contract.\r\n     * @param _manager is campaign manager.\r\n     * @dev Can only be called by an existing campaign contract.\r\n     */\r\n    function deployProposalContract(address _manager) external;\r\n\r\n    /**\r\n     * @notice Delete a new Campaign that call this function.\r\n     * @dev Only an contract already deployed must be able to call this function\r\n     */\r\n    function deleteCampaign() external;\r\n\r\n    /**\r\n     * @notice Allow the owner to set a new owner for the factory.\r\n     * @dev Only the actual owner must be able to call this function\r\n     * @param newOwner address The new owner address\r\n     */\r\n    function updateOwner(address newOwner) external;\r\n\r\n    /**\r\n     * @notice Allow the owner to set ProxyContract address.\r\n     * @dev Only the actual owner must be able to call this function\r\n     * @param _proxyContract address the ProxyContract\r\n     */\r\n    function setProxy(address _proxyContract) external;\r\n}\r\n",
-  "sourcePath": "/Users/Xutyr/Documents/Lab/SparkUp/contracts/interfaces/ICampaignFactory.sol",
+  "sourcePath": "A:\\Programing\\Projet_Final\\SparkUp\\contracts\\interfaces\\ICampaignFactory.sol",
   "ast": {
     "absolutePath": "project:/contracts/interfaces/ICampaignFactory.sol",
     "exportedSymbols": {
       "ICampaign": [
-        2556
+        3385
       ],
       "ICampaignFactory": [
-        2590
+        3419
       ]
     },
-    "id": 2591,
+    "id": 3420,
     "license": "GPL-3.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2558,
+        "id": 3387,
         "literals": [
           "solidity",
           "0.8",
           ".6"
         ],
         "nodeType": "PragmaDirective",
-        "src": "37:22:8"
+        "src": "37:22:14"
       },
       {
         "absolutePath": "project:/contracts/interfaces/ICampaign.sol",
         "file": "../interfaces/ICampaign.sol",
-        "id": 2559,
+        "id": 3388,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 2591,
-        "sourceUnit": 2557,
-        "src": "63:37:8",
+        "scope": 3420,
+        "sourceUnit": 3386,
+        "src": "63:37:14",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -113,116 +113,116 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 2560,
+          "id": 3389,
           "nodeType": "StructuredDocumentation",
-          "src": "104:160:8",
+          "src": "104:160:14",
           "text": " @title ICampaignFactory\n @notice The Campaign factory facilitate the deployment of new campaigns\n @dev Interface for the CampaignFactory contract"
         },
         "fullyImplemented": false,
-        "id": 2590,
+        "id": 3419,
         "linearizedBaseContracts": [
-          2590
+          3419
         ],
         "name": "ICampaignFactory",
-        "nameLocation": "276:16:8",
+        "nameLocation": "276:16:14",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "documentation": {
-              "id": 2561,
+              "id": 3390,
               "nodeType": "StructuredDocumentation",
-              "src": "302:141:8",
+              "src": "302:141:14",
               "text": " @notice Add campaign contract address to mapping\n @param _newCampaign is ICampaign of created campaign from proxy"
             },
             "functionSelector": "ac9c4fd3",
-            "id": 2567,
+            "id": 3396,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "addCampaign",
-            "nameLocation": "458:11:8",
+            "nameLocation": "458:11:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2565,
+              "id": 3394,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2564,
+                  "id": 3393,
                   "mutability": "mutable",
                   "name": "_newCampaign",
-                  "nameLocation": "480:12:8",
+                  "nameLocation": "480:12:14",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2567,
-                  "src": "470:22:8",
+                  "scope": 3396,
+                  "src": "470:22:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ICampaign_$2556",
+                    "typeIdentifier": "t_contract$_ICampaign_$3385",
                     "typeString": "contract ICampaign"
                   },
                   "typeName": {
-                    "id": 2563,
+                    "id": 3392,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 2562,
+                      "id": 3391,
                       "name": "ICampaign",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 2556,
-                      "src": "470:9:8"
+                      "referencedDeclaration": 3385,
+                      "src": "470:9:14"
                     },
-                    "referencedDeclaration": 2556,
-                    "src": "470:9:8",
+                    "referencedDeclaration": 3385,
+                    "src": "470:9:14",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ICampaign_$2556",
+                      "typeIdentifier": "t_contract$_ICampaign_$3385",
                       "typeString": "contract ICampaign"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "469:24:8"
+              "src": "469:24:14"
             },
             "returnParameters": {
-              "id": 2566,
+              "id": 3395,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "502:0:8"
+              "src": "502:0:14"
             },
-            "scope": 2590,
-            "src": "449:54:8",
+            "scope": 3419,
+            "src": "449:54:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 2568,
+              "id": 3397,
               "nodeType": "StructuredDocumentation",
-              "src": "511:171:8",
+              "src": "511:171:14",
               "text": " @notice Delete a new proposal contract.\n @param _manager is campaign manager.\n @dev Can only be called by an existing campaign contract."
             },
             "functionSelector": "8b89df4f",
-            "id": 2573,
+            "id": 3402,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deployProposalContract",
-            "nameLocation": "697:22:8",
+            "nameLocation": "697:22:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2571,
+              "id": 3400,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2570,
+                  "id": 3399,
                   "mutability": "mutable",
                   "name": "_manager",
-                  "nameLocation": "728:8:8",
+                  "nameLocation": "728:8:14",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2573,
-                  "src": "720:16:8",
+                  "scope": 3402,
+                  "src": "720:16:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -230,10 +230,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2569,
+                    "id": 3398,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "720:7:8",
+                    "src": "720:7:14",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -243,81 +243,81 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "719:18:8"
+              "src": "719:18:14"
             },
             "returnParameters": {
-              "id": 2572,
+              "id": 3401,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "746:0:8"
+              "src": "746:0:14"
             },
-            "scope": 2590,
-            "src": "688:59:8",
+            "scope": 3419,
+            "src": "688:59:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 2574,
+              "id": 3403,
               "nodeType": "StructuredDocumentation",
-              "src": "755:157:8",
+              "src": "755:157:14",
               "text": " @notice Delete a new Campaign that call this function.\n @dev Only an contract already deployed must be able to call this function"
             },
             "functionSelector": "244c3c2c",
-            "id": 2577,
+            "id": 3406,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deleteCampaign",
-            "nameLocation": "927:14:8",
+            "nameLocation": "927:14:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2575,
+              "id": 3404,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "941:2:8"
+              "src": "941:2:14"
             },
             "returnParameters": {
-              "id": 2576,
+              "id": 3405,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "952:0:8"
+              "src": "952:0:14"
             },
-            "scope": 2590,
-            "src": "918:35:8",
+            "scope": 3419,
+            "src": "918:35:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 2578,
+              "id": 3407,
               "nodeType": "StructuredDocumentation",
-              "src": "961:204:8",
+              "src": "961:204:14",
               "text": " @notice Allow the owner to set a new owner for the factory.\n @dev Only the actual owner must be able to call this function\n @param newOwner address The new owner address"
             },
             "functionSelector": "880cdc31",
-            "id": 2583,
+            "id": 3412,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateOwner",
-            "nameLocation": "1180:11:8",
+            "nameLocation": "1180:11:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2581,
+              "id": 3410,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2580,
+                  "id": 3409,
                   "mutability": "mutable",
                   "name": "newOwner",
-                  "nameLocation": "1200:8:8",
+                  "nameLocation": "1200:8:14",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2583,
-                  "src": "1192:16:8",
+                  "scope": 3412,
+                  "src": "1192:16:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -325,10 +325,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2579,
+                    "id": 3408,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1192:7:8",
+                    "src": "1192:7:14",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -338,48 +338,48 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1191:18:8"
+              "src": "1191:18:14"
             },
             "returnParameters": {
-              "id": 2582,
+              "id": 3411,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1218:0:8"
+              "src": "1218:0:14"
             },
-            "scope": 2590,
-            "src": "1171:48:8",
+            "scope": 3419,
+            "src": "1171:48:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 2584,
+              "id": 3413,
               "nodeType": "StructuredDocumentation",
-              "src": "1227:200:8",
+              "src": "1227:200:14",
               "text": " @notice Allow the owner to set ProxyContract address.\n @dev Only the actual owner must be able to call this function\n @param _proxyContract address the ProxyContract"
             },
             "functionSelector": "97107d6d",
-            "id": 2589,
+            "id": 3418,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setProxy",
-            "nameLocation": "1442:8:8",
+            "nameLocation": "1442:8:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2587,
+              "id": 3416,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2586,
+                  "id": 3415,
                   "mutability": "mutable",
                   "name": "_proxyContract",
-                  "nameLocation": "1459:14:8",
+                  "nameLocation": "1459:14:14",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2589,
-                  "src": "1451:22:8",
+                  "scope": 3418,
+                  "src": "1451:22:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -387,10 +387,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2585,
+                    "id": 3414,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1451:7:8",
+                    "src": "1451:7:14",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -400,61 +400,61 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1450:24:8"
+              "src": "1450:24:14"
             },
             "returnParameters": {
-              "id": 2588,
+              "id": 3417,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1483:0:8"
+              "src": "1483:0:14"
             },
-            "scope": 2590,
-            "src": "1433:51:8",
+            "scope": 3419,
+            "src": "1433:51:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 2591,
-        "src": "266:1221:8",
+        "scope": 3420,
+        "src": "266:1221:14",
         "usedErrors": []
       }
     ],
-    "src": "37:1452:8"
+    "src": "37:1452:14"
   },
   "legacyAST": {
     "absolutePath": "project:/contracts/interfaces/ICampaignFactory.sol",
     "exportedSymbols": {
       "ICampaign": [
-        2556
+        3385
       ],
       "ICampaignFactory": [
-        2590
+        3419
       ]
     },
-    "id": 2591,
+    "id": 3420,
     "license": "GPL-3.0",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2558,
+        "id": 3387,
         "literals": [
           "solidity",
           "0.8",
           ".6"
         ],
         "nodeType": "PragmaDirective",
-        "src": "37:22:8"
+        "src": "37:22:14"
       },
       {
         "absolutePath": "project:/contracts/interfaces/ICampaign.sol",
         "file": "../interfaces/ICampaign.sol",
-        "id": 2559,
+        "id": 3388,
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
-        "scope": 2591,
-        "sourceUnit": 2557,
-        "src": "63:37:8",
+        "scope": 3420,
+        "sourceUnit": 3386,
+        "src": "63:37:14",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -464,116 +464,116 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": {
-          "id": 2560,
+          "id": 3389,
           "nodeType": "StructuredDocumentation",
-          "src": "104:160:8",
+          "src": "104:160:14",
           "text": " @title ICampaignFactory\n @notice The Campaign factory facilitate the deployment of new campaigns\n @dev Interface for the CampaignFactory contract"
         },
         "fullyImplemented": false,
-        "id": 2590,
+        "id": 3419,
         "linearizedBaseContracts": [
-          2590
+          3419
         ],
         "name": "ICampaignFactory",
-        "nameLocation": "276:16:8",
+        "nameLocation": "276:16:14",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "documentation": {
-              "id": 2561,
+              "id": 3390,
               "nodeType": "StructuredDocumentation",
-              "src": "302:141:8",
+              "src": "302:141:14",
               "text": " @notice Add campaign contract address to mapping\n @param _newCampaign is ICampaign of created campaign from proxy"
             },
             "functionSelector": "ac9c4fd3",
-            "id": 2567,
+            "id": 3396,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "addCampaign",
-            "nameLocation": "458:11:8",
+            "nameLocation": "458:11:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2565,
+              "id": 3394,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2564,
+                  "id": 3393,
                   "mutability": "mutable",
                   "name": "_newCampaign",
-                  "nameLocation": "480:12:8",
+                  "nameLocation": "480:12:14",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2567,
-                  "src": "470:22:8",
+                  "scope": 3396,
+                  "src": "470:22:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_contract$_ICampaign_$2556",
+                    "typeIdentifier": "t_contract$_ICampaign_$3385",
                     "typeString": "contract ICampaign"
                   },
                   "typeName": {
-                    "id": 2563,
+                    "id": 3392,
                     "nodeType": "UserDefinedTypeName",
                     "pathNode": {
-                      "id": 2562,
+                      "id": 3391,
                       "name": "ICampaign",
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 2556,
-                      "src": "470:9:8"
+                      "referencedDeclaration": 3385,
+                      "src": "470:9:14"
                     },
-                    "referencedDeclaration": 2556,
-                    "src": "470:9:8",
+                    "referencedDeclaration": 3385,
+                    "src": "470:9:14",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_ICampaign_$2556",
+                      "typeIdentifier": "t_contract$_ICampaign_$3385",
                       "typeString": "contract ICampaign"
                     }
                   },
                   "visibility": "internal"
                 }
               ],
-              "src": "469:24:8"
+              "src": "469:24:14"
             },
             "returnParameters": {
-              "id": 2566,
+              "id": 3395,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "502:0:8"
+              "src": "502:0:14"
             },
-            "scope": 2590,
-            "src": "449:54:8",
+            "scope": 3419,
+            "src": "449:54:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 2568,
+              "id": 3397,
               "nodeType": "StructuredDocumentation",
-              "src": "511:171:8",
+              "src": "511:171:14",
               "text": " @notice Delete a new proposal contract.\n @param _manager is campaign manager.\n @dev Can only be called by an existing campaign contract."
             },
             "functionSelector": "8b89df4f",
-            "id": 2573,
+            "id": 3402,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deployProposalContract",
-            "nameLocation": "697:22:8",
+            "nameLocation": "697:22:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2571,
+              "id": 3400,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2570,
+                  "id": 3399,
                   "mutability": "mutable",
                   "name": "_manager",
-                  "nameLocation": "728:8:8",
+                  "nameLocation": "728:8:14",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2573,
-                  "src": "720:16:8",
+                  "scope": 3402,
+                  "src": "720:16:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -581,10 +581,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2569,
+                    "id": 3398,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "720:7:8",
+                    "src": "720:7:14",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -594,81 +594,81 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "719:18:8"
+              "src": "719:18:14"
             },
             "returnParameters": {
-              "id": 2572,
+              "id": 3401,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "746:0:8"
+              "src": "746:0:14"
             },
-            "scope": 2590,
-            "src": "688:59:8",
+            "scope": 3419,
+            "src": "688:59:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 2574,
+              "id": 3403,
               "nodeType": "StructuredDocumentation",
-              "src": "755:157:8",
+              "src": "755:157:14",
               "text": " @notice Delete a new Campaign that call this function.\n @dev Only an contract already deployed must be able to call this function"
             },
             "functionSelector": "244c3c2c",
-            "id": 2577,
+            "id": 3406,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "deleteCampaign",
-            "nameLocation": "927:14:8",
+            "nameLocation": "927:14:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2575,
+              "id": 3404,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "941:2:8"
+              "src": "941:2:14"
             },
             "returnParameters": {
-              "id": 2576,
+              "id": 3405,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "952:0:8"
+              "src": "952:0:14"
             },
-            "scope": 2590,
-            "src": "918:35:8",
+            "scope": 3419,
+            "src": "918:35:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 2578,
+              "id": 3407,
               "nodeType": "StructuredDocumentation",
-              "src": "961:204:8",
+              "src": "961:204:14",
               "text": " @notice Allow the owner to set a new owner for the factory.\n @dev Only the actual owner must be able to call this function\n @param newOwner address The new owner address"
             },
             "functionSelector": "880cdc31",
-            "id": 2583,
+            "id": 3412,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "updateOwner",
-            "nameLocation": "1180:11:8",
+            "nameLocation": "1180:11:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2581,
+              "id": 3410,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2580,
+                  "id": 3409,
                   "mutability": "mutable",
                   "name": "newOwner",
-                  "nameLocation": "1200:8:8",
+                  "nameLocation": "1200:8:14",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2583,
-                  "src": "1192:16:8",
+                  "scope": 3412,
+                  "src": "1192:16:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -676,10 +676,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2579,
+                    "id": 3408,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1192:7:8",
+                    "src": "1192:7:14",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -689,48 +689,48 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1191:18:8"
+              "src": "1191:18:14"
             },
             "returnParameters": {
-              "id": 2582,
+              "id": 3411,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1218:0:8"
+              "src": "1218:0:14"
             },
-            "scope": 2590,
-            "src": "1171:48:8",
+            "scope": 3419,
+            "src": "1171:48:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           },
           {
             "documentation": {
-              "id": 2584,
+              "id": 3413,
               "nodeType": "StructuredDocumentation",
-              "src": "1227:200:8",
+              "src": "1227:200:14",
               "text": " @notice Allow the owner to set ProxyContract address.\n @dev Only the actual owner must be able to call this function\n @param _proxyContract address the ProxyContract"
             },
             "functionSelector": "97107d6d",
-            "id": 2589,
+            "id": 3418,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
             "name": "setProxy",
-            "nameLocation": "1442:8:8",
+            "nameLocation": "1442:8:14",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 2587,
+              "id": 3416,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 2586,
+                  "id": 3415,
                   "mutability": "mutable",
                   "name": "_proxyContract",
-                  "nameLocation": "1459:14:8",
+                  "nameLocation": "1459:14:14",
                   "nodeType": "VariableDeclaration",
-                  "scope": 2589,
-                  "src": "1451:22:8",
+                  "scope": 3418,
+                  "src": "1451:22:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -738,10 +738,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 2585,
+                    "id": 3414,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "1451:7:8",
+                    "src": "1451:7:14",
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -751,35 +751,35 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "1450:24:8"
+              "src": "1450:24:14"
             },
             "returnParameters": {
-              "id": 2588,
+              "id": 3417,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "1483:0:8"
+              "src": "1483:0:14"
             },
-            "scope": 2590,
-            "src": "1433:51:8",
+            "scope": 3419,
+            "src": "1433:51:14",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 2591,
-        "src": "266:1221:8",
+        "scope": 3420,
+        "src": "266:1221:14",
         "usedErrors": []
       }
     ],
-    "src": "37:1452:8"
+    "src": "37:1452:14"
   },
   "compiler": {
     "name": "solc",
     "version": "0.8.6+commit.11564f7e.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-04T10:36:14.209Z",
+  "schemaVersion": "3.4.2",
+  "updatedAt": "2021-08-04T20:02:24.033Z",
   "devdoc": {
     "details": "Interface for the CampaignFactory contract",
     "kind": "dev",
