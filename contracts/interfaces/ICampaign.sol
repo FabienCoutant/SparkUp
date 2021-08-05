@@ -36,37 +36,43 @@ interface ICampaign {
 
     /**
      * @notice Returns the campaign information in the struct Info plus de createAt and the managerAddress.
+     * @return Info The campaign Info data set
+     * @return createAt The campaign creation date in timestamps
+     * @return manager The address of the campaign manager
+     * @return WorkflowStatus The workflow status of the campaign
+     * @return totalRaised The amount raised by the campaign in USDC
+     * @return proposalAddress The address of the proposal contract link to the campaign
      */
     function getCampaignInfo() external returns(Info memory, uint64, address, WorkflowStatus, uint128, address);
 
     /**
      * @notice Update the campaign information in the struct Info.
      * @dev Only the manager must be able to call it.
-     * @param updatedInfoData Info Object that contains all the new information following the Info struct for the campaign
+     * @param _updatedInfoData is The Info Object that contains all the new information following the Info struct for the campaign
      */
-    function updateCampaign(Info memory updatedInfoData) external;
+    function updateCampaign(Info memory _updatedInfoData) external;
 
     /**
      * @notice Add a new reward level to the campaign.
      * @dev Only the manager must be able to call it.
-     * @param newRewardData Rewards Object that contains all the needed information following the Rewards struct for the campaign
+     * @param _newRewardData The Rewards Object that contains all the needed information which follow the Rewards struct for the campaign
      */
-    function addReward(Rewards memory newRewardData) external;
+    function addReward(Rewards memory _newRewardData) external;
 
     /**
      * @notice Update the data of a specific reward regarding its id.
      * @dev Only the manager must be able to call it.
-     * @param newRewardData Rewards Object that contains the new data to set following the Rewards struct for the campaign
-     * @param rewardIndex uint256 Index of the reward to update
+     * @param _newRewardData The rewards Object that contains the new data to set which follow the Rewards struct for the campaign
+     * @param _rewardIndex The reward's index to update
      */
-    function updateReward( Rewards memory newRewardData,uint8 rewardIndex) external;
+    function updateReward( Rewards memory _newRewardData,uint8 _rewardIndex) external;
 
     /**
      * @notice Delete a reward by its Id.
      * @dev Only the manager must be able to call it.
-     * @param rewardIndex uint256 Index of the reward to delete
+     * @param _rewardIndex The reward's index to delete
      */
-    function deleteReward(uint8 rewardIndex) external;
+    function deleteReward(uint8 _rewardIndex) external;
 
     /**
      * @notice Delete the campaign.
@@ -77,9 +83,9 @@ interface ICampaign {
     /**
      * @notice Allow the manager to setup a new one.
      * @dev Only the manager must be able to call it.
-     * @param newManager address Address of the new manager
+     * @param _newManager The new manager's address
      */
-    function updateManager(address newManager) external;
+    function updateManager(address _newManager) external;
     
     /**
      * @notice Allow the manager to publish campaign and make it visible to potential contributors.
@@ -90,12 +96,14 @@ interface ICampaign {
     /**
      * @notice Allow contributors to contribute to the campaign.
      * @dev Can only be called if campaign is published, is not completed, is not deleted and is not failed.
+     * @param _amount The Amount in USDC that msg.sender want to contribute
+     * @param _rewardIndex The reward's index
      */
-    function contribute(uint128 _amount, uint8 rewardIndex) external;
+    function contribute(uint128 _amount, uint8 _rewardIndex) external;
 
     /**
      * @notice Allow contributor to get refunded.
-     * @dev Can only be called if campiagn deadline is passed and fundingGoal not reached.
+     * @dev Can only be called if campaign deadline is passed and fundingGoal not reached.
      */
     function refund() external;
 
@@ -106,14 +114,30 @@ interface ICampaign {
     function launchProposalContract() external;
 
     /**
-     * @notice Allows campiagn factory contract to set proposal contract address.
+     * @notice Allows campaign factory contract to set proposal contract address.
      * @dev Can only be called by campaign factory contract.
+     * @param _proposalContract The proposal contract's address
      */
     function setProposal(address _proposalContract) external;
 
     /**
      * @notice Transfer unlocked funds to manager address.
      * @dev Can only be called by proposal contract when proposal is accepted.
+     * @param _amount The Amount of funding raised that must be transfer to the manager
      */
     function releaseProposalFunds(uint128 _amount) external;
+
+    /**
+     * @notice Return the contribution balance in usdc for a specific address
+     * @param _account The contributor's address
+     * @return Amount The Amount contributed by the _account
+     */
+    function getContributorBalances(address _account) external view returns(uint128);
+
+    /**
+     * @notice Make _campaignUSDCBalance available to external and used by Interface
+     * @dev Note that USDC using 6 decimals instead of 18
+     * @return balance The current balance of the current contract
+     */
+    function getContractUSDCBalance() external view returns(uint128);
 }

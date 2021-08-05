@@ -6548,12 +6548,12 @@
         }
       },
       "links": {},
-      "address": "0x44A103F803A4b1BB8404Dcf6Fb213cD136a77a8b",
-      "transactionHash": "0xbddfb7e5354dcaf6562a81c5624c72555960cb4929984e051a44a5061464c223"
+      "address": "0x23b3f264E7602F9f513dc6e9CDedA4a9E543e2d5",
+      "transactionHash": "0x2471e2f0a9d7e4ea86adab9495f40cb53bd5ad255bb1b5f1b3c10c8fae7f2ff4"
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-04T11:17:40.563Z",
+  "updatedAt": "2021-08-04T20:21:33.464Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Inherit of for the CampaignFactory Interface",

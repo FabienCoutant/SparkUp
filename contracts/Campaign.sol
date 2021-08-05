@@ -7,6 +7,11 @@ import "./interfaces/IProposal.sol";
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+/**
+* @title Campaign
+* @notice The Campaign contract handle the all life for one campaign
+* @dev Inherit of for the Campaign Interface
+*/
 contract Campaign is ICampaign {
     using SafeERC20 for IERC20;
     
@@ -41,10 +46,10 @@ contract Campaign is ICampaign {
     }
 
     modifier checkStatus(
-        WorkflowStatus currentStatus,
-        WorkflowStatus requiredStatus
+        WorkflowStatus _currentStatus,
+        WorkflowStatus _requiredStatus
     ) {
-        require(currentStatus == requiredStatus, "!Err : Wrong workflow status");
+        require(_currentStatus == _requiredStatus, "!Err : Wrong workflow status");
         _;
     }
     
@@ -53,22 +58,22 @@ contract Campaign is ICampaign {
         _;
     }
 
-    constructor(Info memory infoData, Rewards[] memory rewardsData, address _manager, IERC20 _usdcToken, address _escrowContract, address _factory)
+    constructor(Info memory _infoData, Rewards[] memory _rewardsData, address _manager, IERC20 _usdcToken, address _escrowContract, address _factory)
     {
-        require(rewardsData.length > 0, "!Err: Rewards empty");
-        require(rewardsData.length <= 10, "!Err: Too much Rewards");
+        require(_rewardsData.length > 0, "!Err: Rewards empty");
+        require(_rewardsData.length <= 10, "!Err: Too much Rewards");
         manager = _manager;
         factory = _factory;
         createAt = uint64(block.timestamp);
         status = WorkflowStatus.CampaignDrafted;
         usdcToken = _usdcToken;
         escrowContract = _escrowContract;
-        _setCampaignInfo(infoData);
+        _setCampaignInfo(_infoData);
         uint8 _rewardsCounter;
-        for (_rewardsCounter; _rewardsCounter < rewardsData.length; _rewardsCounter++) {
-            _setCampaignReward(_rewardsCounter, rewardsData[_rewardsCounter]);
+        for (_rewardsCounter; _rewardsCounter < _rewardsData.length; _rewardsCounter++) {
+            _setCampaignReward(_rewardsCounter, _rewardsData[_rewardsCounter]);
         }
-        rewardsCounter = uint8(rewardsData.length) ;
+        rewardsCounter = uint8(_rewardsData.length) ;
     }
 
     /**
@@ -81,8 +86,8 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateCampaign(Info memory newInfo) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
-        _setCampaignInfo(newInfo);
+    function updateCampaign(Info memory _newInfo) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+        _setCampaignInfo(_newInfo);
     }
 
     /**
@@ -96,42 +101,42 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateReward(Rewards memory newRewardData, uint8 rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
-        require(rewardIndex <= rewardsCounter, "!Err: Index not exist");
-        _setCampaignReward(rewardIndex, newRewardData);
+    function updateReward(Rewards memory _newRewardData, uint8 _rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+        require(_rewardIndex <= rewardsCounter, "!Err: Index not exist");
+        _setCampaignReward(_rewardIndex, _newRewardData);
     }
 
     /**
     * @notice Internal function that set a new campaign's info and making data validation first.
-    * @param data Info Object that contains the Info data following the Info struct
+    * @param _data The Info Object that contains the Info data which follow the Info struct
     */
-    function _setCampaignInfo(Info memory data) private {
-        require(bytes(data.title).length > 0, "!Err: Title empty");
-        require(bytes(data.description).length > 0, "!Err: Description empty");
-        require(data.fundingGoal >= 1000*10**6, "!Err: Funding Goal not enough");
-        require(createAt + 7 days <= data.deadlineDate, "!Err: deadlineDate to short");
-        campaignInfo.title = data.title;
-        campaignInfo.description = data.description;
-        campaignInfo.fundingGoal = data.fundingGoal;
-        campaignInfo.deadlineDate = data.deadlineDate;
+    function _setCampaignInfo(Info memory _data) private {
+        require(bytes(_data.title).length > 0, "!Err: Title empty");
+        require(bytes(_data.description).length > 0, "!Err: Description empty");
+        require(_data.fundingGoal >= 1000*10**6, "!Err: Funding Goal not enough");
+        require(createAt + 7 days <= _data.deadlineDate, "!Err: deadlineDate to short");
+        campaignInfo.title = _data.title;
+        campaignInfo.description = _data.description;
+        campaignInfo.fundingGoal = _data.fundingGoal;
+        campaignInfo.deadlineDate = _data.deadlineDate;
     }
 
     /**
      * @notice Internal function that set a new campaign's reward level and making data validation first.
-     * @param index uint Index of the reward to add
-     * @param data Rewards Object that contains the Reward data following the Rewards struct
+     * @param _index The reward's index to add
+     * @param _data The Rewards Object that contains the Reward data which follow the Rewards struct
      */
-    function _setCampaignReward(uint8 index, Rewards memory data) private {
-        require(bytes(data.title).length > 0, "!Err: Title empty");
-        require(bytes(data.description).length > 0, "!Err: Description empty");
+    function _setCampaignReward(uint8 _index, Rewards memory _data) private {
+        require(bytes(_data.title).length > 0, "!Err: Title empty");
+        require(bytes(_data.description).length > 0, "!Err: Description empty");
         Rewards memory r;
-        r.title = data.title;
-        r.description = data.description;
-        r.minimumContribution = data.minimumContribution;
-        r.stockLimit = data.stockLimit;
-        r.nbContributors = data.nbContributors;
-        r.isStockLimited = data.isStockLimited;
-        rewardsList[index] = r;
+        r.title = _data.title;
+        r.description = _data.description;
+        r.minimumContribution = _data.minimumContribution;
+        r.stockLimit = _data.stockLimit;
+        r.nbContributors = _data.nbContributors;
+        r.isStockLimited = _data.isStockLimited;
+        rewardsList[_index] = r;
     }
 
     /**
@@ -146,10 +151,10 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function deleteReward(uint8 rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
-        require(rewardIndex < rewardsCounter, "!Err: Index not exist");
-        if((rewardsCounter-1)!=rewardIndex){
-            rewardsList[rewardIndex] = rewardsList[rewardsCounter-1];
+    function deleteReward(uint8 _rewardIndex) external override isNotDeleted() onlyManager() checkStatus(status, WorkflowStatus.CampaignDrafted) {
+        require(_rewardIndex < rewardsCounter, "!Err: Index not exist");
+        if((rewardsCounter-1)!=_rewardIndex){
+            rewardsList[_rewardIndex] = rewardsList[rewardsCounter-1];
         }
         delete rewardsList[rewardsCounter-1];
         rewardsCounter--;
@@ -158,8 +163,8 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function updateManager(address newManager) external override onlyManager() {
-        manager = newManager;
+    function updateManager(address _newManager) external override onlyManager() {
+        manager = _newManager;
     }
 
     /**
@@ -174,15 +179,15 @@ contract Campaign is ICampaign {
     /**
      * @inheritdoc ICampaign
      */
-    function contribute(uint128 _amount, uint8 rewardIndex) external override isNotDeleted() checkCampaignDeadline() {
+    function contribute(uint128 _amount, uint8 _rewardIndex) external override isNotDeleted() checkCampaignDeadline() {
         require(status != WorkflowStatus.CampaignDrafted && status != WorkflowStatus.FundingFailed && status != WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
-        require(checkRewardInventory(rewardIndex), "!Err: no more reward");
+        require(checkRewardInventory(_rewardIndex), "!Err: no more reward");
         usdcToken.safeTransferFrom(msg.sender, address(this), _amount);
         contributorBalances[msg.sender] = contributorBalances[msg.sender] + _amount;
-        rewardToContributor[rewardIndex][msg.sender] = rewardToContributor[rewardIndex][msg.sender] + 1;
-        rewardsList[rewardIndex].nbContributors = rewardsList[rewardIndex].nbContributors + 1;
-        rewardsList[rewardIndex].amount = rewardsList[rewardIndex].amount + _amount;
-        if(getContractUSDCBalance() >= campaignInfo.fundingGoal) {
+        rewardToContributor[_rewardIndex][msg.sender] = rewardToContributor[_rewardIndex][msg.sender] + 1;
+        rewardsList[_rewardIndex].nbContributors = rewardsList[_rewardIndex].nbContributors + 1;
+        rewardsList[_rewardIndex].amount = rewardsList[_rewardIndex].amount + _amount;
+        if(_campaignUSDCBalance() >= campaignInfo.fundingGoal) {
             status = WorkflowStatus.FundingComplete;
         }
     }
@@ -191,7 +196,7 @@ contract Campaign is ICampaign {
      * @inheritdoc ICampaign
      */
     function refund() external override {
-        require(block.timestamp > campaignInfo.deadlineDate && getContractUSDCBalance() > 0, "!Err: conditions not met");
+        require(block.timestamp > campaignInfo.deadlineDate && _campaignUSDCBalance() > 0, "!Err: conditions not met");
         require(status == WorkflowStatus.CampaignPublished || status == WorkflowStatus.FundingFailed, "!Err: wrong workflowstatus");
         if (status == WorkflowStatus.CampaignPublished) {
             status = WorkflowStatus.FundingFailed;
@@ -207,8 +212,8 @@ contract Campaign is ICampaign {
     function launchProposalContract() external override onlyManager() isNotDeleted() checkStatus(status, WorkflowStatus.FundingComplete) {
         require(proposal == address(0), "!Err: proposal already deployed");
         require(block.timestamp > campaignInfo.deadlineDate, "!Err: campaign deadline not passed");
-        usdcToken.safeTransfer(escrowContract, getContractUSDCBalance()*5/100);
-        totalRaised = getContractUSDCBalance();
+        usdcToken.safeTransfer(escrowContract, _campaignUSDCBalance()*5/100);
+        totalRaised = _campaignUSDCBalance();
         ICampaignFactory(factory).deployProposalContract(manager);
     }
 
@@ -229,24 +234,42 @@ contract Campaign is ICampaign {
     }
 
     /**
-     * @notice Return the amount in USDC raised by the campaign
-     * @dev amount uint USDC raised by the campaign in WEI
+     * @inheritdoc ICampaign
      */
-    function getContractUSDCBalance() public view returns(uint128) {
+    function getContractUSDCBalance() external override view returns(uint128) {
+        return _campaignUSDCBalance();
+    }
+
+    /**
+     * @notice Internal function that return the amount in USDC raised by the campaign
+     * @dev Note that USDC using 6 decimals instead of 18
+     * @return balance The current balance of the current contract
+     */
+    function _campaignUSDCBalance() private view returns(uint128){
         return uint128(usdcToken.balanceOf(address(this)));
     }
 
     /**
      * @notice Return true if reward inventory > 0 and false if = 0
-     * @param rewardIndex is rewardi id
+     * @dev If the reward if not limited the function return true
+     * @param _rewardIndex The reward's index to check
+     * @return bool The return of the check
      */
-    function checkRewardInventory(uint8 rewardIndex) internal view returns (bool) {
-        if (!rewardsList[rewardIndex].isStockLimited) {
+    function checkRewardInventory(uint8 _rewardIndex) internal view returns (bool) {
+        if (!rewardsList[_rewardIndex].isStockLimited) {
             return true;
-        } else if(rewardsList[rewardIndex].stockLimit > rewardsList[rewardIndex].nbContributors) {
+        } else if(rewardsList[_rewardIndex].stockLimit > rewardsList[_rewardIndex].nbContributors) {
             return true;
         } else {
             return false;
         }
     }
+
+    /**
+     * @inheritdoc ICampaign
+     */
+    function getContributorBalances(address _account) external view override returns(uint128){
+        return contributorBalances[_account];
+    }
+
 }

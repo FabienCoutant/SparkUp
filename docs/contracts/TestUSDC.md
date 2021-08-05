@@ -1,8 +1,9 @@
 # TestUSDC
 
 
+Reproduce the basic function of the official USDC contract
 
-
+> This contract is only used for the purpose of local development
 
 ## Contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -37,7 +38,9 @@ No description
 
 
 ### decimals
-No description
+Getter that return the number of decimals for the ERC20
+
+> This getter is used to calculate the right value (ex: metamask token value displayed)
 
 
 #### Declaration
@@ -50,6 +53,9 @@ No description
 No modifiers
 
 
-
+#### Returns:
+| Type | Description |
+| --- | --- |
+|`decimals` | The number of decimals
 
 

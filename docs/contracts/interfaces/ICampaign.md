@@ -23,6 +23,8 @@ The Campaign contract handle the all life of one Campaign. It's generate by the 
   - [launchProposalContract](#launchproposalcontract)
   - [setProposal](#setproposal)
   - [releaseProposalFunds](#releaseproposalfunds)
+  - [getContributorBalances](#getcontributorbalances)
+  - [getContractUSDCBalance](#getcontractusdcbalance)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -35,6 +37,7 @@ The Campaign contract handle the all life of one Campaign. It's generate by the 
 Returns the campaign information in the struct Info plus de createAt and the managerAddress.
 
 
+
 #### Declaration
 ```solidity
   function getCampaignInfo(
@@ -45,7 +48,15 @@ Returns the campaign information in the struct Info plus de createAt and the man
 No modifiers
 
 
-
+#### Returns:
+| Type | Description |
+| --- | --- |
+|`Info` | The campaign Info data set
+|`createAt` | The campaign creation date in timestamps
+|`manager` | The address of the campaign manager
+|`WorkflowStatus` | The workflow status of the campaign
+|`totalRaised` | The amount raised by the campaign in USDC
+|`proposalAddress` | The address of the proposal contract link to the campaign
 ### updateCampaign
 Update the campaign information in the struct Info.
 
@@ -55,7 +66,7 @@ Update the campaign information in the struct Info.
 #### Declaration
 ```solidity
   function updateCampaign(
-    struct ICampaign.Info updatedInfoData
+    struct ICampaign.Info _updatedInfoData
   ) external
 ```
 
@@ -65,7 +76,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`updatedInfoData` | struct ICampaign.Info | Info Object that contains all the new information following the Info struct for the campaign
+|`_updatedInfoData` | struct ICampaign.Info | is The Info Object that contains all the new information following the Info struct for the campaign
 
 ### addReward
 Add a new reward level to the campaign.
@@ -76,7 +87,7 @@ Add a new reward level to the campaign.
 #### Declaration
 ```solidity
   function addReward(
-    struct ICampaign.Rewards newRewardData
+    struct ICampaign.Rewards _newRewardData
   ) external
 ```
 
@@ -86,7 +97,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`newRewardData` | struct ICampaign.Rewards | Rewards Object that contains all the needed information following the Rewards struct for the campaign
+|`_newRewardData` | struct ICampaign.Rewards | The Rewards Object that contains all the needed information which follow the Rewards struct for the campaign
 
 ### updateReward
 Update the data of a specific reward regarding its id.
@@ -97,8 +108,8 @@ Update the data of a specific reward regarding its id.
 #### Declaration
 ```solidity
   function updateReward(
-    struct ICampaign.Rewards newRewardData,
-    uint8 rewardIndex
+    struct ICampaign.Rewards _newRewardData,
+    uint8 _rewardIndex
   ) external
 ```
 
@@ -108,8 +119,8 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`newRewardData` | struct ICampaign.Rewards | Rewards Object that contains the new data to set following the Rewards struct for the campaign
-|`rewardIndex` | uint8 | uint256 Index of the reward to update
+|`_newRewardData` | struct ICampaign.Rewards | The rewards Object that contains the new data to set which follow the Rewards struct for the campaign
+|`_rewardIndex` | uint8 | The reward's index to update
 
 ### deleteReward
 Delete a reward by its Id.
@@ -120,7 +131,7 @@ Delete a reward by its Id.
 #### Declaration
 ```solidity
   function deleteReward(
-    uint8 rewardIndex
+    uint8 _rewardIndex
   ) external
 ```
 
@@ -130,7 +141,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`rewardIndex` | uint8 | uint256 Index of the reward to delete
+|`_rewardIndex` | uint8 | The reward's index to delete
 
 ### deleteCampaign
 Delete the campaign.
@@ -157,7 +168,7 @@ Allow the manager to setup a new one.
 #### Declaration
 ```solidity
   function updateManager(
-    address newManager
+    address _newManager
   ) external
 ```
 
@@ -167,7 +178,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`newManager` | address | address Address of the new manager
+|`_newManager` | address | The new manager's address
 
 ### publishCampaign
 Allow the manager to publish campaign and make it visible to potential contributors.
@@ -190,21 +201,28 @@ Allow contributors to contribute to the campaign.
 
 > Can only be called if campaign is published, is not completed, is not deleted and is not failed.
 
+
 #### Declaration
 ```solidity
   function contribute(
+    uint128 _amount,
+    uint8 _rewardIndex
   ) external
 ```
 
 #### Modifiers:
 No modifiers
 
-
+#### Args:
+| Arg | Type | Description |
+| --- | --- | --- |
+|`_amount` | uint128 | The Amount in USDC that msg.sender want to contribute
+|`_rewardIndex` | uint8 | The reward's index
 
 ### refund
 Allow contributor to get refunded.
 
-> Can only be called if campiagn deadline is passed and fundingGoal not reached.
+> Can only be called if campaign deadline is passed and fundingGoal not reached.
 
 #### Declaration
 ```solidity
@@ -234,36 +252,90 @@ No modifiers
 
 
 ### setProposal
-Allows campiagn factory contract to set proposal contract address.
+Allows campaign factory contract to set proposal contract address.
 
 > Can only be called by campaign factory contract.
+
 
 #### Declaration
 ```solidity
   function setProposal(
+    address _proposalContract
   ) external
 ```
 
 #### Modifiers:
 No modifiers
 
-
+#### Args:
+| Arg | Type | Description |
+| --- | --- | --- |
+|`_proposalContract` | address | The proposal contract's address
 
 ### releaseProposalFunds
 Transfer unlocked funds to manager address.
 
 > Can only be called by proposal contract when proposal is accepted.
 
+
 #### Declaration
 ```solidity
   function releaseProposalFunds(
+    uint128 _amount
   ) external
 ```
 
 #### Modifiers:
 No modifiers
 
+#### Args:
+| Arg | Type | Description |
+| --- | --- | --- |
+|`_amount` | uint128 | The Amount of funding raised that must be transfer to the manager
+
+### getContributorBalances
+Return the contribution balance in usdc for a specific address
 
 
+
+#### Declaration
+```solidity
+  function getContributorBalances(
+    address _account
+  ) external returns (uint128)
+```
+
+#### Modifiers:
+No modifiers
+
+#### Args:
+| Arg | Type | Description |
+| --- | --- | --- |
+|`_account` | address | The contributor's address
+
+#### Returns:
+| Type | Description |
+| --- | --- |
+|`Amount` | The Amount contributed by the _account
+### getContractUSDCBalance
+Make _campaignUSDCBalance available to external and used by Interface
+
+> Note that USDC using 6 decimals instead of 18
+
+
+#### Declaration
+```solidity
+  function getContractUSDCBalance(
+  ) external returns (uint128)
+```
+
+#### Modifiers:
+No modifiers
+
+
+#### Returns:
+| Type | Description |
+| --- | --- |
+|`balance` | The current balance of the current contract
 
 

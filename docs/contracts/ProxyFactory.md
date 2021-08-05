@@ -1,9 +1,9 @@
 # ProxyFactory
 
 
-The Campaign factory is used for the deployment of new campaign
+The Proxy factory is used for the deployment of new campaign
 
-> Inherit of for the CampaignFactory Interface
+> Using this Contract make the CampaignFactory contract lighter
 
 ## Contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -47,19 +47,27 @@ No modifiers
 
 
 ### createCampaign
-No description
+Deploy a new campaign contract and push it address to the Campaign Factory contract
+
+> The function emit an event that return the address to the DApp for state update
 
 
 #### Declaration
 ```solidity
   function createCampaign(
+    struct ICampaign.Info _infoData,
+    struct ICampaign.Rewards[] _rewardsData
   ) external
 ```
 
 #### Modifiers:
 No modifiers
 
-
+#### Args:
+| Arg | Type | Description |
+| --- | --- | --- |
+|`_infoData` | struct ICampaign.Info | The Info Object that contains data which follow the ICampaign.Info struct
+|`_rewardsData` | struct ICampaign.Rewards[] | The array of Rewards Object that contains data which follow the ICampaign.Rewards struct
 
 
 

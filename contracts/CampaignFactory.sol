@@ -8,7 +8,7 @@ import "./interfaces/ICampaignFactory.sol";
 
 /**
 * @title CampaignFactory
-* @notice The Campaign factory is used for the deployment of new campaign
+* @notice The Campaign factory is used for save the list of campaign deployed and also deploy proposal contract
 * @dev Inherit of for the CampaignFactory Interface
 */
 contract CampaignFactory is ICampaignFactory {
@@ -67,8 +67,8 @@ contract CampaignFactory is ICampaignFactory {
     /**
      * @inheritdoc ICampaignFactory
      */
-    function updateOwner(address newOwner) external override onlyOwner() {
-        owner = newOwner;
+    function updateOwner(address _newOwner) external override onlyOwner() {
+        owner = _newOwner;
     }
 
     /**

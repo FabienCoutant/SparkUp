@@ -1,7 +1,7 @@
 # CampaignFactory
 
 
-The Campaign factory is used for the deployment of new campaign
+The Campaign factory is used for save the list of campaign deployed and also deploy proposal contract
 
 > Inherit of for the CampaignFactory Interface
 
@@ -65,7 +65,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`_newCampaign` | contract ICampaign | is ICampaign of created campaign from proxy
+|`_newCampaign` | contract ICampaign | The address of the campaign created from proxy
 
 ### deleteCampaign
 Delete a new Campaign that call this function.
@@ -84,7 +84,7 @@ No modifiers
 
 
 ### deployProposalContract
-Delete a new proposal contract.
+Deploy the proposal contract for a campaign.
 
 > Can only be called by an existing campaign contract.
 
@@ -101,7 +101,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`_manager` | address | is campaign manager.
+|`_manager` | address | The campaign manager address.
 
 
 ### updateOwner
@@ -113,7 +113,7 @@ Allow the owner to set a new owner for the factory.
 #### Declaration
 ```solidity
   function updateOwner(
-    address newOwner
+    address _newOwner
   ) external onlyOwner
 ```
 
@@ -125,7 +125,7 @@ Allow the owner to set a new owner for the factory.
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`newOwner` | address | address The new owner address
+|`_newOwner` | address | The new owner address
 
 ### setProxy
 Allow the owner to set ProxyContract address.
@@ -148,7 +148,7 @@ Allow the owner to set ProxyContract address.
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`_proxyContract` | address | address the ProxyContract
+|`_proxyContract` | address | The ProxyContract address
 
 
 

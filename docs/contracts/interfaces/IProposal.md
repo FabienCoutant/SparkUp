@@ -32,7 +32,9 @@ Create a new proposal
 #### Declaration
 ```solidity
   function createProposal(
-    string _title
+    string _title,
+    string _description,
+    uint128 _amount
   ) external
 ```
 
@@ -42,7 +44,9 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`_title` | string | as proposal title, _description as proposal description and _amount as amount to be unlocked for spending
+|`_title` | string | The proposal title
+|`_description` | string | The proposal description
+|`_amount` | uint128 | The amount to be unlocked for spending
 
 
 ### deleteProposal
@@ -53,7 +57,7 @@ Delete proposal
 #### Declaration
 ```solidity
   function deleteProposal(
-    uint8 proposalId
+    uint8 _proposalId
   ) external
 ```
 
@@ -63,7 +67,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`proposalId` | uint8 | as proposal index in proposalList array
+|`_proposalId` | uint8 | The proposal's index inside the proposalList array
 
 
 ### startVotingSession
@@ -74,7 +78,7 @@ start proposal voting process
 #### Declaration
 ```solidity
   function startVotingSession(
-    uint8 proposalId
+    uint8 _proposalId
   ) external
 ```
 
@@ -84,7 +88,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`proposalId` | uint8 | as proposal index in proposalList array
+|`_proposalId` | uint8 | The proposal's index inside the proposalList array
 
 
 ### voteProposal
@@ -95,7 +99,8 @@ enable contributors to vote for or against proposal
 #### Declaration
 ```solidity
   function voteProposal(
-    uint8 proposalId
+    uint8 _proposalId,
+    bool _vote
   ) external
 ```
 
@@ -105,7 +110,8 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`proposalId` | uint8 | as proposal index in proposalList array and _vote as 1 for ok and 0 for nok
+|`_proposalId` | uint8 | The proposal's index inside the proposalList array
+|`_vote` | bool | As 1 for ok and 0 for nok
 
 
 ### getResults
@@ -116,7 +122,7 @@ check if proposal is ok or nok
 #### Declaration
 ```solidity
   function getResults(
-    uint8 proposalId
+    uint8 _proposalId
   ) external
 ```
 
@@ -126,7 +132,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`proposalId` | uint8 | as proposal index in proposalList array
+|`_proposalId` | uint8 | The proposal's index inside the proposalList array
 
 
 ### getProposals
@@ -147,7 +153,11 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`_proposalStatus` | enum IProposal.ProposalType | is proposalType (active, archived or deleted)
+|`_proposalStatus` | enum IProposal.ProposalType | The proposalType (active, archived or deleted)
 
+#### Returns:
+| Type | Description |
+| --- | --- |
+|`Array` | The list of Proposals corresponding to the _proposalStatus
 
 
