@@ -2,13 +2,13 @@
 
 📌 The common attacks listed below are a mix of Alyra security courses and [Consensys](https://consensys.github.io/smart-contract-best-practices/known_attacks/)
 
-*:information_source: Attacks applicable to this application are checks*  
+_:information_source: Attacks applicable to this application are checks_
 
 - [x] [Reentrancy](#Reentrancy)
 - [ ] [Front Running](#Front-Running)
 - [x] [Timestamp Dependence](#Timestamp-Dependence)
 - [x] [Overflow and Underflow](#Overflow-and-Underflow)
-- [x] [DoS with (Unexpected) revert](#DoS-with-(Unexpected)-revert)
+- [x] [DoS with (Unexpected) revert](<#DoS-with-(Unexpected)-revert>)
 - [x] [DoS with Block Gas Limit](#DoS-with-Block-Gas-Limit)
 - [ ] [Insufficient gas griefing](#Insufficient-gas-griefing)
 - [ ] [Forcibly Sending Ether to a Contract](#Forcibly-Sending-Ether-to-a-Contract)
@@ -17,14 +17,13 @@
 - [ ] [tx.origin](#tx.origin)
 - [ ] [Honeypot](#Honeypot)
 
-
 ## Reentrancy
 
-* The only external contract used is the official USDC ERC-20 contract which is used through the SafeERC20 library.
+- The only external contract used is the official USDC ERC-20 contract which is used through the SafeERC20 library.
 
-* We are not using `address.call()` function but SafeERC20 safeTransfer() and safeTransferFrom() instead.
+- We are not using `address.call()` function but SafeERC20 safeTransfer() and safeTransferFrom() instead.
 
-* We limit the access to certain functionalities thanks to **modifiers** and **workflow**
+- We limit the access to certain functionalities with the use of **modifiers** and a **workflow**
 
 ```
     modifier isNotDeleted(){
@@ -44,12 +43,12 @@
         require(currentStatus == requiredStatus, "!Err : Wrong workflow status");
         _;
     }
-    
+
     modifier checkCampaignDeadline() {
         require(block.timestamp <  campaignInfo.deadlineDate, "!Err : Campaign contribution has ended");
         _;
     }
-    
+
 ```
 
 ## Front Running
@@ -59,11 +58,11 @@ This attack isn't applicable to our application.
 ## Timestamp Dependence
 
 We are using timestamp on several parts of the workflow. To avoid this attack we took some best practices:
-* Using `block.timestamp` instead of `now` or `block.number`
-  
-* Using timestamp comparison (>, <, >=, <=) instead of strict equal
 
-* Our application isn't impacted by the 15 seconds rule because the minimum time between action and deadline is 7 days.
+- Using `block.timestamp` instead of `now` or `block.number`
+- Using timestamp comparison (>, <, >=, <=) instead of strict equal
+
+- Our application isn't impacted by the 15 seconds rule because the minimum time between action and deadline is 7 days.
 
 ## Overflow and Underflow
 
@@ -79,9 +78,10 @@ Our application use pull over push payment in order to prevent this attack.
 
 ## DoS with Block Gas Limit
 
-We are avoiding this attack with two solutions : 
-* using pull over push payment as the previous attack.
-* limiting the number of array length for data set (example: the max level of Rewards is 10).
+We are avoiding this attack with two solutions :
+
+- using pull over push payment as the previous attack.
+- using mapping data structures instead of arrays (example: the max level of Rewards is 10).
 
 ## Insufficient gas griefing
 
@@ -93,17 +93,18 @@ This attack isn't applicable to our application because it does not handle contr
 
 ## Call to the unknown
 
-We are avoiding this attack by : 
-* not using the low level `call()` neither `delegatecall()` functions
-* using interfaces in order to instance other contracts.
+We are avoiding this attack by :
+
+- not using the low level `call()` neither `delegatecall()` functions
+- using interfaces in order to instance other contracts.
 
 ## Source of Randomness
 
-This attack isn't applicable to our application because it does have any random usage.  
+This attack isn't applicable to our application because it does have any randomly generated data.
 
 ## tx.origin
 
-This attack isn't applicable to our application because it does use tx.origin.  
+This attack isn't applicable to our application because it does use tx.origin.
 
 ## Honeypot
 
