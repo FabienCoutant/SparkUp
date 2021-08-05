@@ -141,7 +141,7 @@ You also need to create a **.env** file in the project's client folder. This fil
 below:
 _This configuration allows data like the campaign list to be fetched even if the user isn't connected_
 
-**In case you want to deploy this DApp on a external provider you should use the config with var instead of the .env file**
+**In case you want to deploy this DApp on an external provider you should use the config with var instead of the .env file**
 
 ```
 REACT_APP_INFURA_KEY = "YOUR_INFURA_ID"
