@@ -20,87 +20,113 @@ This user story give us two information:
 :two: Then we write the basic tests for this user story:
 
 ```
-contract("Campaign",(accounts)=>{
-    const [factory, alice, bob] = accounts;
-    const initialCampaignInfo = {
-		title: "First Campaign",
-		description: "This is the first campaign of SparkUp",
-		fundingGoal: ether('11000').toString(),
-		durationDays: 0
-	};
-	const initialRewards = [
-     {
-        title: 'First rewards',
-        description: 'level1',
-        minimumContribution: ether('100').toString(),
-        stockLimit: 0,
-        nbContributors: 0,
-        amount: 0,
-        isStockLimited: false,
-      },
-      {
-        title: 'Second rewards',
-        description: 'level2',
-        minimumContribution: ether('5').toString(),
-        stockLimit: 1000,
-        nbContributors: 0,
-        amount: 0,
-        isStockLimited: true,
-      },
-    ];
-	beforeEach(async () => {
-        TestUSDCContractInstance = await TestUSDCContract.new(bob, { from: bob });
-        CampaignFactoryContractInstance = await CampaignFactoryContract.new(
-          TestUSDCContractInstance.address,
-          {
-            from: alice,
-          }
-        );
-        const deadline = parseInt((await time.latest()).add(time.duration.days(8)));
-        initialCampaignInfo.deadlineDate = deadline;
-        const newCampaign = await CampaignFactoryContractInstance.createCampaign(
-          initialCampaignInfo,
-          initialRewards,
-          { from: alice }
-        );
-        newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
-        CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
+contract('Campaign', (accounts) => {
+  const [alice, bob, john] = accounts;
+  const initialCampaignInfo = {
+    title: 'First Campaign',
+    description: 'This is the first campaign of SparkUp',
+    fundingGoal: usdc('11000').toString(),
+    deadlineDate: 0,
+  };
+  const initialRewards = [
+    {
+      title: 'First rewards',
+      description: 'level1',
+      minimumContribution: usdc('100').toString(),
+      stockLimit: 0,
+      nbContributors: 0,
+      amount: 0,
+      isStockLimited: false,
+    },
+    {
+      title: 'Second rewards',
+      description: 'level2',
+      minimumContribution: usdc('5').toString(),
+      stockLimit: 1000,
+      nbContributors: 0,
+      amount: 0,
+      isStockLimited: true,
+    },
+  ];
+  const newReward = {
+    title: 'Third rewards',
+    description: 'level3',
+    minimumContribution: usdc('150').toString(),
+    stockLimit: 100,
+    nbContributors: 0,
+    amount: 0,
+    isStockLimited: true,
+  };
+
+  const newReward2 = {
+    title: 'Third rewards',
+    description: 'level3',
+    minimumContribution: usdc('150').toString(),
+    stockLimit: 1,
+    nbContributors: 0,
+    amount: 0,
+    isStockLimited: true,
+  };
+
+  const proposal = {
+    title: 'First Proposal',
+    description: 'This is the first proposal',
+    amount: usdc('1500').toString(),
+  };
+
+  let CampaignContractInstance;
+  let TestUSDCContractInstance;
+  let EscrowContractInstance;
+  let ProposalContractInstance;
+
+  beforeEach(async () => {
+    TestUSDCContractInstance = await TestUSDCContract.new(bob, { from: bob });
+    EscrowContractInstance = await EscrowContract.new(TestUSDCContractInstance.address, { from: alice });
+    CampaignFactoryContractInstance = await CampaignFactoryContract.new({
+      from: alice,
     });
-    describe('  --- Add a new reward --- ', () => {
-      it('should revert if not manager try to add a reward', async () => {
-        await expectRevert(
-          CampaignContractInstance.addReward(newReward, { from: bob }),
-          '!Not Authorized'
-        );
-      });
-      it('should revert if wrong workflow status', async () => {
-        await CampaignContractInstance.publishCampaign({
-          from: alice,
-        });
-        await expectRevert(
-          CampaignContractInstance.addReward(newReward, { from: alice }),
-          '!Err : Wrong workflow status'
-        );
-      });
-      it('should add a new reward', async () => {
-        const initialRewardNb = await CampaignContractInstance.rewardsCounter();
-
-        await CampaignContractInstance.addReward(newReward, {
-          from: alice,
-        });
-
-        const afterRewardNb = await CampaignContractInstance.rewardsCounter();
-        expect(afterRewardNb).to.be.bignumber.equal(
-          initialRewardNb.add(new BN(1))
-        );
-
-        const RewardsInfo = await CampaignContractInstance.rewardsList(
-          afterRewardNb.sub(new BN(1))
-        );
-        expect(RewardsInfo.title).to.be.equal(newReward.title);
-      });
+    ProxyFactoryContractInstance = await ProxyFactoryContract.new(
+      CampaignFactoryContractInstance.address,
+      EscrowContractInstance.address,
+      TestUSDCContractInstance.address,
+      { from: alice }
+    );
+    await CampaignFactoryContractInstance.setProxy(ProxyFactoryContractInstance.address, { from: alice });
+    const deadline = parseInt((await time.latest()).add(time.duration.days(8)));
+    initialCampaignInfo.deadlineDate = deadline;
+    const newCampaign = await ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
+      from: alice,
     });
-});
+    newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
+    CampaignContractInstance = await CampaignContract.at(newCampaignAddress);
+  });
+  describe('  --- Add a new reward --- ', () => {
+    it('should revert if not manager try to add a reward', async () => {
+      await expectRevert(CampaignContractInstance.addReward(newReward, { from: bob }), '!Not Authorized');
+    });
+    it('should revert if wrong workflow status', async () => {
+      await CampaignContractInstance.publishCampaign({
+        from: alice,
+      });
+      await expectRevert(
+        CampaignContractInstance.addReward(newReward, { from: alice }),
+        '!Err : Wrong workflow status'
+      );
+    });
+    it('should add a new reward', async () => {
+      const initialRewardNb = await CampaignContractInstance.rewardsCounter();
+
+      await CampaignContractInstance.addReward(newReward, {
+        from: alice,
+      });
+
+      const afterRewardNb = await CampaignContractInstance.rewardsCounter();
+      expect(afterRewardNb).to.be.bignumber.equal(initialRewardNb.add(new BN(1)));
+
+      const RewardsInfo = await CampaignContractInstance.rewardsList(afterRewardNb.sub(new BN(1)));
+      expect(RewardsInfo.title).to.be.equal(newReward.title);
+    });
+  });
 ```
 
 :three: We are running the test that must fail.
@@ -155,20 +181,20 @@ contract("Campaign",(accounts)=>{
   Thus we are using a single internal function that refactor the logic of adding a reward:
 
 ```
-   /**
-    * @notice Internal function that set a new campaign's info and making data validation first.
-    * @param data Info Object that contains the Info data following the Info struct
-    */
-    function _setCampaignInfo(Info memory data) private {
-        require(bytes(data.title).length > 0, "!Err: Title empty");
-        require(bytes(data.description).length > 0, "!Err: Description empty");
-        require(data.fundingGoal >= 1000 ether, "!Err: Funding Goal not enough");
-        require(createAt + 7 days <= data.deadlineDate, "!Err: deadlineDate to short");
-        campaignInfo.title = data.title;
-        campaignInfo.description = data.description;
-        campaignInfo.fundingGoal = data.fundingGoal;
-        campaignInfo.deadlineDate = data.deadlineDate;
-    }
+/**
+* @notice Internal function that set a new campaign's info and making data validation first.
+* @param _data The Info Object that contains the Info data which follow the Info struct
+*/
+function _setCampaignInfo(Info memory _data) private {
+    require(bytes(_data.title).length > 0, "!Err: Title empty");
+    require(bytes(_data.description).length > 0, "!Err: Description empty");
+    require(_data.fundingGoal >= 1000*10**6, "!Err: Funding Goal not enough");
+    require(createAt + 7 days <= _data.deadlineDate, "!Err: deadlineDate to short");
+    campaignInfo.title = _data.title;
+    campaignInfo.description = _data.description;
+    campaignInfo.fundingGoal = _data.fundingGoal;
+    campaignInfo.deadlineDate = _data.deadlineDate;
+}
 ```
 
 :eight: We run our code coverage in order to check that we tested every line of our smart contracts with :

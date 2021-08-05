@@ -78,16 +78,16 @@ modifier onlyManager() {
         _;
     }
 
-function voteProposal(uint8 proposalId, bool vote) external override checkStatus(proposalId, WorkflowStatus.VotingSessionStarted) checkProposalDeadline(proposalId) isContributor() {
-    require(!hasVoted[msg.sender], "!Err: Already voted");
-    uint128 contributorVotes = campaignContract.contributorBalances(msg.sender);
-    if (vote) {
-        proposals[proposalId].okVotes = proposals[proposalId].okVotes + contributorVotes;
-    } else {
-        proposals[proposalId].nokVotes = proposals[proposalId].nokVotes + contributorVotes;
+function voteProposal(uint8 _proposalId, bool _vote) external override checkStatus(_proposalId, WorkflowStatus.VotingSessionStarted) checkProposalDeadline(_proposalId) isContributor() {
+        require(!hasVoted[_proposalId][msg.sender], "!Err: Already voted");
+        uint128 contributorVotes = campaignContract.getContributorBalances(msg.sender);
+        if (_vote) {
+            proposalsList[_proposalId].okVotes = proposalsList[_proposalId].okVotes + contributorVotes;
+        } else {
+            proposalsList[_proposalId].nokVotes = proposalsList[_proposalId].nokVotes + contributorVotes;
+        }
+        hasVoted[_proposalId][msg.sender] = true;
     }
-    hasVoted[msg.sender] = true;
-}
 ```
 
 ### **_Pull over Push_**
@@ -130,18 +130,14 @@ struct Rewards {
 In order to limit gas usage we avoided using arrays and only used mapping and counters. For example:
 
 ```
-uint8 public activeProposalCounter;
-mapping(uint8 => Proposal) public activeProposals;
+uint256 public proposalCounter;
+mapping(uint => Proposal) public proposalsList;
 
-function deleteProposal(uint8 proposalId) external override onlyManager() checkStatus(proposalId, WorkflowStatus.Registered) {
-        availableFunds = availableFunds + activeProposals[proposalId].amount;
-        if (proposalId == activeProposalCounter - 1) {
-            delete  activeProposals[proposalId];
-        } else {
-            activeProposals[proposalId] = activeProposals[activeProposalCounter - 1];
-            delete activeProposals[activeProposalCounter -1];
-        }
-        activeProposalCounter--;
+    function deleteProposal(uint8 _proposalId) external override onlyManager() checkStatus(_proposalId, WorkflowStatus.Registered) {
+        availableFunds = availableFunds + proposalsList[_proposalId].amount;
+        proposalsList[_proposalId].proposalType = ProposalType.Deleted;
+        proposalTypeCounter[ProposalType.Deleted]++;
+        proposalTypeCounter[ProposalType.Active]--;
     }
 
 ```
