@@ -32,27 +32,27 @@ Alyra's 2021 Final Project.
 
 ## Concept
 
-**SparkUp** is a DApp with the goal of decentralizing the way of crowdfunding work and also to improve the funding
-process. We believe that backers and creators must keep a link between them after fundraising. To do so, we developed a
-DApp that allow creators to create Campaign that backers can contribute to in USDC.
+**SparkUp** is a DApp with the goal of decentralizing crowdfunding along with improving its funding
+process. We believe that contributors and creators must keep a link between them after the fundraising process is completed. To do so, we developed a
+DApp that allows creators to create Campaigns that contributors can contribute to in USDC.
 
 In the case of a **successful fundraising** :
 
-- Each backer will get a **voting power which depend on their contribution**.
-- To withdraw funds, the creator will have to make proposal to his contributors in order to justify the spending.
-- If more that 50% of backers vote approve the withdrawal, than the creator is allowed to receive the amount he needs.
+- Each backer will get a **voting power which proportionally to their contribution**.
+- To withdraw funds, the creator will have to create proposals (spending requests) and submit them to the campaign contributors in order to approve funding release.
+- If more that 50% of contributors approve the proposal, than the campaign manager recieves the funds.
 
 In case of a **unsuccessful fundraising** :
 
-- each backer is authorized to withdraw their contribution
+- Each contributor is authorized to withdraw its initial contribution
 
 ## Design pattern decisions
 
-This part is explains in detail [here](./docs/DESIGN_PATTERN_DECISIONS.md)
+You can find all of the design patter details [here](./docs/DESIGN_PATTERN_DECISIONS.md)
 
 ## Technical Specifications
 
-This part list the main development languages and libraries used along with the project architecture :
+This partsections lists the main development languages and libraries used along with the project architecture :
 
 ### Architecture
 
@@ -125,29 +125,30 @@ Then follow the configuration part.
 
 - #### Back end configuration
 
-You must create an **.env** file in the project's root folder. This file must contain your Infura project ID and the
-account's private key which will deploy the project.
+You must create a **.env** file in the project's root folder. This file must contain your Infura project ID and the
+account's private key which will be used to deploy the project.
 
 ```
 PRIVATE_KEYS="YOUR_PRIVATE_KEY"
 INFURA_KEY = "YOUR_INFURA_ID"
 ```
 
-:white_check_mark: Take not that your value must be surrounded with double quotes.
+:white_check_mark: Make sure that your input is surrounded with double quotes.
 
 - #### Front end configuration
 
-You also need to create an **.env** file in the project's client folder. This file only need your Infura project ID as
+You also need to create a **.env** file in the project's client folder. This file only need your Infura project ID as
 below:
-_This configuration allow fetch data like the campaign list even if the user isn't connected_
+_This configuration allows data like the campaign list to be fetched even if the user isn't connected_
 
-**In case you want to deploy this DApp on external provider you should use the config var of it instead of the .env file** 
+**In case you want to deploy this DApp on a external provider you should use the config with var instead of the .env file**
+
 ```
 REACT_APP_INFURA_KEY = "YOUR_INFURA_ID"
 REACT_APP_DEFAULT_NETWORK_CHAINID= "DEPLOYED_NETWORK_ID"
 ```
 
-:white_check_mark: Take not that your value must be surrounded with double quotes.
+:white_check_mark: Make sure that your input is surrounded with double quotes.
 
 ### Deployment
 
@@ -155,13 +156,13 @@ You will first need to deploy the back-end (solidity files) and then the front.
 
 - #### Back end
 
-  Take not that you need to be at the project's root folder.
+  Make sure that you are in the project's root folder.
 
   - Local Deployment (Ganache) : `npm run deploy-local`
   - Ropsten Deployment : `npm run deploy-ropsten`
   - Ethereum Deployment : `npm truffle deploy --reset --network mainnet`
 
-:white_check_mark: Take not that our smart-contracts are deployed on Ropsten at the addresses defined
+:white_check_mark: Note that our smart-contracts are deployed on Ropsten at the addresses defined
 [here](./docs/DEPLOYED_ADDRESSES.md)
 
 - #### Front End
@@ -174,7 +175,7 @@ You will first need to deploy the back-end (solidity files) and then the front.
 
 The solidity part has been tested following the TDD (**T**est **D**rive **D**evelopment : [reference](https://github.com/acarbone/TDD-Cheat-Sheet)) approach. More details on what has been tested and why explained
 [here](./docs/TESTS_EXPLANATIONS.md).
-To run the tests you have several options but both need to be launch in the project's root folder :
+To run tests you have several options but both need to be launched in the project's root folder :
 
 - Using the truffle commands on local (ganache on port **7545**) or testnet :
   - If you installed truffle globally : `truffle test`
@@ -184,29 +185,31 @@ To run the tests you have several options but both need to be launch in the proj
 - Running test with code coverage :
   `npm run coverage`
 
-:white_check_mark: Take not that both first points run gas consumption report but you could also run `npm run gas`
+:white_check_mark: Both options run gas consumption report but you could also run `npm run gas`
 
-:white_check_mark: Take not that by using CI/CD, we perform tests with **code coverage** and **gas report** on each Pull Request
+:white_check_mark: By using CI/CD, we perform tests with **code coverage** and **gas report** on each Pull Request
 
 ## Avoiding common attacks
 
-This part is explains in detail [here](./docs/AVOIDING_COMMON_ATTACKS.md)
+You can find avoiding common attacks details [here](./docs/AVOIDING_COMMON_ATTACKS.md)
 
 ## Events
 
-There is only two events in our contracts :
-* One in the ProxyFactory.sol which return the campaign address when a new campaign is created
+There are only two events in our contracts :
+
+- One in the ProxyFactory.sol which returns the campaign address when a new campaign is created
 
 ```
 event newCampaign(address campaignAddress);
 ```
 
-* One in the Proposal.sol which return proposal Id  when a new proposal is created :
+- One in the Proposal.sol which returns the proposal Id when a new proposal is created :
+
 ```
 event proposalCreated(uint256 proposalId);
 ```
 
-We chose to limit events in order to optimize contract size and avoid duplicated events triggering on the UI
+We chose to limit events in order to optimize contract size and avoid multiple events triggering on the UI
 
 ## Contributors
 

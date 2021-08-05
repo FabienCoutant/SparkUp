@@ -6865,6 +6865,12 @@
   },
   "networks": {
     "1337": {
+      "events": {},
+      "links": {},
+      "address": "0x8e014d703043e4ccbA1d9e65c50d0DA253E78d90",
+      "transactionHash": "0x1b3dd3818fa308d491b6b23c04b5d974a37446a75131a0293aa0aa8491c26b29"
+    },
+    "5777": {
       "events": {
         "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
           "anonymous": false,
@@ -6937,18 +6943,12 @@
         }
       },
       "links": {},
-      "address": "0xe56C0e83DC231a0609e2aa739a3D3E23d08e8bD0",
-      "transactionHash": "0xd2571ff88a231b638c04e74e7994f98a122fc67a3f63250bd82a3c1529737582"
-    },
-    "5777": {
-      "events": {},
-      "links": {},
-      "address": "0xF3C934aaB5538e7d877b5163A3C0FC8A6e5d8D58",
-      "transactionHash": "0x1467cf8ba8aa854308f427d7941053d41b7a7245e7eae0c67c94bf1dab7ef13c"
+      "address": "0xdbe0BeD99aE08136e929B9fc7538269fff91F878",
+      "transactionHash": "0x52fbf65140294260d76233f885f234c1478e48c8e29053dbbd776d029351e872"
     }
   },
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-04T20:02:27.890Z",
+  "updatedAt": "2021-08-04T20:13:39.550Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

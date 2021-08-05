@@ -2978,7 +2978,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-04T20:02:24.031Z",
+  "updatedAt": "2021-08-04T20:13:35.235Z",
   "devdoc": {
     "details": "Interface for the Campaign contract",
     "kind": "dev",

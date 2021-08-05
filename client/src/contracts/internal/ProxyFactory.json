@@ -10770,27 +10770,21 @@
     "version": "0.8.6+commit.11564f7e.Emscripten.clang"
   },
   "networks": {
-    "3": {
-      "events": {},
-      "links": {},
-      "address": "0xB0536E8D81C8b747a0caB13E214082a1a9c26310",
-      "transactionHash": "0x5ec5993bb2bdc16b7f01c7f78a684bf3653bcdb7c78b5c57d8859904b33ecb61"
-    },
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x02A8e9b3d352ed2f6B789988d586353669e27406",
-      "transactionHash": "0xb2dce5950bb02704c7903955d7ed51b5bc052c0396a9f23f4bce92b00a3e52bf"
+      "address": "0x837683121a1e79711c718F29DC8d6e1621Aa1Df7",
+      "transactionHash": "0xb2dbdb6ce5f1df4eadfc4cc03be50d13870e2389eae9d23172bcdaa16b9b9949"
     },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xE639A9D56B172C61c9bAe8034853A831d821CE0D",
-      "transactionHash": "0xc4f0f0316586d2583a1b87b8eb798a2cb10c6b3e9c02bd2d35374365c140e066"
+      "address": "0x3CfF6dF46D84a3971e1cD2dd0961766be5Eac171",
+      "transactionHash": "0x126c8381894091ac35d714a045a2c83bcb6f5ef9dcebcfb405f2447dd7014f9d"
     }
   },
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-04T20:02:27.882Z",
+  "updatedAt": "2021-08-04T20:13:39.540Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Inherit of for the CampaignFactory Interface",

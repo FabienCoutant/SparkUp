@@ -6499,67 +6499,41 @@
     "version": "0.8.6+commit.11564f7e.Emscripten.clang"
   },
   "networks": {
-    "3": {
-      "events": {
-        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "previousOwner",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "newOwner",
-              "type": "address"
-            }
-          ],
-          "name": "OwnershipTransferred",
-          "type": "event"
-        }
-      },
-      "links": {},
-      "address": "0xD3355AF755762f08Bc120cDE1B06b56b1b04aa16",
-      "transactionHash": "0x1c9c410c219bfbbfa71f308c80a5e928e069813c1f0425b6297370105d8336fc"
-    },
     "1337": {
-      "events": {
-        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "previousOwner",
-              "type": "address"
-            },
-            {
-              "indexed": true,
-              "internalType": "address",
-              "name": "newOwner",
-              "type": "address"
-            }
-          ],
-          "name": "OwnershipTransferred",
-          "type": "event"
-        }
-      },
-      "links": {},
-      "address": "0x44A103F803A4b1BB8404Dcf6Fb213cD136a77a8b",
-      "transactionHash": "0xbddfb7e5354dcaf6562a81c5624c72555960cb4929984e051a44a5061464c223"
-    },
-    "5777": {
       "events": {},
       "links": {},
-      "address": "0x441dBdc4ebfF8c408a999Bb791b8B0F56C1ee9e0",
-      "transactionHash": "0xdbab8bcb54c8c6a73209c4ef5ba54ce6fcd1d32231d57ed6f26aa0042456b1c0"
+      "address": "0x2DC256b106da44f09CfE2234C022481e2bc56fe9",
+      "transactionHash": "0xdc1ffa8f451b2a8fab3be439041d64141d6bc4dab204a73e0cbcce5f11c410b0"
+    },
+    "5777": {
+      "events": {
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x970A2c5782e414b9a2cB1Ac00C68A5742C65fd2E",
+      "transactionHash": "0x251a6b8e76becdc2a39710428a38532106f516ce00266fbc4f850cf517a2c22f"
     }
   },
   "schemaVersion": "3.4.2",
-  "updatedAt": "2021-08-04T20:02:27.898Z",
+  "updatedAt": "2021-08-04T20:13:39.556Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Inherit of for the CampaignFactory Interface",

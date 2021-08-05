@@ -1,25 +1,23 @@
 # Tests Explanations
 
-*In the test part of the README.md, we mentioned that our smart contracts has been developed following a TDD 
+_In the test section of the README.md, we mentioned that our smart contracts has been developed following a TDD
 (**T**est **D**rive **D**evelopment) approach ([reference](https://github.com/acarbone/TDD-Cheat-Sheet)).
-This file aims to explain how we wrote our tests and the logic behind them.*
+This file aims to explain how we wrote our tests and the logic behind them._
 
-:information_source: The testing process describe after, focusing on adding a new reward to a campaign,
-however the same process has been used for every code line of our smart contracts.
+:information_source: The testing example below uses the case of adding a new reward to a campaign,
+however it illustrates the methodology used for our full testing process.
 
 :one: Every test start with a user story :
-As a *role/type of user* I want/can *goal* so that *benefit/some reason*
+As a _role/type of user_ I want/can _goal_ so that _benefit/some reason_
 
-Our user story : As a *contract manager* I can *add a new reward* so that *the campaign get a new reward and emit an event*
+Our user story : As a _contract manager_ I can _add a new reward_ so that _the campaign get a new reward and emit an event_
 
 This user story give us two information:
 
-* It's possible to add a new reward => we need a addReward function that emit an event if the new reward is correctly added
-  
-* Only the manager can add a new reward => we need to check the user access
+- It's possible to add a new reward => we need a addReward function that updates correctly the rewardList if the new reward is correctly added
+- Only the manager can add a new reward => we need to check the user access
 
-:two: Then we right the basic tests for this user story:
-
+:two: Then we write the basic tests for this user story:
 
 ```
 contract("Campaign",(accounts)=>{
@@ -108,6 +106,7 @@ contract("Campaign",(accounts)=>{
 :three: We are running the test that must fail.
 
 :four: If we need new functions, we add them into the contract's interface : (ICampaign.sol)
+
 ```
     /**
      * @notice Add a new reward level to the campaign.
@@ -117,7 +116,7 @@ contract("Campaign",(accounts)=>{
     function addReward(Rewards memory newRewardData) external;
 ```
 
-:five: We write the minimum of code to make it work
+:five: We write the minimum amount of code to make it work
 
 ```
     /**
@@ -129,18 +128,19 @@ contract("Campaign",(accounts)=>{
     }
 ```
 
-:six: We are running the test again that must pass
+:six: We run the test again that must pass
 
-:seven: We are refactoring our code:
+:seven: We refactor our code:
 
-* The check that only the manager is able to call some functions will be used in several part of the contract.
-We then created a modifier that can be easily reused :
+- The verification that only the manager is able to call some functions will be used in several part of the contract.
+  We then created a modifier that can be easily reused :
+
 ```
   modifier isNotDeleted(){
     require(status != WorkflowStatus.CampaignDeleted, "!Err: Campaign Deleted");
     _;
   }
-  
+
   ...
  /**
  * @inheritdoc ICampaign
@@ -151,8 +151,9 @@ We then created a modifier that can be easily reused :
  }
 ```
 
-* adding a reward use the same logic as updating a specific reward, all rewards or adding several rewards.
-That why we are using a single internal function that refactor the logic of add a reward:
+- adding a reward uses the same logic as updating a specific reward or adding several rewards.
+  Thus we are using a single internal function that refactor the logic of adding a reward:
+
 ```
    /**
     * @notice Internal function that set a new campaign's info and making data validation first.
@@ -167,11 +168,10 @@ That why we are using a single internal function that refactor the logic of add 
         campaignInfo.description = data.description;
         campaignInfo.fundingGoal = data.fundingGoal;
         campaignInfo.deadlineDate = data.deadlineDate;
-    }  
+    }
 ```
 
-:eight: We are running our code coverage in order to check that we tested every line of our smart contracts with :
+:eight: We run our code coverage in order to check that we tested every line of our smart contracts with :
 `npm run coverage`
 
-**Thanks to TDD and the code coverage, we are sure to code only what we need and also that what we code has been tested.**
-
+**Thanks to TDD and the code coverage, we are sure to code only what we need and also that what we code what has already been tested.**
