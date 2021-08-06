@@ -17,7 +17,7 @@ The Campaign factory is used for save the list of campaign deployed and also dep
   - [deleteCampaign](#deletecampaign)
   - [deployProposalContract](#deployproposalcontract)
   - [updateOwner](#updateowner)
-  - [setCampaignCreator](#setCampaignCreator)
+  - [setCampaignCreator](#setcampaigncreator)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,7 +27,7 @@ The Campaign factory is used for save the list of campaign deployed and also dep
 | ---  | --- |
 | campaignCounter | uint128 |
 | owner | address |
-| proxyContract | address |
+| campaignCreatorContract | address |
 | deployedCampaigns | mapping(uint128 => address) |
 | campaignToId | mapping(address => uint128) |
 
@@ -65,7 +65,7 @@ No modifiers
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`_newCampaign` | contract ICampaign | The address of the campaign created from proxy
+|`_newCampaign` | contract ICampaign | The address of the campaign created from the campaignCreator
 
 ### deleteCampaign
 Delete a new Campaign that call this function.
@@ -128,7 +128,7 @@ Allow the owner to set a new owner for the factory.
 |`_newOwner` | address | The new owner address
 
 ### setCampaignCreator
-Allow the owner to set ProxyContract address.
+Allow the owner to set campaignCreator contract address.
 
 > Only the actual owner must be able to call this function
 
@@ -136,7 +136,7 @@ Allow the owner to set ProxyContract address.
 #### Declaration
 ```solidity
   function setCampaignCreator(
-    address _proxyContract
+    address _campaignCreatorContract
   ) external onlyOwner
 ```
 
@@ -148,7 +148,7 @@ Allow the owner to set ProxyContract address.
 #### Args:
 | Arg | Type | Description |
 | --- | --- | --- |
-|`_proxyContract` | address | The ProxyContract address
+|`_campaignCreatorContract` | address | The campaignCreator contract address
 
 
 

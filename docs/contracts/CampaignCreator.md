@@ -1,7 +1,7 @@
-# ProxyFactory
+# CampaignCreator
 
 
-The Proxy factory is used for the deployment of new campaign
+The CampaignCreator is used for the deployment of new campaign
 
 > Using this Contract make the CampaignFactory contract lighter
 
