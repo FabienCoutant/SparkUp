@@ -1,5 +1,5 @@
 const CampaignFactory = artifacts.require('CampaignFactory');
-const ProxyFactory = artifacts.require('ProxyFactory');
+const CampaignCreator = artifacts.require('CampaignCreator');
 const TestUSDC = artifacts.require('TestUSDC');
 const Escrow = artifacts.require('Escrow');
 const USDC_CONTRACTS = {
@@ -23,9 +23,9 @@ module.exports = async (deployer, network, accounts) => {
   await deployer.deploy(CampaignFactory);
   const CampaignFactoryInstance = await CampaignFactory.deployed();
 
-  await deployer.deploy(ProxyFactory, CampaignFactoryInstance.address, EscrowInstance.address, addressUSDC);
-  const ProxyFactoryInstance = await ProxyFactory.deployed();
+  await deployer.deploy(CampaignCreator, CampaignFactoryInstance.address, EscrowInstance.address, addressUSDC);
+  const CampaignCreatorInstance = await CampaignCreator.deployed();
 
-  await CampaignFactoryInstance.setProxy(ProxyFactoryInstance.address);
+  await CampaignFactoryInstance.setCampaignCreator(CampaignCreatorInstance.address);
 };
 

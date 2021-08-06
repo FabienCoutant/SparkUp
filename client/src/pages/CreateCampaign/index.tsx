@@ -7,7 +7,7 @@ import CampaignForm from '../../components/CampaignForm'
 import CampaignCard from '../../components/CampaignCard'
 import RewardCard from '../../components/RewardCard'
 import { useWeb3React } from '@web3-react/core'
-import { useContractProxyFactory } from '../../hooks/useContract'
+import { useContractCampaignCreator } from '../../hooks/useContract'
 import { notificationActions } from '../../store/Notification/slice'
 import { serializeTimestampsFor } from '../../utils/dateHelper'
 import { useHistory } from 'react-router'
@@ -20,7 +20,7 @@ const CreateCampaign = () => {
   const { chainId, account } = useWeb3React()
   const history = useHistory()
   const dispatch = useAppDispatch()
-  const contractProxyFactory = useContractProxyFactory()
+  const contractProxyFactory = useContractCampaignCreator()
   const campaign = useAppSelector((state) => state.campaign)
   const rewards = useAppSelector((state) => state.reward.rewards)
   const [isInit, setIsInit] = useState<boolean>(false)

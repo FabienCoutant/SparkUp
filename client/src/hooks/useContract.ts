@@ -7,7 +7,7 @@ import TUSDC from '../contracts/internal/TestUSDC.json'
 import CampaignFactory from '../contracts/internal/CampaignFactory.json'
 import Campaign from '../contracts/internal/Campaign.json'
 import Proposal from '../contracts/internal/Proposal.json'
-import ProxyFactory from '../contracts/internal/ProxyFactory.json'
+import CampaignCreator from '../contracts/internal/CampaignCreator.json'
 import { ZERO_ADDRESS } from '../constants'
 
 export const useContractUSDC = () => {
@@ -74,12 +74,12 @@ export const useContractProposal = (address: string | null) => {
 }
 
 
-export const useContractProxyFactory = () => {
+export const useContractCampaignCreator = () => {
   const { library, chainId } = useActiveWeb3React()
   return useMemo(() => {
     if (!library || !chainId) return null
     try {
-      return getContractByABI(ProxyFactory, library, chainId, 'LOCAL')
+      return getContractByABI(CampaignCreator, library, chainId, 'LOCAL')
     } catch (error) {
       console.error('Failed to get contract', error)
       return null

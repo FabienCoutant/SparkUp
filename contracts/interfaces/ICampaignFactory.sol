@@ -12,7 +12,7 @@ interface ICampaignFactory {
 
     /**
      * @notice Add campaign contract address to mapping
-     * @param _newCampaign The address of the campaign created from proxy
+     * @param _newCampaign The address of the campaign created from the campaignCreator
      */
     function addCampaign(ICampaign _newCampaign) external;
 
@@ -37,9 +37,9 @@ interface ICampaignFactory {
     function updateOwner(address _newOwner) external;
 
     /**
-     * @notice Allow the owner to set ProxyContract address.
+     * @notice Allow the owner to set campaignCreator contract address.
      * @dev Only the actual owner must be able to call this function
-     * @param _proxyContract The ProxyContract address
+     * @param _campaignCreatorContract The campaignCreator contract address
      */
-    function setProxy(address _proxyContract) external;
+    function setCampaignCreator(address _campaignCreatorContract) external;
 }

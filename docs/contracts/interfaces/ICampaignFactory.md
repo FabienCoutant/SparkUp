@@ -14,7 +14,7 @@ The Campaign factory facilitate the storage of campaign addresses
   - [deployProposalContract](#deployproposalcontract)
   - [deleteCampaign](#deletecampaign)
   - [updateOwner](#updateowner)
-  - [setProxy](#setproxy)
+  - [setCampaignCreator](#setCampaignCreator)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -101,7 +101,7 @@ No modifiers
 | --- | --- | --- |
 |`_newOwner` | address | The new owner address
 
-### setProxy
+### setCampaignCreator
 Allow the owner to set ProxyContract address.
 
 > Only the actual owner must be able to call this function
@@ -109,7 +109,7 @@ Allow the owner to set ProxyContract address.
 
 #### Declaration
 ```solidity
-  function setProxy(
+  function setCampaignCreator(
     address _proxyContract
   ) external
 ```

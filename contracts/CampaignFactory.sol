@@ -15,7 +15,7 @@ contract CampaignFactory is ICampaignFactory {
 
     uint128 public campaignCounter = 1;
     address public owner;
-    address public proxyContract;
+    address public campaignCreatorContract;
 
     mapping(uint128 => address) public deployedCampaigns;
     mapping(address => uint128) public campaignToId;
@@ -33,7 +33,7 @@ contract CampaignFactory is ICampaignFactory {
      * @inheritdoc ICampaignFactory
      */
     function addCampaign(ICampaign _newCampaign) external override {
-        require(msg.sender == proxyContract, "!Not Authorized");
+        require(msg.sender == campaignCreatorContract, "!Not Authorized");
         deployedCampaigns[campaignCounter] = address(_newCampaign);
         campaignToId[address(_newCampaign)] = campaignCounter;
         campaignCounter++;
@@ -74,7 +74,7 @@ contract CampaignFactory is ICampaignFactory {
     /**
      * @inheritdoc ICampaignFactory
      */
-    function setProxy(address _proxyContract) external override onlyOwner() {
-        proxyContract = _proxyContract;
+    function setCampaignCreator(address _campaignCreatorContract) external override onlyOwner() {
+        campaignCreatorContract = _campaignCreatorContract;
     }
 }

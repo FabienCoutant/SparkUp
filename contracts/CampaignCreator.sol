@@ -6,11 +6,11 @@ import "./interfaces/ICampaign.sol";
 import "./interfaces/ICampaignFactory.sol";
 
 /**
-* @title ProxyFactory
-* @notice The Proxy factory is used for the deployment of new campaign
+* @title CampaignCreator
+* @notice The CampaignCreator is used for the deployment of new campaign
 * @dev Using this Contract make the CampaignFactory contract lighter
 */
-contract ProxyFactory {
+contract CampaignCreator {
     
     address public immutable factory;
     address public immutable escrow;

@@ -85,16 +85,16 @@ contract('Campaign', (accounts) => {
     CampaignFactoryContractInstance = await CampaignFactoryContract.new({
       from: alice,
     });
-    ProxyFactoryContractInstance = await ProxyFactoryContract.new(
+    CampaignCreatorContractInstance = await CampaignCreatorContract.new(
       CampaignFactoryContractInstance.address,
       EscrowContractInstance.address,
       TestUSDCContractInstance.address,
       { from: alice }
     );
-    await CampaignFactoryContractInstance.setProxy(ProxyFactoryContractInstance.address, { from: alice });
+    await CampaignFactoryContractInstance.setCampaignCreator(CampaignCreatorContractInstance.address, { from: alice });
     const deadline = parseInt((await time.latest()).add(time.duration.days(8)));
     initialCampaignInfo.deadlineDate = deadline;
-    const newCampaign = await ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
+    const newCampaign = await CampaignCreatorContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
       from: alice,
     });
     newCampaignAddress = newCampaign.logs[0].args.campaignAddress;

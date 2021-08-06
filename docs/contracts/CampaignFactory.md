@@ -17,7 +17,7 @@ The Campaign factory is used for save the list of campaign deployed and also dep
   - [deleteCampaign](#deletecampaign)
   - [deployProposalContract](#deployproposalcontract)
   - [updateOwner](#updateowner)
-  - [setProxy](#setproxy)
+  - [setCampaignCreator](#setCampaignCreator)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -127,7 +127,7 @@ Allow the owner to set a new owner for the factory.
 | --- | --- | --- |
 |`_newOwner` | address | The new owner address
 
-### setProxy
+### setCampaignCreator
 Allow the owner to set ProxyContract address.
 
 > Only the actual owner must be able to call this function
@@ -135,7 +135,7 @@ Allow the owner to set ProxyContract address.
 
 #### Declaration
 ```solidity
-  function setProxy(
+  function setCampaignCreator(
     address _proxyContract
   ) external onlyOwner
 ```

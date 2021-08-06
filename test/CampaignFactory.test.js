@@ -5,7 +5,7 @@ const CampaignFactoryContract = artifacts.require('CampaignFactory');
 const CampaignContract = artifacts.require('Campaign');
 const TestUSDCContract = artifacts.require('TestUSDC');
 const EscrowContract = artifacts.require('Escrow');
-const ProxyFactoryContract = artifacts.require('ProxyFactory');
+const CampaignCreatorContract = artifacts.require('CampaignCreator');
 const ProposalContract = artifacts.require('Proposal');
 
 contract('CampaignFactory', (accounts) => {
@@ -53,13 +53,13 @@ contract('CampaignFactory', (accounts) => {
     CampaignFactoryContractInstance = await CampaignFactoryContract.new({
       from: owner,
     });
-    ProxyFactoryContractInstance = await ProxyFactoryContract.new(
+    CampaignCreatorContractInstance = await CampaignCreatorContract.new(
       CampaignFactoryContractInstance.address,
       EscrowContractInstance.address,
       TestUSDCContractInstance.address,
       { from: alice }
     );
-    await CampaignFactoryContractInstance.setProxy(ProxyFactoryContractInstance.address);
+    await CampaignFactoryContractInstance.setCampaignCreator(CampaignCreatorContractInstance.address);
     const factoryOwner = await CampaignFactoryContractInstance.owner();
     expect(factoryOwner).to.be.equal(owner);
     initialCampaignInfo.deadlineDate = parseInt((await time.latest()).add(time.duration.days(30)));
@@ -71,7 +71,7 @@ contract('CampaignFactory', (accounts) => {
 
   describe('--- Add Campaign ---', async () => {
     it('should allow people to create new campaign', async () => {
-      const receipt = await ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
+      const receipt = await CampaignCreatorContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
         from: alice,
       });
       firstCampaignAddress = receipt.logs[0].args.campaignAddress; // get the Campaign created address
@@ -83,7 +83,7 @@ contract('CampaignFactory', (accounts) => {
       expect(campaignCounter).to.be.bignumber.equal(new BN(2));
     });
     it('should emit an event when new campaign has been created', async () => {
-      const receipt = await ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
+      const receipt = await CampaignCreatorContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
         from: alice,
       });
       const deployedCampaignAddress = receipt.logs[0].args.campaignAddress; // get the Campaign created address
@@ -92,7 +92,7 @@ contract('CampaignFactory', (accounts) => {
       });
     });
     it('should init correctly the data of the new campaign deployed', async () => {
-      const receipt = await ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
+      const receipt = await CampaignCreatorContractInstance.createCampaign(initialCampaignInfo, initialRewards, {
         from: alice,
       });
       firstCampaignAddress = receipt.logs[0].args.campaignAddress; // get the Campaign created address
@@ -119,7 +119,7 @@ contract('CampaignFactory', (accounts) => {
     it('should revert if campaign title is empty', async () => {
       const badCampaignInfo = { ...initialCampaignInfo, title: '' };
       await expectRevert(
-        ProxyFactoryContractInstance.createCampaign(badCampaignInfo, initialRewards, {
+        CampaignCreatorContractInstance.createCampaign(badCampaignInfo, initialRewards, {
           from: alice,
         }),
         '!Err: Title empty'
@@ -128,7 +128,7 @@ contract('CampaignFactory', (accounts) => {
     it('should revert if campaign description is empty', async () => {
       const badCampaignInfo = { ...initialCampaignInfo, description: '' };
       await expectRevert(
-        ProxyFactoryContractInstance.createCampaign(badCampaignInfo, initialRewards, {
+        CampaignCreatorContractInstance.createCampaign(badCampaignInfo, initialRewards, {
           from: alice,
         }),
         '!Err: Description empty'
@@ -140,7 +140,7 @@ contract('CampaignFactory', (accounts) => {
         fundingGoal: usdc('999').toString(),
       };
       await expectRevert(
-        ProxyFactoryContractInstance.createCampaign(badCampaignInfo, initialRewards, {
+        CampaignCreatorContractInstance.createCampaign(badCampaignInfo, initialRewards, {
           from: alice,
         }),
         '!Err: Funding Goal not enough'
@@ -150,7 +150,7 @@ contract('CampaignFactory', (accounts) => {
       const badDate = (await time.latest()).add(time.duration.days(5));
       const badCampaignInfo = { ...initialCampaignInfo, deadlineDate: badDate };
       await expectRevert(
-        ProxyFactoryContractInstance.createCampaign(badCampaignInfo, initialRewards, {
+        CampaignCreatorContractInstance.createCampaign(badCampaignInfo, initialRewards, {
           from: alice,
         }),
         '!Err: deadlineDate to short'
@@ -158,7 +158,7 @@ contract('CampaignFactory', (accounts) => {
     });
     it('should revert if no rewards is defined', async () => {
       await expectRevert(
-        ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, [], { from: alice }),
+        CampaignCreatorContractInstance.createCampaign(initialCampaignInfo, [], { from: alice }),
         '!Err: Rewards empty'
       );
     });
@@ -167,7 +167,7 @@ contract('CampaignFactory', (accounts) => {
         return { ...reward, title: '' };
       });
       await expectRevert(
-        ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, badRewardsInfo, { from: alice }),
+        CampaignCreatorContractInstance.createCampaign(initialCampaignInfo, badRewardsInfo, { from: alice }),
         '!Err: Title empty'
       );
     });
@@ -176,7 +176,7 @@ contract('CampaignFactory', (accounts) => {
         return { ...reward, description: '' };
       });
       await expectRevert(
-        ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, badRewardsInfo, { from: alice }),
+        CampaignCreatorContractInstance.createCampaign(initialCampaignInfo, badRewardsInfo, { from: alice }),
         '!Err: Description empty'
       );
     });
@@ -191,11 +191,11 @@ contract('CampaignFactory', (accounts) => {
         ...initialRewards,
       ];
       await expectRevert(
-        ProxyFactoryContractInstance.createCampaign(initialCampaignInfo, badRewardsInfo, { from: alice }),
+        CampaignCreatorContractInstance.createCampaign(initialCampaignInfo, badRewardsInfo, { from: alice }),
         '!Err: Too much Rewards'
       );
     });
-    it('should revert if not called by proxy contract', async () => {
+    it('should revert if not called by campaignCreator contract', async () => {
       await expectRevert(
         CampaignFactoryContractInstance.addCampaign(bob, {
           from: alice,
@@ -213,13 +213,13 @@ contract('CampaignFactory', (accounts) => {
     it('should revert if not owner try to set a new owner', async () => {
       await expectRevert(CampaignFactoryContractInstance.updateOwner(bob, { from: alice }), '!Not Authorized');
     });
-    it('should allow the owner to set proxy contract', async () => {
-      await CampaignFactoryContractInstance.setProxy(bob, { from: owner });
-      const proxyContractAddress = await CampaignFactoryContractInstance.proxyContract();
-      expect(proxyContractAddress).to.be.equal(bob);
+    it('should allow the owner to set campaignCreator contract', async () => {
+      await CampaignFactoryContractInstance.setCampaignCreator(bob, { from: owner });
+      const campaignCreatorContractAddress = await CampaignFactoryContractInstance.campaignCreatorContract();
+      expect(campaignCreatorContractAddress).to.be.equal(bob);
     });
     it('should revert if not owner try to set a new owner', async () => {
-      await expectRevert(CampaignFactoryContractInstance.setProxy(bob, { from: alice }), '!Not Authorized');
+      await expectRevert(CampaignFactoryContractInstance.setCampaignCreator(bob, { from: alice }), '!Not Authorized');
     });
   });
   describe('--- Deploy Proposal ---', async () => {
@@ -230,7 +230,7 @@ contract('CampaignFactory', (accounts) => {
         fundingGoal: usdc('10000').toString(),
         deadlineDate: parseInt((await time.latest()).add(time.duration.days(30))),
       };
-      const newCampaign = await ProxyFactoryContractInstance.createCampaign(newCampaignInfo, initialRewards, {
+      const newCampaign = await CampaignCreatorContractInstance.createCampaign(newCampaignInfo, initialRewards, {
         from: alice,
       });
       newCampaignAddress = newCampaign.logs[0].args.campaignAddress;
@@ -271,7 +271,7 @@ contract('CampaignFactory', (accounts) => {
   });
   describe('--- Deletion ---', async () => {
     beforeEach(async () => {
-      const firstCampaignCreated = await ProxyFactoryContractInstance.createCampaign(
+      const firstCampaignCreated = await CampaignCreatorContractInstance.createCampaign(
         initialCampaignInfo,
         initialRewards,
         { from: alice }
@@ -282,7 +282,7 @@ contract('CampaignFactory', (accounts) => {
       const firstCampaignInfo = firstCampaignResult['0'];
       expect(firstCampaignInfo.title).to.be.equal(initialCampaignInfo.title);
 
-      const secondCampaignCreated = await ProxyFactoryContractInstance.createCampaign(
+      const secondCampaignCreated = await CampaignCreatorContractInstance.createCampaign(
         secondInitialCampaignInfo,
         initialRewards,
         { from: alice }
@@ -311,7 +311,7 @@ contract('CampaignFactory', (accounts) => {
         ...initialCampaignInfo,
         title: 'Third Campaign',
       };
-      const thirdCampaignCreated = await ProxyFactoryContractInstance.createCampaign(
+      const thirdCampaignCreated = await CampaignCreatorContractInstance.createCampaign(
         thirdInitialCampaignInfo,
         initialRewards,
         { from: alice }
