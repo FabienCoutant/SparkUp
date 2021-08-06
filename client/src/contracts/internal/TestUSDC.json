@@ -6842,7 +6842,7 @@
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-06T10:00:45.768Z",
+  "updatedAt": "2021-08-06T10:14:17.883Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "This contract is only used for the purpose of local development",

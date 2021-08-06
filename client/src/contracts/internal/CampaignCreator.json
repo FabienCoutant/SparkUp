@@ -10782,6 +10782,12 @@
     "version": "0.8.6+commit.11564f7e.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {},
+      "links": {},
+      "address": "0x5dec3F966d678e27a761E106c43b79c386fF4B47",
+      "transactionHash": "0x09eaa1f61343d08c061f7c02013f742804fe0615eb855baa447b15eb2e944543"
+    },
     "1337": {
       "events": {},
       "links": {},
@@ -10790,7 +10796,7 @@
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-06T10:00:45.756Z",
+  "updatedAt": "2021-08-06T10:14:17.859Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Using this Contract make the CampaignFactory contract lighter",

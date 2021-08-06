@@ -7661,6 +7661,12 @@
     "version": "0.8.6+commit.11564f7e.Emscripten.clang"
   },
   "networks": {
+    "3": {
+      "events": {},
+      "links": {},
+      "address": "0xa9176FD31f77C8AE0E1C133AaC2ba20c2cD81af2",
+      "transactionHash": "0x5e298c45106e6290161cdf3ee1c09237d8965e192672512606c14caa5a0d683e"
+    },
     "1337": {
       "events": {},
       "links": {},
@@ -7669,7 +7675,7 @@
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-06T10:00:45.749Z",
+  "updatedAt": "2021-08-06T10:14:17.851Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Inherit of for the CampaignFactory Interface",
