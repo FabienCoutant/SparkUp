@@ -478,6 +478,21 @@ contract('Campaign', (accounts) => {
         '!Err : Campaign contribution has ended'
       );
     });
+    it('should revert if amount is not greater of equal to the minimum contribution', async () => {
+      await CampaignContractInstance.publishCampaign({ from: alice });
+      const spender = CampaignContractInstance.address;
+      const bobContribution = usdc('1').toString();
+      const minimum = await CampaignContractInstance.rewardsList(0);
+      TestUSDCContractInstance.increaseAllowance(spender, bobContribution, {
+        from: bob,
+      });
+      await expectRevert(
+        CampaignContractInstance.contribute(bobContribution, 0, {
+          from: bob,
+        }),
+        "!Err: amount not enough"
+      );
+    });
   });
   describe('--- Refund ---', async () => {
     beforeEach(async () => {

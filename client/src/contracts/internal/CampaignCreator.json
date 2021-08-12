@@ -10791,12 +10791,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x26d076998B8DeEa98C671a48eE9636722c6701AB",
-      "transactionHash": "0x939ecd89e5a51f071932b26b31fe0ec93ae741f9aa20f5d94cc2235937ae3c19"
+      "address": "0x4148326b3981FC3Fe98DaFCfD80ad45F8EB6f9E1",
+      "transactionHash": "0xc0bdfd59acc8f4728117132b762eaa09e802243960c2c4972da3e6d2c27bd403"
     }
   },
   "schemaVersion": "3.4.1",
-  "updatedAt": "2021-08-06T10:14:17.859Z",
+  "updatedAt": "2021-08-12T10:50:58.048Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Using this Contract make the CampaignFactory contract lighter",

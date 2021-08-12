@@ -181,6 +181,7 @@ contract Campaign is ICampaign {
      */
     function contribute(uint128 _amount, uint8 _rewardIndex) external override isNotDeleted() checkCampaignDeadline() {
         require(status != WorkflowStatus.CampaignDrafted && status != WorkflowStatus.FundingFailed && status != WorkflowStatus.CampaignCompleted, "!Err : Wrong workflow status");
+        require(_amount >= rewardsList[_rewardIndex].minimumContribution, "!Err: amount not enough");
         require(checkRewardInventory(_rewardIndex), "!Err: no more reward");
         usdcToken.safeTransferFrom(msg.sender, address(this), _amount);
         contributorBalances[msg.sender] = contributorBalances[msg.sender] + _amount;

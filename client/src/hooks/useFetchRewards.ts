@@ -10,10 +10,10 @@ export const useFetchRewardsList = (address: string) => {
   const { library, chainId } = useActiveWeb3React()
   const dispatch = useAppDispatch()
   const contractCampaign = useContractCampaign(address)
-  const rewards:reward[] = []
   useEffect(() => {
     const fetchRewards = async () => {
       if (contractCampaign && chainId && library) {
+        const rewards:reward[] = []
         const rewardCounter = await contractCampaign?.methods?.rewardsCounter().call()
         for (let i = 0; i < rewardCounter; i++) {
           const res:Rewards = await contractCampaign?.methods?.rewardsList(i).call()
